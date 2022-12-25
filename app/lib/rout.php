@@ -16,9 +16,9 @@ class Rout
     protected $method = 'index';
     protected $param = [];
 
-    public function __construct()
+    public function __construct($siterootpath)
     {
-        $url_arr = $this->url_to_arr();
+        $url_arr = $this->url_to_arr($siterootpath);
         //if (empty($url_arr['path']) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr['path'][0].'.php')) 
         if (empty($url_arr['path']) or !class_exists("App\\Controllers\\".ucwords($url_arr['path'][0]))) 
         {
@@ -61,7 +61,7 @@ class Rout
         //print_r($this->param);
     }
 
-    public function url_to_arr()
+    public function url_to_arr($siterootpath)
     {
         if (isset($_SERVER['REQUEST_URI'])) 
         {
@@ -71,7 +71,7 @@ class Rout
             $request_url = trim($request_url, " \/");
             $res_path = explode('/', $request_url);
             //если на сервере многосайтовость - уберем из пути корневую папку сайта и переиндексируем
-            $root = explode('/', ROOTPATH);
+            $root = explode('/', $siterootpath);
             $res_path = array_values(array_diff($res_path, array(array_pop($root))));
             $res = array('path' => $res_path);
             

@@ -4,5 +4,5 @@ define('ROOTPATH', __DIR__);
 require_once ROOTPATH.DS.'app/lib/load.php';
 
 // Init Core Library
-$init  = new App\Lib\Rout;
+$init  = new App\Lib\Rout(ROOTPATH);
 ?>
