@@ -28,6 +28,10 @@ class Rout
         }
         else 
         {
+            if ( strpos('adm',$url_arr['path'][0]) !== false )
+            {
+                new \App\Lib\Auth(ADMUSER, ADMPASS);
+            }
             //print_r($url_arr['path'][0]);
             $contr = "App\\Controllers\\".ucwords($url_arr['path'][0]);
             //$this->param = $url_arr;
