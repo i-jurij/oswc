@@ -2,13 +2,15 @@
 namespace App\Lib;
 /**
 *  App Load class
-* Get name of pages for site from database
 * Parse URL and loads controller from app/pages
-* URL FORMAT may be /controller/method/params/...?name=string&name2=string2
+* URL FORMAT may be /controller/method_for_controller_or_model/params/...?name=string&name2=string2
+* if method not exists for controller - he may used as model method
 * rout loaded controller and put other data from url to controllers input datas array
-* where 'path' - a piece of url after /controller before ?
+* where 'path' - a piece of url after /method/... before ? if exists method for controller
+* or where 'path' - a piece of url after /controller/... before ? if method for controller not exists
 * 'get_query' - after ?
 * and may be 'post_query' - from html POST
+* For adm page load simple authenticate class. Login and pass is in app/config/config.php
 */
 class Rout
 {
