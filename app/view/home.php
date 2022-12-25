@@ -1,6 +1,6 @@
 <table>
 Home
-<tr><td>N</td><td>Page</td><td>Desc</td></tr>
+<tr><td>N</td><td>Controller</td><td>Desc</td></tr>
 <?php
 
 	foreach($data as $row)
