@@ -20,17 +20,17 @@ class Home
 			array(
 				'N' => '3',
 				'Controller' => 'Adm login',
-				'Description' => 'user'
+				'Description' => 'admin'
 			),
 			array(
 				'N' => '4',
 				'Controller' => 'Adm pass',
-				'Description' => 'pass'
+				'Description' => 'passw'
 			),
 			array(
 				'N' => '5',
 				'Controller' => 'Change login and pass in',
-				'Description' => 'app/config/config.php'
+				'Description' => 'table "users" in database'
 			),
 		);
 	}

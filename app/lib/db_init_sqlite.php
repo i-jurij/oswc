@@ -1,8 +1,10 @@
 <?php
 namespace App\Lib;
 
-class Db_init 
+class Db_init_sqlite
 {
+    public $db;
+
     public function __construct($params = [
                                 'type' => 'sqlite',
                                 'database' => APPROOT.DS.'db'.DS.DB_NAME.'.sqlite',
@@ -13,9 +15,13 @@ class Db_init
                                 ])
     {
         //init $db
-        $db = new Medoo($params);
+        $this->db = new Medoo($params);
+    }
+
+    function create_tables()
+    {
         //select from or created pages table if not exists
-        $db->create("pages", [
+        $this->db->create("pages", [
             "page_id" => [
                 "INT",
                 "AUTO_INCREMENT"
@@ -46,6 +52,31 @@ class Db_init
                 "DEFAULT Y"
             ],
             "PRIMARY KEY (<page_id>)"
+        ]);
+
+        $this->db->create("users", [
+            "id" => [
+                "INT",
+                "AUTO_INCREMENT"
+            ],
+            "username" => [
+                "VARCHAR(25)", 
+                "NOT NULL",
+                "UNIQUE"
+            ],
+            "password" => [
+                "VARCHAR(255)", 
+                "NOT NULL"
+            ],
+            "email" => [
+                "VARCHAR(100)", 
+                "NOT NULL"
+            ],
+            "email_status" => [
+                "VARCHAR(10)"
+            ],
+            "PRIMARY KEY (<id>)",
+	        "AUTO_INCREMENT" => 1
         ]);
     }
 }

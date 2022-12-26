@@ -20,6 +20,9 @@ class Rout
 
     public function __construct($siterootpath)
     {
+        $dbinit = '\App\Lib\\'.DBINITNAME;
+        $db_create = new $dbinit;
+        $db_create->create_tables();
         $url_arr = $this->url_to_arr($siterootpath);
         //if (empty($url_arr['path']) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr['path'][0].'.php')) 
         if (empty($url_arr['path']) or !class_exists("App\\Controllers\\".ucwords($url_arr['path'][0]))) 
@@ -30,10 +33,15 @@ class Rout
         }
         else 
         {
+            /*
             if ( strpos('adm',$url_arr['path'][0]) !== false )
             {
-                new \App\Lib\Auth(ADMUSER, ADMPASS);
+                $session = new Session();
+                $session->start();
+                //load login form, get post with login and pass
+                new \App\Lib\Auth;
             }
+            */
             //print_r($url_arr['path'][0]);
             $contr = "App\\Controllers\\".ucwords($url_arr['path'][0]);
             //$this->param = $url_arr;
