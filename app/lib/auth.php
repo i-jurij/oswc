@@ -61,7 +61,7 @@ class Auth
     * @param string $login
     * @param string $password
     */
-    public function auth($inp_password, $inp_login, $password, $login = 'admin') 
+    public function auth($inp_password, $inp_login, $password, $login) 
     {
         if ( $inp_login === $login && password_verify($inp_password, $password) )
         { //Если логин и пароль введены правильно

@@ -25,7 +25,7 @@ class Adm extends Home
 		    ]);
 		    $password = (isset($res[0])) ? $res[0] : '';
 		
-		    if (!$auth->auth($inp_password, $inp_login, $password)) { //Если логин и пароль введен не правильно
+		    if (!$auth->auth($inp_password, $inp_login, $password, $login = 'admin')) { //Если логин и пароль введен не правильно
 		        echo '<h2 style="color:red;">Неправильный логин или пароль.</h2>';
 		        include 'app/view/login.php';
 		    }

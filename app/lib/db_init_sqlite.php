@@ -23,8 +23,9 @@ class Db_init_sqlite
         //select from or created pages table if not exists
         $this->db->create("pages", [
             "page_id" => [
-                "INT",
-                "AUTO_INCREMENT"
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
             ],
             "page_alias" => [
                 "VARCHAR(100)"
@@ -50,14 +51,14 @@ class Db_init_sqlite
             "page_publish" => [
                 "CHAR",
                 "DEFAULT Y"
-            ],
-            "PRIMARY KEY (<page_id>)"
+            ]
         ]);
 
         $this->db->create("users", [
             "id" => [
-                "INT",
-                "AUTO_INCREMENT"
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
             ],
             "username" => [
                 "VARCHAR(25)", 
@@ -69,14 +70,33 @@ class Db_init_sqlite
                 "NOT NULL"
             ],
             "email" => [
-                "VARCHAR(100)", 
-                "NOT NULL"
+                "VARCHAR(100)"
             ],
             "email_status" => [
                 "VARCHAR(10)"
-            ],
-            "PRIMARY KEY (<id>)",
-	        "AUTO_INCREMENT" => 1
+            ]
         ]);
+ /*      
+        $this->db->insert("users", [
+            [
+                "username" => "admin",
+                "password" => password_hash("passw", PASSWORD_DEFAULT),
+                "email" => "foo@bar.com",
+                "email_status" => "0"
+            ],
+            [
+                "username" => "moder",
+                "password" => password_hash("moder", PASSWORD_DEFAULT),
+                "email" => "foo@moder.com",
+                "email_status" => "0"
+            ],
+            [
+                "username" => "user",
+                "password" => password_hash("user", PASSWORD_DEFAULT),
+                "email" => "foo@user.com",
+                "email_status" => "0"
+            ]
+        ]);
+        */
     }
 }
