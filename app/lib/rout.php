@@ -33,18 +33,7 @@ class Rout
         }
         else 
         {
-            /*
-            if ( strpos('adm',$url_arr['path'][0]) !== false )
-            {
-                $session = new Session();
-                $session->start();
-                //load login form, get post with login and pass
-                new \App\Lib\Auth;
-            }
-            */
-            //print_r($url_arr['path'][0]);
             $contr = "App\\Controllers\\".ucwords($url_arr['path'][0]);
-            //$this->param = $url_arr;
             $this->controller = new $contr;
             unset($url_arr['path'][0]);
             
@@ -72,7 +61,6 @@ class Rout
             }
         }
         call_user_func_array([$this->controller,$this->method], $this->param);
-        //print_r($this->param);
     }
 
     public function url_to_arr($siterootpath)
