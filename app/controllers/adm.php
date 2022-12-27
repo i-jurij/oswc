@@ -9,56 +9,23 @@ class Adm extends Home
 
 	public function index($path = [], $get_query = [], $post_query = [])
     {		
-		$session = new \App\Lib\Session();
-		$session->start();
-		//load login form, get post with login and pass
-		$auth = new \App\Lib\Auth;
-
-		//Если логин и пароль были отправлены isset($_POST["login"]) && isset($_POST["password"])
-		if (strlen(filter_has_var( INPUT_POST, "login" )) < 256 && filter_has_var( INPUT_POST, "password" ) ) 
-		{ 
-			$args = array('login' => FILTER_SANITIZE_SPECIAL_CHARS, 'password' => FILTER_SANITIZE_SPECIAL_CHARS);
-			$post_inputs = filter_input_array(INPUT_POST, $args);
-			print_r($post_inputs);
-
-			$inp_login = $post_inputs["login"];
-			$inp_password = $post_inputs["password"];
-			
-		    $dbi = new \App\Lib\Db_init_sqlite; $dbt = $dbi->db;
-		    $res = $dbt->select("users", "password", [
-		        "username" => $inp_login
-		    ]);
-		    $password = (isset($res[0])) ? $res[0] : '';
-		
-		    if (!$auth->auth($inp_password, $inp_login, $password, $login = 'admin')) { //Если логин и пароль введен не правильно
-		        echo '<h2 style="color:red;">Неправильный логин или пароль.</h2>';
-		        include 'app/view/login.php';
-		    }
-		             
-		    if (isset($_GET["is_exit"])) 
-		    { //Если нажата кнопка выхода
-		        if ($_GET["is_exit"] == 1) {
-		            $auth->out(); //Выходим
-		            header("Location: ?is_exit=0"); //Редирект после выхода
-		        }
-		    }
-		
-		   if ($auth->isAuth()) 
-		    { // Если пользователь авторизован, приветствуем:  
-		        echo "Здравствуйте, " . $auth->getLogin() ;
-		        echo "<br/><br/><a href='?is_exit=1'>Выйти</a>"; //Показываем кнопку выхода
-
-				$arr = explode('\\', static::class);
-				$class = array_pop($arr);
-				$full_name_class = '\App\Models\\'.$class;
-				$this->model = new $full_name_class;
-				$data = $this->model->get_data($path, $get_query, $post_query);	
-				$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', APPROOT.DS.'templates/templ.php', $data);
-		    } 
-		 }
-		 else 
-		 { //Если не авторизован, показываем форму ввода логина и пароля
-		    include 'app/view/login.php';
-		 }
+		$letlogin = new \App\Lib\Let_adm_login;
+		if ( $letlogin->let ) 
+		{
+			print $letlogin->let;
+			$arr = explode('\\', static::class);
+			$class = array_pop($arr);
+			$full_name_class = '\App\Models\\'.$class;
+			$this->model = new $full_name_class;
+			$data = $this->model->get_data($path, $get_query, $post_query);	
+			$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', APPROOT.DS.'templates/templ.php', $data);
+		}
     }
+
+	public function exit() 
+	{
+		$auth = new \App\Lib\Auth;
+		$auth->out(); //Выходим
+		header("Location: ".URLROOT); //Редирект после выхода
+	}
 }

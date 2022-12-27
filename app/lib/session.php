@@ -72,7 +72,8 @@ class Session
      * Полностью очищаем все данные пользователя
      */
     public function destroyAll() {
-        session_destroy();
+        $_SESSION = array(); //Очищаем сессию
+        session_destroy(); //Уничтожаем
     }
     /**
      * Устанавливаем куки  

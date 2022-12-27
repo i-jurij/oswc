@@ -1,4 +1,5 @@
 <?php
+/* class dependencies: Session class in app/lib/session.php
 /* example of using a class
 *
 * if (isset($_POST["login"]) && isset($_POST["password"])) 
@@ -47,11 +48,18 @@ class Auth
     private string $login; //researched user, eg admin
     private string $password; //password from db
 
+    function __construct()
+    {
+        $this->session = new \App\Lib\Session();
+		$this->session->start();
+    }
+
     public function isAuth() 
     {
-        if (isset($_SESSION["is_auth"])) 
+        //if (isset($_SESSION["is_auth"])) 
+        if ($this->session->has("is_auth"))
         { //Если сессия существует
-            return $_SESSION["is_auth"]; //Возвращаем значение переменной сессии is_auth (хранит true если авторизован, false если не авторизован)
+            return $this->session->get("is_auth"); //Возвращаем значение переменной сессии is_auth (хранит true если авторизован, false если не авторизован)
         }
         else return false; //Пользователь не авторизован, т.к. переменная is_auth не создана
     }
@@ -65,13 +73,13 @@ class Auth
     {
         if ( $inp_login === $login && password_verify($inp_password, $password) )
         { //Если логин и пароль введены правильно
-            $_SESSION["is_auth"] = true; //Делаем пользователя авторизованным
-            $_SESSION["login"] = $inp_login; //Записываем в сессию логин пользователя
+            $this->session->set("is_auth", true); //Делаем пользователя авторизованным
+            $this->session->set("login", $inp_login); //Записываем в сессию логин пользователя
             return true;
         }
         else 
         { //Логин и пароль не подошел
-            $_SESSION["is_auth"] = false;
+            $this->session->set("is_auth", false);;
             return false; 
         }
     }
@@ -83,13 +91,12 @@ class Auth
     {
         if ($this->isAuth()) 
         { //Если пользователь авторизован
-            return $_SESSION["login"]; //Возвращаем логин, который записан в сессию
+            return $this->session->get("login"); //Возвращаем логин, который записан в сессию
         }
     }
     
     public function out() 
     {
-        $_SESSION = array(); //Очищаем сессию
-        session_destroy(); //Уничтожаем
+        $this->session->destroyAll(); //Уничтожаем
     }
 }
