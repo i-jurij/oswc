@@ -14,11 +14,16 @@ class Adm extends Home
 		//load login form, get post with login and pass
 		$auth = new \App\Lib\Auth;
 
-		if (isset($_POST["login"]) && isset($_POST["password"])) 
-		{ //Если логин и пароль были отправлены
-		   $inp_login = $_POST["login"];
-		   $inp_password = $_POST["password"];
-		
+		//Если логин и пароль были отправлены isset($_POST["login"]) && isset($_POST["password"])
+		if (strlen(filter_has_var( INPUT_POST, "login" )) < 256 && filter_has_var( INPUT_POST, "password" ) ) 
+		{ 
+			$args = array('login' => FILTER_SANITIZE_SPECIAL_CHARS, 'password' => FILTER_SANITIZE_SPECIAL_CHARS);
+			$post_inputs = filter_input_array(INPUT_POST, $args);
+			print_r($post_inputs);
+
+			$inp_login = $post_inputs["login"];
+			$inp_password = $post_inputs["password"];
+			
 		    $dbi = new \App\Lib\Db_init_sqlite; $dbt = $dbi->db;
 		    $res = $dbt->select("users", "password", [
 		        "username" => $inp_login
