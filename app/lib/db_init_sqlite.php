@@ -30,6 +30,9 @@ class Db_init_sqlite
             "page_alias" => [
                 "VARCHAR(100)"
             ],
+            "page_templates" => [
+                "VARCHAR(100)"
+            ],
             "page_title" => [
                 "VARCHAR(255)"
             ],
@@ -37,6 +40,9 @@ class Db_init_sqlite
                 "VARCHAR(100)"
             ],
             "page_meta_keywords" => [
+                "VARCHAR(500)"
+            ],
+            "page_robots" => [
                 "VARCHAR(100)"
             ],
             "page_h1" => [
@@ -76,7 +82,47 @@ class Db_init_sqlite
                 "VARCHAR(10)"
             ]
         ]);
- /*      
+
+        $this->db->create("contacts", [
+            "id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "contacts_type" => [
+                "VARCHAR(25)"
+            ],
+            "contacts_data" => [
+                "VARCHAR(100)",
+                "UNIQUE"
+            ]
+        ]);
+        /*
+        $this->db->insert("contacts", [
+            [
+                "contacts_type" => "telegram",
+                "contacts_data" => "tg"
+            ],
+            [
+                "contacts_type" => "vk",
+                "contacts_data" => "vk"
+            ],
+            [
+                "contacts_type" => "instagram",
+                "contacts_data" => "inst"
+            ],
+            [
+                "contacts_type" => "tel",
+                "contacts_data" => "+7 523 425 25 43"
+            ],
+            [
+                "contacts_type" => "tel",
+                "contacts_data" => "0"
+            ],
+
+        ]);
+        */
+       /*
         $this->db->insert("users", [
             [
                 "username" => "admin",

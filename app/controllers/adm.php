@@ -3,9 +3,7 @@ namespace App\Controllers;
 
 class Adm extends Home
 {
-	protected $param = [];
-    public $model;
-	public $view;
+	protected string $template = TEMPLATEROOT.DS.'first/templ.php';
 
 	public function index($path = [], $get_query = [], $post_query = [])
     {		
@@ -18,7 +16,7 @@ class Adm extends Home
 			$full_name_class = '\App\Models\\'.$class;
 			$this->model = new $full_name_class;
 			$data = $this->model->get_data($path, $get_query, $post_query);	
-			$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', APPROOT.DS.'templates/templ.php', $data);
+			$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', $data, $this->template);
 		}
     }
 
@@ -26,6 +24,6 @@ class Adm extends Home
 	{
 		$auth = new \App\Lib\Auth;
 		$auth->out(); //Выходим
-		header("Location: ".URLROOT); //Редирект после выхода
+		header("Location: ".URLROOT."/adm"); //Редирект после выхода
 	}
 }

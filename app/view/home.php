@@ -1,12 +1,18 @@
-<table>
-Home
-<tr><td>N</td><td>Controller</td><td>Desc</td></tr>
 <?php
-
-	foreach($data as $row)
-	{
-		echo '<tr><td>'.$row['N'].'</td><td>'.$row['Controller'].'</td><td>'.$row['Description'].'</td></tr>';
-	}
-	
+	if (isset($data)) {
+		foreach($data as $row)
+		{
+			if (is_array($row)) {
+				echo '<tr>';
+				foreach ($row as $value) {
+					echo '<td>'.$value.'</td>';
+				}
+				echo '</tr>';
+			}
+			else {
+				print $row.'<br />';
+			}
+			//echo '<tr><td>'.$row['N'].'</td><td>'.$row['Controller'].'</td><td>'.$row['Desc'].'</td></tr>';
+		}
+	}	
 ?>
-</table>

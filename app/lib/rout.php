@@ -1,8 +1,8 @@
 <?php
 namespace App\Lib;
 /**
-*  App Load class
-* Parse URL and loads controller from app/pages
+*  App Rout class
+* Parse URL and loads controller from app/controllers
 * URL FORMAT may be /controller/method_for_controller_or_model/params/...?name=string&name2=string2
 * if method not exists for controller - he may used as model method
 * rout loaded controller and put other data from url to controllers input datas array
@@ -10,7 +10,6 @@ namespace App\Lib;
 * or where 'path' - a piece of url after /controller/... before ? if method for controller not exists
 * 'get_query' - after ?
 * and may be 'post_query' - from html POST
-* For adm page load simple authenticate class. Login and pass is in app/config/config.php
 */
 class Rout
 {
@@ -35,12 +34,14 @@ class Rout
         {
             $contr = "App\\Controllers\\".ucwords($url_arr['path'][0]);
             $this->controller = new $contr;
-            unset($url_arr['path'][0]);
+            //unset($url_arr['path'][0]);
+            array_shift($url_arr['path']);
             
             if (isset($url_arr['path'][1]) && method_exists($contr, $url_arr['path'][1])) 
             {
                 $this->method = $url_arr['path'][1];
-                unset($url_arr['path'][1]);
+                //unset($url_arr['path'][1]);
+                array_shift($url_arr['path']);
             }
 
             if (!empty($url_arr['path']) && array_filter($url_arr['path'], 'is_string') === $url_arr['path'])

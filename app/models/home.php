@@ -6,33 +6,36 @@ class Home
 	public function get_data()
 	{	
 		// get vars for home page from database
-		return array(
+		$data = (file_exists(APPROOT.DS.'README.md')) ? file(APPROOT.DS.'README.md') : array(
+			"<table>Home<tr><td>N</td><td>Controller</td><td>Desc</td></tr>",
 			array(
 				'N' => '1',
 				'Controller' => 'Home',
-				'Description' => 'Home page.'
+				'Desc' => 'Home page.'
 			),
 			array(
 				'N' => '2',
 				'Controller' => 'Adm',
-				'Description' => 'Page for site admins.'
+				'Desc' => 'Page for site admins.'
 			),
 			array(
 				'N' => '3',
 				'Controller' => 'Adm login',
-				'Description' => 'admin'
+				'Desc' => 'admin'
 			),
 			array(
 				'N' => '4',
 				'Controller' => 'Adm pass',
-				'Description' => 'passw'
+				'Desc' => 'passw'
 			),
 			array(
 				'N' => '5',
 				'Controller' => 'Change login and pass in',
-				'Description' => 'table "users" in database'
+				'Desc' => 'table "users" in database'
 			),
+			"</table>"
 		);
+		return $data;
 	}
 
 }
