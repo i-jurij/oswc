@@ -1,12 +1,16 @@
 <?php
 namespace App\Models;
+use App\Lib\Traits\Css_add;
 
 class Home
 {
+	use Css_add;
+
 	public function get_data()
 	{	
+		//$css = $this->css_add();
 		// get vars for home page from database
-		$data = (file_exists(APPROOT.DS.'README.md')) ? file(APPROOT.DS.'README.md') : array(
+		$data = (file_exists('README.md')) ? file('README.md') : array(
 			"<table>Home<tr><td>N</td><td>Controller</td><td>Desc</td></tr>",
 			array(
 				'N' => '1',

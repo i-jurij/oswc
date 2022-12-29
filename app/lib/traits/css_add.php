@@ -1,0 +1,25 @@
+<?php
+namespace App\Lib\Traits;
+
+trait Css_add
+{
+    public function css_add($path_to_css  = 'public/css/first', $pattern = '/*.{css}') 
+    {
+        $css_files = array();
+        foreach(glob($path_to_css . $pattern , GLOB_BRACE) as $file) {
+            if (strpos($file, 'normalize')) {
+                if (!empty($css_files[0])) {
+                    $css_files[] = $css_files[0];
+                    $css_files[0] = '<link rel="stylesheet" href="'.URLROOT.DS.$file.'" />';
+                } else {
+                    $css_files[0] = '<link rel="stylesheet" href="'.URLROOT.DS.$file.'" />';
+                }   
+            } else {
+                $css_files[] = '<link rel="stylesheet" href="'.URLROOT.DS.$file.'" />';
+            }
+        }
+        //print_r($css_files) ;
+        return $css_files;
+    }
+}
+?>

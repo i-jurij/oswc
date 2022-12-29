@@ -17,9 +17,6 @@
                         print '<a href="tel:'.$tlf.'">'.$tlf.'</a>';
                     }
                 }
-                else {
-                    print '<a href="tel:+7 523 425 25 43">+7 523 425 25 43</a>';
-                }
             ?>
         </div>
     </div>

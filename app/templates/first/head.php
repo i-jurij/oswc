@@ -18,8 +18,8 @@
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $data['robots'] = (isset($data['robots']) and !empty($data['robots'])) ? $data['robots'] : 'INDEX, FOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
-  <link rel="stylesheet" href="first/css/normalize.css" />
-  <link rel="stylesheet" href="first/css/font-awesome.min.css">
+  <link rel="stylesheet" href="public/css/first/normalize.css" />
+  <!-- <link rel="stylesheet" href="../../../public/first/css/font-awesome.min.css"> -->
 
 <!-- light dark mode. Light is default -->
   <script>
@@ -29,19 +29,19 @@
       document.documentElement.style.display = 'none';
       document.head.insertAdjacentHTML(
           'beforeend',
-          '<link rel="stylesheet" href="first/css/light.css" onload="document.documentElement.style.display = ``">'
+          '<link rel="stylesheet" href="public/first/css/light.css" onload="document.documentElement.style.display = ``">'
       );
     }
   </script>
-  <link rel="stylesheet" href="first/css/dark.css" media="(prefers-color-scheme: dark)">
-  <link rel="stylesheet" href="first/css/light.css" media="(prefers-color-scheme: no-preference), (prefers-color-scheme: light)">
-  <link rel="stylesheet" href="first/css/style.css">
+  <link rel="stylesheet" href="public/css/first/dark.css" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="public/css/first/light.css" media="(prefers-color-scheme: no-preference), (prefers-color-scheme: light)">
+  <link rel="stylesheet" href="public/css/first/style.css">
 
 <!-- css for js files 
   <link rel="stylesheet" href="first/js/fancybox.css" />
   <link rel="stylesheet" href="first/js/panzoom.css" />
 -->
-  <link rel="icon" href="first/imgs/favicon.png" />
+  <link rel="icon" href="public/imgs/first/favicon.png" />
   <!-- <link href="mobile.css" rel="stylesheet" media="screen and (max-width: 600px)"> -->
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script> -->
   <!--<script type="text/javascript" src="first/js/jquery-3.6.0.min.js"></script>  -->
