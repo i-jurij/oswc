@@ -28,7 +28,8 @@ class Db_init_sqlite
                 "NOT NULL"
             ],
             "page_alias" => [
-                "VARCHAR(100)"
+                "VARCHAR(100)",
+                "UNIQUE"
             ],
             "page_templates" => [
                 "VARCHAR(100)"
@@ -141,6 +142,17 @@ class Db_init_sqlite
                 "password" => password_hash("user", PASSWORD_DEFAULT),
                 "email" => "foo@user.com",
                 "email_status" => "0"
+            ]
+        ]);
+        */
+        /*
+        $this->db->insert("pages", [
+            ["page_alias" => "home",
+            "page_templates" => "first",
+            "page_title" => "Красота спасет мир",
+            "page_meta_description" => "Маникюр, визаж, парикмахерские услуги.",
+            "page_meta_keywords" => "маникюр, ногти, ногтевая пластина, кутикула, лак, гель, наращивание, покрытие, визаж, грим, тени, помада, парикмахер, салон, парикмахерская, прическа, стрижка",
+            "page_h1" => "Маникюр"
             ]
         ]);
         */

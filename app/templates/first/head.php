@@ -1,20 +1,14 @@
 <!doctype html>
-<!-- <html lang="ru"> -->
 <html lang="<?php echo $data['html_lang'] = (isset($data['html_lang']) and !empty($data['html_lang'])) ? $data['html_lang'] : 'ru'; ?>">
 <head>
-  <!-- <meta charset="utf-8" /> -->
   <meta charset="<?php echo $data['charset'] = (isset($data['charset']) and !empty($data['charset'])) ? $data['charset'] : 'utf-8' ; ?>">
   <title>
     <?php 
-      echo $data['title'] = (isset($data['title']) and !empty($data['title'])) ? $data['title'] : 'Title of page';
+      echo $data['page_title'] = (isset($data['page_title']) and !empty($data['page_title'])) ? $data['page_title'] : 'Title of page';
     ?>
   </title>
-  <meta name="description" content="<?php echo $data['description'] = (isset($data['description']) and !empty($data['description'])) ? $data['description'] : 'Description of page'; ?>">
-  <!-- <META NAME="keywords" CONTENT="маникюр, ногти, визаж, грим, ресницы, тени, помада, парикмахер, парикмахерская, прическа, стрижка"> -->
-  <META NAME="keywords" CONTENT="<?php echo $data['keywords'] = (isset($data['keywords']) and !empty($data['keywords'])) ? $data['keywords'] : 'Keywords of page'; ?>">
-  <!--<meta HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"> -->
-  <!-- <meta HTTP-EQUIV="Content-language" CONTENT="ru-RU"> -->
-  <!-- <meta HTTP-EQUIV="Content-language" CONTENT="<?php //echo $data['language'] = (isset($data['language']) and !empty($data['language'])) ? $data['language'] : 'ru-RU'; ?>"> -->
+  <meta name="description" content="<?php echo $data['page_meta_description'] = (isset($data['page_meta_description']) and !empty($data['page_meta_description'])) ? $data['page_meta_description'] : 'Description of page'; ?>">
+  <META NAME="keywords" CONTENT="<?php echo $data['page_meta_keywords'] = (isset($data['page_meta_keywords']) and !empty($data['page_meta_keywords'])) ? $data['page_meta_keywords'] : 'Keywords of page'; ?>">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $data['robots'] = (isset($data['robots']) and !empty($data['robots'])) ? $data['robots'] : 'INDEX, FOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
