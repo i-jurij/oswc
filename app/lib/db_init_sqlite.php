@@ -61,6 +61,34 @@ class Db_init_sqlite
             ]
         ]);
 
+        $this->db->create("adm_pages", [
+            "page_id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "page_alias" => [
+                "VARCHAR(100)",
+                "UNIQUE"
+            ],
+            "page_templates" => [
+                "VARCHAR(100)"
+            ],
+            "page_title" => [
+                "VARCHAR(255)"
+            ],
+            "page_meta_description" => [
+                "VARCHAR(100)"
+            ],
+            "page_robots" => [
+                "VARCHAR(100)",
+                "DEFAULT NOINDEX, NOFOLLOW"
+            ],
+            "page_content" => [
+                "TEXT"
+            ]
+        ]);
+
         $this->db->create("users", [
             "id" => [
                 "INTEGER PRIMARY KEY",
@@ -155,6 +183,62 @@ class Db_init_sqlite
             "page_meta_keywords" => "маникюр, ногти, ногтевая пластина, кутикула, лак, гель, наращивание, покрытие, визаж, грим, тени, помада, парикмахер, салон, парикмахерская, прическа, стрижка",
             "page_h1" => "Маникюр"
             ]
+        ]);
+*/
+/*
+        $this->db->insert("adm_pages", [
+            ["page_alias" => "adm",
+            "page_title" => "Admin",
+            "page_meta_description" => "Управление сайтом"
+            ],
+            ["page_alias" => "master_app",
+            "page_title" => "Записи к мастерам",
+            "page_meta_description" => "Таблица записей к мастеру"
+            ],
+            ["page_alias" => "today_app",
+            "page_title" => "Записи на сегодня",
+                "page_meta_description" => "Таблица записей к мастерам на сегодня"
+            ],
+            ["page_alias" => "recall",
+            "page_title" => "Перезвоните клиенту",
+            "page_meta_description" => "Список клиентов, которым нужно перезвонить"
+            ],
+            ["page_alias" => "no_recall",
+            "page_title" => "Обратный звонок выполнен",
+            "page_meta_description" => "Список клиентов, которым уже перезвонили"
+            ],
+            ["page_alias" => "contacts",
+            "page_title" => "Редактор контактов",
+            "page_meta_description" => "Страница изменения контактов"
+            ],
+            ["page_alias" => "grafik",
+            "page_title" => "Графики работы мастеров",
+            "page_meta_description" => "Редактирование графиков работы мастеров"
+            ],
+            ["page_alias" => "price",
+            "page_title" => "Редактирование прайсов услуг",
+            "page_meta_description" => "Редактирование прайсов услуг"
+            ],
+            ["page_alias" => "masters",
+            "page_title" => "Мастера",
+            "page_meta_description" => "Редактирование информации о мастерах"
+            ],
+            ["page_alias" => "pages_services",
+            "page_title" => "Редактор страниц и услуг",
+            "page_meta_description" => "Редактирование страниц и услуг"
+            ],
+            ["page_alias" => "map",
+            "page_title" => "Изменение карты проезда",
+            "page_meta_description" => "Изменение карты проезда"
+            ],
+            ["page_alias" => "about",
+            "page_title" => "Редактор страницы \"Обо мне\"",
+            "page_meta_description" => "Редактор страницы \"Обо мне\""
+            ],
+            ["page_alias" => "gallery",
+            "page_title" => "Редактор галереи",
+            "page_meta_description" => "Редактор галереи"
+            ],
         ]);
 */
     }
