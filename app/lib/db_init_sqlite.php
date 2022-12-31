@@ -61,6 +61,37 @@ class Db_init_sqlite
             ]
         ]);
 
+        $this->db->create("adm_pages", [
+            "page_id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "page_alias" => [
+                "VARCHAR(100)",
+                "UNIQUE"
+            ],
+            "page_templates" => [
+                "VARCHAR(100)"
+            ],
+            "page_title" => [
+                "VARCHAR(255)"
+            ],
+            "page_meta_description" => [
+                "VARCHAR(100)"
+            ],
+            "page_robots" => [
+                "VARCHAR(100)",
+                "DEFAULT NOINDEX, NOFOLLOW"
+            ],
+            "page_h1" => [
+                "VARCHAR(100)"
+            ],
+            "page_content" => [
+                "TEXT"
+            ]
+        ]);
+
         $this->db->create("users", [
             "id" => [
                 "INTEGER PRIMARY KEY",
@@ -157,5 +188,13 @@ class Db_init_sqlite
             ]
         ]);
 */
+
+        $this->db->insert("adm_pages", [
+            ["page_alias" => "adm",
+            "page_title" => "Admin",
+            "page_meta_description" => "Управление сайтом"
+        ],
+        
+        ]);
     }
 }

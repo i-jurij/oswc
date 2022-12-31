@@ -1,23 +1,23 @@
 <!doctype html>
-<html lang="<?php echo $data['html_lang'] = (isset($data['html_lang']) and !empty($data['html_lang'])) ? $data['html_lang'] : 'ru'; ?>">
+<html lang="<?php echo $a = (isset($data['html_lang']) and !empty($data['html_lang'])) ? htmlspecialchars($data['html_lang']) : 'ru'; ?>">
 <head>
-  <meta charset="<?php echo $data['charset'] = (isset($data['charset']) and !empty($data['charset'])) ? $data['charset'] : 'utf-8' ; ?>">
+  <meta charset="<?php echo $b = (isset($data['charset']) and !empty($data['charset'])) ? htmlspecialchars($data['charset']) : 'utf-8' ; ?>">
   <meta name="referrer" content="origin-when-cross-origin">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <title>
     <?php 
-      echo $data['page_title'] = (isset($data['page_title']) and !empty($data['page_title'])) ? $data['page_title'] : 'Title of page';
+      echo $c = (isset($data['page_title']) and !empty($data['page_title'])) ? htmlspecialchars($data['page_title']) : 'Title of page';
     ?>
   </title>
-  <meta name="description" content="<?php echo $data['page_meta_description'] = (isset($data['page_meta_description']) and !empty($data['page_meta_description'])) ? $data['page_meta_description'] : 'Description of page'; ?>">
-  <META NAME="keywords" CONTENT="<?php echo $data['page_meta_keywords'] = (isset($data['page_meta_keywords']) and !empty($data['page_meta_keywords'])) ? $data['page_meta_keywords'] : 'Keywords of page'; ?>">
+  <meta name="description" content="<?php echo $d = (isset($data['page_meta_description']) and !empty($data['page_meta_description'])) ? htmlspecialchars($data['page_meta_description']) : 'Description of page'; ?>">
+  <META NAME="keywords" CONTENT="<?php echo $e = (isset($data['page_meta_keywords']) and !empty($data['page_meta_keywords'])) ? htmlspecialchars($data['page_meta_keywords']) : 'Keywords of page'; ?>">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-  <META NAME="Robots" CONTENT="<?php echo $data['robots'] = (isset($data['robots']) and !empty($data['robots'])) ? $data['robots'] : 'INDEX, FOLLOW'; ?>">
+  <META NAME="Robots" CONTENT="<?php echo $f = (isset($data['robots']) and !empty($data['robots'])) ? htmlspecialchars($data['robots']) : 'INDEX, FOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
   <!-- <link rel="stylesheet" type="text/css" href="public/css/first/normalize.css" />
   <link rel="stylesheet" type="text/css" href="public/css/first/style.css" charset="utf-8" /> -->
-  <?php echo $data['css']; ?>
+  <?php echo htmlspecialchars($data['css']); ?>
 
 <!-- <link rel="stylesheet" type="text/css" href="../../../public/css/first/font-awesome.min.css"> -->
 <!-- <link href="mobile.css" type="text/css" rel="stylesheet" media="screen and (max-width: 600px)"> -->
