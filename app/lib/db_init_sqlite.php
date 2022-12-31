@@ -98,7 +98,7 @@ class Db_init_sqlite
                 "UNIQUE"
             ]
         ]);
-        /*
+ /*       
         $this->db->insert("contacts", [
             [
                 "contacts_type" => "telegram",
@@ -113,17 +113,19 @@ class Db_init_sqlite
                 "contacts_data" => "inst"
             ],
             [
-                "contacts_type" => "tel",
+                "contacts_type" => "tlf",
                 "contacts_data" => "+7 523 425 25 43"
             ],
             [
-                "contacts_type" => "tel",
+                "contacts_type" => "tlf",
                 "contacts_data" => "0"
             ],
-
+            [
+                "contacts_type" => "adres",
+                "contacts_data" => "Севастополь, ул. Такая-то, д.№00, офис №11"
+            ]
         ]);
-        */
-       /*
+
         $this->db->insert("users", [
             [
                 "username" => "admin",
@@ -144,8 +146,7 @@ class Db_init_sqlite
                 "email_status" => "0"
             ]
         ]);
-        */
-        /*
+
         $this->db->insert("pages", [
             ["page_alias" => "home",
             "page_templates" => "first",
@@ -155,6 +156,6 @@ class Db_init_sqlite
             "page_h1" => "Маникюр"
             ]
         ]);
-        */
+*/
     }
 }

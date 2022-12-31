@@ -12,12 +12,24 @@ class Home
 	{	
 		// get vars for home page from database
 		$data = [];
-		//$css = $this->css_add();
+		
 		$db = new Db_init_sqlite;
+		//add data for head in template
 		if ($db->db->has("pages", ["page_alias" => "home"])) {
 			$data = $db->db->get("pages", ["page_title", "page_meta_description", "page_meta_keywords", "page_h1"], ["page_alias" => "home"]);
 		}
-		
+		//add css for head in template
+		$data['css'] = $this->css_add();
+
+		$i = 0;
+		foreach ($db->db->select("contacts", ["contacts_type", "contacts_data"]) as $value) {
+			if ($value['contacts_type'] === 'tlf' && !empty($value['contacts_data'])) {
+				$data['tlf'.$i] = $value['contacts_data'];
+				$i++;
+			} elseif (!empty($value['contacts_data'])) {
+				$data[$value['contacts_type']] = $value['contacts_data'];
+			}
+		} 		
 		$data['content'] = (file_exists('README.md')) ? file('README.md') : array(
 			"<table>Home<tr><td>N</td><td>Controller</td><td>Desc</td></tr>",
 			array(

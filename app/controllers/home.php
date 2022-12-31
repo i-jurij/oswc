@@ -21,5 +21,4 @@ class Home
         $data = $this->model->get_data($path, $get_query, $post_query);	
 		$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', $data);
     }
-
 }

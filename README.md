@@ -71,6 +71,6 @@ framework use Medoo (https://medoo.in);
 write your database init class or use app/lib/db_init_sqlite.php as example
 and rewrite it for your database type;
 declare your database init class in config.php, then
-$db = new DBINITNAME;
-$db->db->select("users", "password", ["username" => $inp_login]);
+$database = new DBINITNAME;
+$database->db->select("users", "password", ["username" => $inp_login]);
 

@@ -25,7 +25,7 @@ class Let_adm_login
 		    $password = (isset($res[0])) ? $res[0] : '';
 		
 		    if (!$auth->auth($inp_password, $inp_login, $password, $login = 'admin')) { //Если логин и пароль введен не правильно
-		        $message = '<h2 style="color:red;">Неправильный логин или пароль.</h2>';
+		        $message = '<span style="color:red;">Неправильный логин или пароль.</span>';
 		        include 'app/view/login.php';
 		    }
 		    /*         

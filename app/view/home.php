@@ -1,4 +1,6 @@
+<div class="content" style="text-align: left;">
 <?php
+
 	if (isset($data['content'])) {
 		echo '<table>';
 		foreach($data['content'] as $row)
@@ -17,7 +19,7 @@
 		echo '</table>';
 	}
 
-print '<pre>';
+//print '<pre>';
 foreach ($data as $key => $value) {
 	if ($key != 'content') {
 		if (is_array($data[$key])) {
@@ -28,5 +30,6 @@ foreach ($data as $key => $value) {
 		
 	}
 }
-print '</pre>';
+//print '</pre>';
 ?>
+</div>

@@ -4,7 +4,7 @@ namespace App\Lib;
 class Registry
 { 
 	private static $_storage = array(); 
-    private static $_lock      = array();
+    private static $_lock = array();
     
     public static function set($key, $value)
     {   // Проверим блокировку элемента

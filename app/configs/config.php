@@ -21,4 +21,4 @@ define('ADMLOGPAS', [   "admin" => ['login' => 'admin', 'password' => 'passw'],
                         "user" =>  ['login' => 'user', 'password' => 'user']
                     ] );
 */
-define('TEMPLATEROOT', APPROOT.DS.'templates');
+define('TEMPLATEROOT', PUBLICROOT.DS.'templates');
