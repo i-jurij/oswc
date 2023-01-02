@@ -3,7 +3,7 @@
 <html lang="<?php echo $a = (isset($db['html_lang']) and !empty($db['html_lang'])) ? htmlspecialchars($db['html_lang']) : 'ru'; ?>">
 <head>
   <meta charset="<?php echo $b = (isset($db['charset']) and !empty($db['charset'])) ? htmlspecialchars($db['charset']) : 'utf-8' ; ?>">
-  <meta name="referrer" content="origin-when-cross-origin">
+  <meta name="referrer" content="no-referrer">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <title>
@@ -12,9 +12,8 @@
     ?>
   </title>
   <meta name="description" content="<?php echo $d = (isset($db['page_meta_description']) and !empty($db['page_meta_description'])) ? htmlspecialchars($db['page_meta_description']) : 'Description of page'; ?>">
-  <META NAME="keywords" CONTENT="<?php echo $e = (isset($db['page_meta_keywords']) and !empty($db['page_meta_keywords'])) ? htmlspecialchars($db['page_meta_keywords']) : 'Keywords of page'; ?>">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-  <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'INDEX, FOLLOW'; ?>">
+  <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'NOINDEX, NOFOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
   <?php 
   if (!empty($data['css'])) {

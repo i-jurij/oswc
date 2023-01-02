@@ -11,7 +11,8 @@ define('PUBLICROOT', dirname(dirname(dirname(__FILE__))).DS.'public');
 //site name
 define('SITENAME', 'oswc');
 define('URLROOT', 'http://localhost/'.SITENAME);
-//define('URLROOT', 'http://'.SITENAME.'.net');
+//define('URLROOT', 'http'.((isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']=='on') ? 's': '').'://'.SITENAME.'.net'); 
+//define('URLROOT', 'http://'.SITENAME.'.net'); 
 /* login and pass for basic auth */
 //define('ADMUSER', 'admin');
 //define('ADMPASS', 'passw');
