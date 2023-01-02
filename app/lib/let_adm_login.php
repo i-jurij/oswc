@@ -7,10 +7,8 @@ class Let_adm_login
 
     function __construct()
     {
-        //load login form, get post with login and pass
 		$auth = new \App\Lib\Auth;
 
-		//Если логин и пароль были отправлены isset($_POST["login"]) && isset($_POST["password"])
 		if (strlen(filter_has_var( INPUT_POST, "login" )) < 256 && filter_has_var( INPUT_POST, "password" ) ) 
 		{ 
 			$args = array('login' => FILTER_SANITIZE_SPECIAL_CHARS, 'password' => FILTER_SANITIZE_SPECIAL_CHARS);
@@ -37,21 +35,25 @@ class Let_adm_login
 		        }
 		    }
             */
-		   if ($auth->isAuth()) 
+			if ($auth->isAuth()) 
 		    { // Если пользователь авторизован, приветствуем:  
 		      //  echo "Здравствуйте, " . $auth->getLogin() ;
 		      //  echo "<br/><br/><a href='?is_exit=1'>Выйти</a>"; //Показываем кнопку выхода
               //$this->let = "Здравствуйте, " . $auth->getLogin() . "<br/><br/><a href='?is_exit=1'>Выйти</a>";
-                $request_url = explode('adm', strtok(filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL), '?'));
-                $res_url = $request_url[0].'adm/';
-                $this->let = "Здравствуйте, " . $auth->getLogin() . '<br/><br/><a href="'.$res_url.'exit">Выйти</a>';
+              //  $request_url = explode('adm', strtok(filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL), '?'));
+              //  $res_url = $request_url[0].'adm/';
+			  $res_url = '';
+                $this->let = '<div style="margin: 0 2rem;">
+								<span style="float: left;">Здравствуйте, ' . $auth->getLogin() . '</span>
+								<a href="'.URLROOT.'/adm/exit" style="float: right;">Выйти</a>
+							  </div>
+							  <div style="clear: both;"></div>';
 		    } 
-		 }
-		 else 
-		 { //Если не авторизован, показываем форму ввода логина и пароля
-            $message = "Enter data for log in";
-		    include 'app/view/login.php';
-		 }
-    }
-
+		}
+		else 
+		{ //Если не авторизован, показываем форму ввода логина и пароля
+			$message = "Enter data for log in";
+			include 'app/view/login.php';
+		}
+	}
 }

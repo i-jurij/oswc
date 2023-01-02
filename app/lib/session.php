@@ -18,7 +18,7 @@ class Session
     // задаем время жизни сессионных кук
     public function __construct(string $cookieTime = '+30 days') {
         $this->cookieTime = strtotime($cookieTime);
-        session_cache_limiter(false);
+        session_cache_limiter('private_no_expire');
     }
     // стартуем сессию
     public function start()

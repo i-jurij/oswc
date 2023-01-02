@@ -12,9 +12,11 @@
 
         <div class="he_tlf">
             <?php
-                foreach ($data as $key => $tlf) {
-                    if (strpos($key, 'tlf') !== false) {
-                        print '<a href="tel:'.$tlf.'">'.$tlf.'</a>';
+                if(!empty($data)) {
+                    foreach ($data as $key => $tlf) {
+                        if (strpos($key, 'tlf') !== false) {
+                            print '<a href="tel:'.$tlf.'">'.$tlf.'</a>';
+                        }
                     }
                 }
             ?>

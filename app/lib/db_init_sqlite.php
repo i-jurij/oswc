@@ -49,7 +49,7 @@ class Db_init_sqlite
             "page_h1" => [
                 "VARCHAR(100)"
             ],
-            "page_small_description" => [
+            "page_img" => [
                 "TEXT"
             ],
             "page_content" => [
@@ -82,7 +82,7 @@ class Db_init_sqlite
             ],
             "page_robots" => [
                 "VARCHAR(100)",
-                "DEFAULT NOINDEX, NOFOLLOW"
+                "DEFAULT NOINDEX"
             ],
             "page_h1" => [
                 "VARCHAR(100)"
@@ -129,7 +129,7 @@ class Db_init_sqlite
                 "UNIQUE"
             ]
         ]);
- /*       
+/*       
         $this->db->insert("contacts", [
             [
                 "contacts_type" => "telegram",
@@ -185,7 +185,96 @@ class Db_init_sqlite
             "page_meta_description" => "Маникюр, визаж, парикмахерские услуги.",
             "page_meta_keywords" => "маникюр, ногти, ногтевая пластина, кутикула, лак, гель, наращивание, покрытие, визаж, грим, тени, помада, парикмахер, салон, парикмахерская, прическа, стрижка",
             "page_h1" => "Маникюр"
-            ]
+            ],
+            ["page_alias" => "about",
+            "page_templates" => "first",
+            "page_title" => "О нас",
+            "page_meta_description" => "Узнайте о нас больше.",
+            "page_meta_keywords" => "образование, курсы, материалы, инструмент, маникюр, ногти, лак, наращивание, парикмахер, салон",
+            "page_h1" => "О нас",
+            "page_img" => "public/imgs/about.jpg"
+            ],
+        ]);
+
+        $this->db->insert("adm_pages", [
+            ["page_alias" => "adm",
+            "page_title" => "Управление сайтом",
+            "page_meta_description" => "Управление сайтом",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Управление сайтом"
+            ],
+            ["page_alias" => "master_app",
+            "page_title" => "Записи к мастерам",
+            "page_meta_description" => "Таблица записей к мастерам",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Записи к мастерам"
+            ],
+            ["page_alias" => "date_app",
+            "page_title" => "Записи по дням",
+            "page_meta_description" => "Таблица записей к мастерам по дням",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Записи к мастерам по дням"
+            ],
+            ["page_alias" => "recall",
+            "page_title" => "Перезвоните клиенту",
+            "page_meta_description" => "Список клиентов, которым необходимо перезвонить",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Перезвоните клиенту"
+            ],
+            ["page_alias" => "recall_yes",
+            "page_title" => "Перезвонили",
+            "page_meta_description" => "Список клиентов, которым уже перезвонили",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Клиентам перезвонили"
+            ],
+            ["page_alias" => "contacts",
+            "page_title" => "Редактор контактов",
+            "page_meta_description" => "Изменение контактных данных",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Редактор контактов"
+            ],
+            ["page_alias" => "grafik",
+            "page_title" => "Графики работы мастеров",
+            "page_meta_description" => "Составление графиков работы мастеров",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Графики работы мастеров"
+            ],
+            ["page_alias" => "price",
+            "page_title" => "Редактор расценок на услуги",
+            "page_meta_description" => "Изменение расценок на услуги",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Редактор расценок на услуги"
+            ],
+            ["page_alias" => "masters",
+            "page_title" => "Мастера",
+            "page_meta_description" => "Изменение данных о мастерах",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Мастера"
+            ],
+            ["page_alias" => "pages_control",
+            "page_title" => "Редактор страниц услуг",
+            "page_meta_description" => "Изменение данных о мастерах",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Редактор страниц услуг"
+            ],
+            ["page_alias" => "map",
+            "page_title" => "Изменение карты",
+            "page_meta_description" => "Изменение карты проезда",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Изменение карты"
+            ],
+            ["page_alias" => "about",
+            "page_title" => "Редактор страницы \"О нас\"",
+            "page_meta_description" => "Редактор страницы \"О нас\"",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Редактор страницы \"О нас\""
+            ],
+            ["page_alias" => "gallery",
+            "page_title" => "Редактор галереи фото",
+            "page_meta_description" => "Добавить, удалить фото, изменить ссылку на облачный архив фото",
+            "page_robots" => "NOINDEX, NOFOLLOW",
+            "page_h1" => "Редактор галереи фото"
+            ],
         ]);
 */
     }

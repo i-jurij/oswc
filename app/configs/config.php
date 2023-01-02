@@ -22,3 +22,4 @@ define('ADMLOGPAS', [   "admin" => ['login' => 'admin', 'password' => 'passw'],
                     ] );
 */
 define('TEMPLATEROOT', PUBLICROOT.DS.'templates');
+define('IMGDIR', PUBLICROOT.DS.'imgs');

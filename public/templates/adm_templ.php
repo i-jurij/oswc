@@ -31,9 +31,6 @@
 </head>
 <body>
   <div class="wrapper">
-    <header class="he stickyheader flex">
-      <?php include 'public/templates/contacts.php'; ?>
-    </header>
 
     <div class="main ">
       <section class="main_section">
@@ -50,15 +47,6 @@
         </div>
       </section>
     </div>
-
-    <footer class="foot">
-      <div class="foot_div">
-          <?php include 'public/templates/contacts.php'; ?>
-      </div>
-      <div class="foot_div">
-        <?php echo "2022 - " . date('Y') . PHP_EOL; ?>
-      </div>
-    </footer>
   </div>
 
   <script type="text/jsx" src="public/js/fancybox.umd.js"></script>

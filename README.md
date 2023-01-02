@@ -1,9 +1,11 @@
 Simple php framework with a single entry point
 
+
 This use namespase. 
 classes are declared like this:
 namespace App\Lib;
 class Rout...
+
 
 a class inside another class is called like this:
 $r = new \App\Lib\Rout;
@@ -12,9 +14,11 @@ $r = new \App\Lib\Rout;
 app/config/config.php:
 constants declaration.
 
+
 /first.oswc (index.php renamed in .htaccess):
 include app/lib.php (load config.php and call to spl_autoload),
 call to Rout and get into it site root path
+
 
 app/lib/rout:
 /**
@@ -31,13 +35,13 @@ app/lib/rout:
 */
 
 
-Default is two controllers: 
+Controllers: its own for each page;
+
 app/controllers/home:
 method __construct load class View;
 method index a gets name of class in which it is located,
 and load method get_data from model ($path, $get_query, $post_query -> from class Rout),
 and load method generate from view ($content_view, $data, $template_view -> explained below).
-
 
 app/controllers/adm - extends home:
 protected string $template = TEMPLATEROOT.DS.'first/templ.php'; - the path to the template, 
@@ -54,7 +58,12 @@ echo password_hash("your_new_passw", PASSWORD_DEFAULT);
 and copy past to db table (use eg SQLiteStudio).
 
 
-appp/lib/view.php
+Models: its own for each page.
+
+
+View: its own for each page, in app/view directory;
+
+appp/lib/view.php - single View class,
 (new View)->generate($content_view, $data, $template_view = TEMPLATEROOT.DS.'first/templ.php')
 $content_view - from app/view (ready-to-output code),
 $data - data array for model from controller (from rout),
@@ -66,7 +75,8 @@ $this->view->generate('your_view.php', $vars_for_view, 'your_template_path.php')
 or set templates in db tables "pages" in "page_templates" and View load it if your model get this var in $data array.
 
 
-Work with database 
+Work with database:
+
 framework use Medoo (https://medoo.in);
 write your database init class or use app/lib/db_init_sqlite.php as example
 and rewrite it for your database type;
