@@ -1,4 +1,4 @@
 <?php
 print '<pre>';
-print_r($data);
+var_dump($data);
 print '</pre>';
