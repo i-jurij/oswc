@@ -27,13 +27,13 @@ class Home
 		if ($this->db->db->has($this->table, ["page_alias" => $this->page])) {
 		$this->data['page_db_data'] = $this->db->db->select($this->table, "*", ["page_alias" => $this->page]);
 		}
-		//get page list from db
-		$this->data['page_list'] = $this->db->db->select($this->table, "*");
 	}
 
 	public function get_data($path, $get_query, $post_query)
 	{	
 		$this->db_query();
+		//get page list from db
+		$this->data['page_list'] = $this->db->db->select($this->table, "*");
 		//add css for head in template
 		$this->data['css'] = $this->css_add('public'.DS.'css'.DS.'first');
 

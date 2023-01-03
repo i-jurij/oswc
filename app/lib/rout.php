@@ -24,15 +24,15 @@ class Rout
         $db_create->create_tables();
         $url_arr = $this->url_to_arr($siterootpath);
         //if (empty($url_arr['path']) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr['path'][0].'.php')) 
-        if (empty($url_arr['path']) or !class_exists("App\\Controllers\\".ucwords($url_arr['path'][0]))) 
+        if (empty($url_arr['path']) or !class_exists("\App\\Controllers\\".ucwords($url_arr['path'][0]))) 
         {
-            $contr = 'App\Controllers\Home';
+            $contr = '\App\Controllers\Home';
             $this->controller = new $contr;
             $url_arr = [];
         }
         else 
         {
-            $contr = "App\\Controllers\\".ucwords($url_arr['path'][0]);
+            $contr = "\App\\Controllers\\".ucwords($url_arr['path'][0]);
             $this->controller = new $contr;
             //unset($url_arr['path'][0]);
             array_shift($url_arr['path']);

@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers;
+namespace App\Models;
 
 class Masters extends Adm
 {

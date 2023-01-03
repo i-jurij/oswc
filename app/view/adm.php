@@ -26,7 +26,7 @@
             foreach ($$value as $value11)
             {
                 list($alias, $title) = explode('#', $value11);
-                echo '<a href="' . $alias . '" class="buttons">' . $title . '</a> ';
+                echo '<a href="' . URLROOT . '/' . $alias . '" class="buttons">' . $title . '</a> ';
             }
             echo "</div>";
         }

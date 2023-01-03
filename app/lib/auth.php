@@ -43,11 +43,8 @@ namespace App\Lib;
 
 class Auth
 {
-    private string $inp_login; //from login form
-    private string $inp_password; //from login form
-    private string $login; //researched user, eg admin
-    private string $password; //password from db
-
+    private $session;
+    
     function __construct()
     {
         $this->session = new \App\Lib\Session();
@@ -75,6 +72,12 @@ class Auth
         { //Если логин и пароль введены правильно
             $this->session->set("is_auth", true); //Делаем пользователя авторизованным
             $this->session->set("login", $inp_login); //Записываем в сессию логин пользователя
+            $str = '<div style="margin: 0 2rem 1rem 2rem; width: 100%; color: blanchedalmond;">
+                        <span style="float: left;">Здравствуйте, ' . $this->getLogin() . '</span>
+                        <a href="'.URLROOT.'/adm/exit" style="float: right; color: blanchedalmond;">Выйти</a>
+                    </div>
+                    <div style="clear: both;"></div>';
+            Registry::set("exit_from_adm", $str);
             return true;
         }
         else 

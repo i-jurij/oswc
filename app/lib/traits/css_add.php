@@ -3,7 +3,7 @@ namespace App\Lib\Traits;
 
 trait Css_add
 {
-    public function css_add($path_to_css = 'public'.DS.'css'.DS.'first') 
+    public function css_add($path_to_css = DS.'public'.DS.'css'.DS.'first') 
     {
         $pattern = '/*.{php,css}';
         $css_files = array();

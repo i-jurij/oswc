@@ -20,14 +20,14 @@
   if (!empty($data['css'])) {
     if (is_array($data['css'])) {
       foreach ($data['css'] as $css) {
-        echo '<link rel="stylesheet" type="text/css" href="'.htmlspecialchars($css).'" />'; 
+        echo '<link rel="stylesheet" type="text/css" href="'.URLROOT.DS.htmlspecialchars($css).'" />'; 
       }
     } elseif (is_string($data['css'])) {
-      echo '<link rel="stylesheet" type="text/css" href="'.htmlspecialchars($data['css']).'" />'; 
+      echo '<link rel="stylesheet" type="text/css" href="'.URLROOT.DS.htmlspecialchars($data['css']).'" />'; 
     }
   }
   ?>
-  <link rel="icon" href="public/imgs/favicon.png" />
+  <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/favicon.png" />
 </head>
 <body>
   <div class="wrapper">

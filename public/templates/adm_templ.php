@@ -1,5 +1,9 @@
 <!doctype html>
-<?php $db = (!empty($data['page_db_data']['0'])) ?  $data['page_db_data']['0'] : null; ?>
+<?php
+
+use App\Lib\Registry;
+
+ $db = (!empty($data['page_db_data']['0'])) ?  $data['page_db_data']['0'] : null; ?>
 <html lang="<?php echo $a = (isset($db['html_lang']) and !empty($db['html_lang'])) ? htmlspecialchars($db['html_lang']) : 'ru'; ?>">
 <head>
   <meta charset="<?php echo $b = (isset($db['charset']) and !empty($db['charset'])) ? htmlspecialchars($db['charset']) : 'utf-8' ; ?>">
@@ -19,14 +23,14 @@
   if (!empty($data['css'])) {
     if (is_array($data['css'])) {
       foreach ($data['css'] as $css) {
-        echo '<link rel="stylesheet" type="text/css" href="'.htmlspecialchars($css).'" />'; 
+        echo '<link rel="stylesheet" type="text/css" href="'.URLROOT.DS.htmlspecialchars($css).'" />'; 
       }
     } elseif (is_string($data['css'])) {
-      echo '<link rel="stylesheet" type="text/css" href="'.htmlspecialchars($data['css']).'" />'; 
+      echo '<link rel="stylesheet" type="text/css" href="/'.URLROOT.DS.htmlspecialchars($data['css']).'" />'; 
     }
   }
   ?>
-  <link rel="icon" href="public/imgs/favicon.png" />
+  <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/key.png" />
 </head>
 <body>
   <div class="wrapper">
@@ -34,6 +38,7 @@
     <div class="main ">
       <section class="main_section">
         <div class="flex flex_top">
+          <?php echo \App\Lib\Registry::get("exit_from_adm"); ?>
           <div class="content">
             <h2><?php echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2>
           </div>
