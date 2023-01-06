@@ -49,6 +49,13 @@ it is possible to override it in child classes;
 method index override parents method from Home,
 load App\Lib\Let_adm_login which load simple authenticate class App\Lib/Auth,
 which uses the class App\Lib\Session (methods for vars in php session). 
+Adm controller set $_SESSION vars: 'user_name' for authentication and
+'status' (admin, moder, user - readed from `users` db) for autorisation
+in pages views class. 
+Autorization is simple: for each status formed array of page alias and 
+user will to see only this page.
+Or you can check status in method of view class.
+Also, the 'page_access' field for each page in the database table indicates the user who is allowed access.
 
 Admins LOGIN and PASSWORD is in app/db/oswc.sqlite in table `users`,
 default is 'login' => 'admin', 'pass' => 'passw;
@@ -56,6 +63,9 @@ password in db - "password" => password_hash("passw", PASSWORD_DEFAULT);
 simple way to change it - generate in php script:
 echo password_hash("your_new_passw", PASSWORD_DEFAULT);
 and copy past to db table (use eg SQLiteStudio).
+
+class Auth use trait Reject from App\Lib\Traits:
+$this->reject_login() - it load header 502 Bad Gateway if password will be wrong enter 4 times
 
 
 Models: its own for each page.

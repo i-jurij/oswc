@@ -29,7 +29,7 @@ class Home
 		}
 	}
 
-	public function get_data($path, $get_query, $post_query)
+	public function get_data($path)
 	{	
 		$this->db_query();
 		//get page list from db

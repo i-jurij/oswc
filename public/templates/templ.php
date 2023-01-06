@@ -28,11 +28,16 @@
   }
   ?>
   <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/favicon.png" />
+  <?php 
+    foreach (files_in_dir(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
+      print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'core'.DS.$value.'"></script>';
+    }
+  ?>
 </head>
 <body>
   <div class="wrapper">
     <header class="he stickyheader flex">
-      <?php include 'public/templates/contacts.php'; ?>
+      <?php include PUBLICROOT.DS.'templates'.DS.'contacts.php'; ?>
     </header>
 
     <div class="main ">
@@ -53,7 +58,7 @@
 
     <footer class="foot">
       <div class="foot_div">
-          <?php include 'public/templates/contacts.php'; ?>
+          <?php include PUBLICROOT.DS.'templates'.DS.'contacts.php'; ?>
       </div>
       <div class="foot_div">
         <?php echo "2022 - " . date('Y') . PHP_EOL; ?>
@@ -61,6 +66,11 @@
     </footer>
   </div>
 
-  <script type="text/jsx" src="public/js/fancybox.umd.js"></script>
+  <?php 
+    foreach (files_in_dir(PUBLICROOT.DS.'js'.DS.'other', 'js') as $value) {
+      print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'other'.DS.$value.'"></script>';
+    }
+  ?>
+  <!-- <script type="text/jsx" src="public/js/fancybox.umd.js"></script> -->
   </body>
 </html>

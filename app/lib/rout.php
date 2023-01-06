@@ -23,8 +23,8 @@ class Rout
         $db_create = new $dbinit;
         $db_create->create_tables();
         $url_arr = $this->url_to_arr($siterootpath);
-        //if (empty($url_arr['path']) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr['path'][0].'.php')) 
-        if (empty($url_arr['path']) or !class_exists("\App\\Controllers\\".ucwords($url_arr['path'][0]))) 
+        //if (empty($url_arr) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr[0].'.php')) 
+        if (empty($url_arr) or !class_exists("\App\\Controllers\\".ucwords($url_arr[0]))) 
         {
             $contr = '\App\Controllers\Home';
             $this->controller = new $contr;
@@ -32,30 +32,23 @@ class Rout
         }
         else 
         {
-            $contr = "\App\\Controllers\\".ucwords($url_arr['path'][0]);
+            $contr = "\App\\Controllers\\".ucwords($url_arr[0]);
             $this->controller = new $contr;
-            //unset($url_arr['path'][0]);
-            array_shift($url_arr['path']);
+            //unset($url_arr[0]);
+            array_shift($url_arr);
             
-            if (isset($url_arr['path'][1]) && method_exists($contr, $url_arr['path'][1])) 
+            if (isset($url_arr[0]) && method_exists($contr, $url_arr[0])) 
             {
-                $this->method = $url_arr['path'][1];
-                //unset($url_arr['path'][1]);
-                array_shift($url_arr['path']);
+                $this->method = $url_arr[0];
+                //unset($url_arr[1]);
+                array_shift($url_arr);
             }
 
-            if (!empty($url_arr['path']) && array_filter($url_arr['path'], 'is_string') === $url_arr['path'])
+            if (!empty($url_arr) && array_filter($url_arr, 'is_string') === $url_arr)
             {
-                $this->param['path'] = $url_arr['path'];
+                $this->param['path'] = $url_arr;
             }
-            if (!empty($url_arr['get_query']) && array_filter($url_arr['get_query'], 'is_string') === $url_arr['get_query']) 
-            {
-                $params['get_query'] = $url_arr['get_query'];
-            }
-            if (!empty($url_arr['post_query']) && array_filter($url_arr['post_query'], 'is_string') === $url_arr['post_query']) 
-            {
-                $params['post_query'] = $url_arr['post_query'];
-            }
+
             if (isset($params) && !empty($params)) 
             {
                 $this->param = $params;
@@ -76,23 +69,8 @@ class Rout
             //если на сервере многосайтовость - уберем из пути корневую папку сайта и переиндексируем
             $root = explode('/', $siterootpath);
             $res_path = array_values(array_diff($res_path, array(array_pop($root))));
-            $res = array('path' => $res_path);
-            
-            if ($_SERVER['REQUEST_METHOD'] === "GET") 
-            {
-                if (!empty($_GET)) 
-                {
-                    $res['get_query'] = $_GET;
-                } 
-            }
 
-            if ($_SERVER['REQUEST_METHOD'] === "POST") 
-            {
-                foreach ($_POST as $key => $value) {
-                    $res['post_query'][$key] = $value;
-                }
-            }
-            return $res;
+            return $res_path;
         }
     }
 }

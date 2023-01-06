@@ -15,21 +15,49 @@ namespace App\Lib;
 class Session
 {
     private $cookieTime;
+    // Время устаревания сессии в секундах
+    static protected $_sessionTime = 30*60;
+
     // задаем время жизни сессионных кук
-    public function __construct(string $cookieTime = '+30 days') {
+    public function __construct(string $cookieTime = '+7 days') {
         $this->cookieTime = strtotime($cookieTime);
-        session_cache_limiter('private_no_expire');
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+        }   
     }
-    // стартуем сессию
-    public function start()
+
+    static public function start($cache = 'nocache')
     {
+      // Если сессия еще не запущена
+      if (session_status() !== PHP_SESSION_ACTIVE)
+      {
+        session_cache_limiter($cache);//nocache, public, private, private_no_expire
+        //session_save_path("S:\Server\session");
         session_start();
+        // Устанавливаем время отсчета для удаления сессии
+        $_SESSION["deleted_time"] = time();
+      }
+      // Не используем слишком старые идентификаторы сессии
+      if (!empty($_SESSION["deleted_time"]) && $_SESSION["deleted_time"] < (time() - static::$_sessionTime))
+      {
+        session_destroy();
+        static::sessionRegenerateId(true);
+      }
     }
+
+    static public function sessionRegenerateId($deleteOldSession = FALSE)
+    {
+        // Устанавливаем время отсчета для удаления сессии
+        $_SESSION["deleted_time"] = time();
+        // Обновляем идентификатор сессии
+        session_regenerate_id($deleteOldSession);
+    }
+
     /**
      * Проверяем сессию на наличие в ней переменной c заданным именем
      */
     public function has($name)
     {
+        static::start();
         return isset($_SESSION[$name]);
     }
     /**
@@ -39,7 +67,9 @@ class Session
      * @param $value
      */
     public function set($name, $value) {
-        $_SESSION[$name] = $value;
+        static::start();
+        if ($name && $value) { $_SESSION[$name] = $value; } 
+        session_write_close();
     }
     /**
      * Когда мы хотим сохранить в сессии сразу много значений - используем массив
@@ -48,8 +78,10 @@ class Session
      */
     public function setArray(array $vars)
     {
+        static::start();
         foreach($vars as $name => $value) {
             $this->set($name, $value);
+            session_write_close();
         }
     }
     /**
@@ -59,21 +91,40 @@ class Session
      * @return mixed
      */
     public function get($name) {
-        return $_SESSION[$name];
+        static::start();
+        return (!empty($_SESSION[$name])) ? $_SESSION[$name] : false;
     }
+    /** 
+    * Если вызвать $this->flash со строковым параметром, то она сохранит эту строку в сессии, 
+    * а если вызвать без параметров, то возвратит сохранённое сообщение 
+    *
+    * @param $message - string or null
+    */
+    public function flash(?string $message = null)
+    {
+        static::start();
+        if ($message) { $_SESSION['flash'] = $message; } 
+        else { if (!empty($_SESSION['flash'])) { return $_SESSION['flash']; } }
+    }
+
     /**
      * 
-     * @param $name - Уничтожаем сессию с именем $name
+     * @param $name - Уничтожаем $name
      */
     public function destroy($name) {
+        static::start();
         unset($_SESSION[$name]);
+        session_write_close();
     }
     /**
      * Полностью очищаем все данные пользователя
      */
     public function destroyAll() {
+        static::start();
+        // Если есть активная сессия, удаляем куки сессии,
+        setcookie(session_name(), session_id(), time()-60*60*24);
         $_SESSION = array(); //Очищаем сессию
-        session_destroy(); //Уничтожаем
+        session_destroy();
     }
     /**
      * Устанавливаем куки  

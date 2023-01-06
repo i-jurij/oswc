@@ -22,8 +22,10 @@
 	} 
 ?>
 
-<div class="content" style="text-align: left;">
+<div class="content" style="text-align: left;"> 
 <?php
+print '<a href="'.URLROOT.'/adm">Enter</a>'; 
+
 
 	if (!empty($data['page_db_data'][0]['page_content'])) {
 		if (is_array($data['page_db_data'][0]['page_content'])) {
@@ -54,3 +56,6 @@ print '</pre>';
 */
 ?>
 </div>
+<script type="text/javascript">
+
+</script>

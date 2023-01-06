@@ -1,105 +1,105 @@
 <?php
-/* class dependencies: Session class in app/lib/session.php
-/* example of using a class
-*
-* if (isset($_POST["login"]) && isset($_POST["password"])) 
-* { //Если логин и пароль были отправлены
-*   $this->inp_login = $_POST["login"];
-*   $this->inp_password = $_POST["password"];
-*
-*    $dbi = new Db_init_sqlite; $dbt = $dbi->db;
-*    $res = $dbt->select("users", "password", [
-*        "username" => $this->inp_login
-*    ]);
-*    $this->password = (isset($res[0])) ? $res[0] : '';
-*
-*    if (!$this->auth()) { //Если логин и пароль введен не правильно
-*        echo '<h2 style="color:red;">Неправильный логин или пароль.</h2>';
-*        include 'app/view/login.php';
-*    }
-*             
-*    if (isset($_GET["is_exit"])) 
-*    { //Если нажата кнопка выхода
-*        if ($_GET["is_exit"] == 1) {
-*            $this->out(); //Выходим
-*            header("Location: ?is_exit=0"); //Редирект после выхода
-*        }
-*    }
-*
-*   if ($this->isAuth()) 
-*    { // Если пользователь авторизован, приветствуем:  
-*        echo "Здравствуйте, " . $this->getLogin() ;
-*        echo "<br/><br/><a href='?is_exit=1'>Выйти</a>"; //Показываем кнопку выхода
-*    } 
-* }
-* else 
-* { //Если не авторизован, показываем форму ввода логина и пароля
-*    include 'app/view/login.php';
-* }
-*
-*/
 
 namespace App\Lib;
 
 class Auth
 {
-    private $session;
+    use \App\Lib\Traits\Reject;
+    protected $session;
+    protected $medoo;
     
     function __construct()
     {
         $this->session = new \App\Lib\Session();
-		$this->session->start();
+		$this->session::start();
+        $this->medoo = new \App\Lib\Db_init_sqlite;
     }
 
-    public function isAuth() 
+    public function login() 
     {
-        //if (isset($_SESSION["is_auth"])) 
-        if ($this->session->has("is_auth"))
-        { //Если сессия существует
-            return $this->session->get("is_auth"); //Возвращаем значение переменной сессии is_auth (хранит true если авторизован, false если не авторизован)
+        if ( isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) )
+        {
+            if (strlen(filter_has_var( INPUT_POST, "login" )) < 256 && filter_has_var( INPUT_POST, "password" ) ) 
+            { 
+                $args = array('login' => FILTER_SANITIZE_SPECIAL_CHARS, 'password' => FILTER_SANITIZE_SPECIAL_CHARS);
+                $post_inputs = filter_input_array(INPUT_POST, $args);
+                $inp_login = $post_inputs["login"];
+                $inp_password = $post_inputs["password"];
+                
+                $db = $this->medoo->db;
+                $res = $db->select("users", ["password", "status"], [
+                    "username" => $inp_login
+                ]);
+                $password = (isset($res[0]['password'])) ? $res[0]['password'] : '';
+                $status = (isset($res[0]['status'])) ? $res[0]['status'] : '';
+
+                if (empty($password)) {
+                    $this->reject_login();
+                    $this->session->flash('<span style="color:red;">Неправильный логин или пароль.</span>');
+                    include APPROOT.DS.'view'.DS.'login.php';
+                    die;
+                }
+            }
+
+            //Если логин и пароль введены правильно
+            if ( isset($status) && password_verify($inp_password, $password) )
+            { 
+                if (password_needs_rehash($password, PASSWORD_DEFAULT)) 
+                {
+                    $newHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                    $db->update("users", ["password" => $newHash], ["username" => $inp_login]);
+                }
+                $this->session->set("user_name", $inp_login); //Записываем в сессию логин пользователя
+                $this->session->set("status", password_hash($status, PASSWORD_DEFAULT)); //Записываем в сессию статус пользователя: admin, mode, user
+
+                //disable caching
+                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+                header('Cache-Control: no-store, no-cache, must-revalidate');
+                header('Cache-Control: post-check=0, pre-check=0', FALSE);
+                header('Pragma: no-cache');
+                //load current page
+                header('Location: '.CURRENT_PAGE_LOCATION);
+                die;
+            }
+
+            if ( filter_has_var( INPUT_POST, "password" ) && $this->check_auth() === false ) {
+                $this->reject_login();
+                $this->session->flash('<span style="color:red;">Неправильный логин или пароль.</span>');
+                include APPROOT.DS.'view'.DS.'login.php';
+                die;
+            }
+
+            include APPROOT.DS.'view'.DS.'login.php';
+            die;
         }
-        else return false; //Пользователь не авторизован, т.к. переменная is_auth не создана
-    }
-        
-    /**
-    * Авторизация пользователя
-    * @param string $login
-    * @param string $password
-    */
-    public function auth($inp_password, $inp_login, $password, $login) 
-    {
-        if ( $inp_login === $login && password_verify($inp_password, $password) )
-        { //Если логин и пароль введены правильно
-            $this->session->set("is_auth", true); //Делаем пользователя авторизованным
-            $this->session->set("login", $inp_login); //Записываем в сессию логин пользователя
-            $str = '<div style="margin: 0 2rem 1rem 2rem; width: 100%; color: blanchedalmond;">
-                        <span style="float: left;">Здравствуйте, ' . $this->getLogin() . '</span>
-                        <a href="'.URLROOT.'/adm/exit" style="float: right; color: blanchedalmond;">Выйти</a>
-                    </div>
-                    <div style="clear: both;"></div>';
-            Registry::set("exit_from_adm", $str);
-            return true;
-        }
-        else 
-        { //Логин и пароль не подошел
-            $this->session->set("is_auth", false);;
-            return false; 
-        }
-    }
-        
-    /**
-    * Метод возвращает логин авторизованного пользователя 
-    */
-    public function getLogin() 
-    {
-        if ($this->isAuth()) 
-        { //Если пользователь авторизован
-            return $this->session->get("login"); //Возвращаем логин, который записан в сессию
+        else {
+            header('HTTP/1.0 403 Forbidden');
+            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
+            echo '<html xmlns="http://www.w3.org/1999/xhtml">';
+            echo '<head>';
+            echo '<title>403 Forbidden</title>';
+            echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+            echo '</head>';
+            echo '<body>';
+            echo '<h1 style="text-align:center">403 Forbidden</h1>';
+            echo '<p style="background:#ccc;border:solid 1px #aaa;margin:30px au-to;padding:20px;text-align:center;width:700px">';
+            echo 'Вход на страницу напрямую из сети запрещен.<br />';
+            echo 'Войдите, пожалуйста, с главной страницы сайта.';
+            echo '</p>';
+            echo '</body>';
+            echo '</html>';
+            //$session->destroy('counter'); $session->destroyAll();
+            exit;
         }
     }
     
+    public function check_auth()
+    {
+        return ($this->session->get('user_name') != false) ? true : false;
+    }
+
     public function out() 
     {
-        $this->session->destroyAll(); //Уничтожаем
+        $this->session->destroyAll();
     }
 }

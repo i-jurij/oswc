@@ -12,7 +12,8 @@ define('PUBLICROOT', dirname(dirname(dirname(__FILE__))).DS.'public');
 define('SITENAME', 'oswc');
 define('URLROOT', 'http://localhost/'.SITENAME);
 //define('URLROOT', 'http'.((isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']=='on') ? 's': '').'://'.SITENAME.'.net'); 
-//define('URLROOT', 'http://'.SITENAME.'.net'); 
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+define('CURRENT_PAGE_LOCATION', $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 /* login and pass for basic auth */
 //define('ADMUSER', 'admin');
 //define('ADMPASS', 'passw');

@@ -1,6 +1,7 @@
 <?php
 // Load Config
 require_once $rootpath.DIRECTORY_SEPARATOR.'app/configs/config.php';
+require_once $rootpath.DIRECTORY_SEPARATOR.'app/lib/function/func.php';
 //Loading Libraries
 /*
 spl_autoload_register(function($className){
