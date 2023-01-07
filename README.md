@@ -1,5 +1,12 @@
 Simple php framework with a single entry point
 
+For enter to admin page list home page to end and click on "FistFramework".
+Then "Да" and then login: admin, password: passw.
+Now you can create or delete page.
+Creating a page includes create file in app/controllers, app/models, app/view
+and insert data to db.
+After that you can modify this file.
+
 
 This use namespase. 
 classes are declared like this:

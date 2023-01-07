@@ -46,7 +46,11 @@ use App\Lib\Registry;
             if (!empty($data[0]['page_content'])) {
               print htmlspecialchars($data[0]['page_content']);
             }
-            include $content_view; 
+            if ( (new SplFileInfo($content_view))->isReadable() ) {
+              include $content_view; 
+            } elseif (is_string($content_view)) {
+              print $content_view;
+            }
           ?>
         </div>
       </section>

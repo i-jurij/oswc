@@ -29,8 +29,10 @@ class Adm extends Home
 			$arr = explode('\\', static::class);
 			$class = array_pop($arr);
 			$full_name_class = '\App\Models\\'.$class;
-			$this->model = new $full_name_class($this->table, strtolower($class));//parameters - tables and page for db query
-			$data = $this->model->get_data($path);	
+			if (class_exists($full_name_class)) {
+				$this->model = new $full_name_class($this->table, strtolower($class));//parameters - tables and page for db query
+				$data = $this->model->get_data($path);
+			}	
 			$this->view->generate(APPROOT.DS.'view/'.mb_strtolower($class).'.php', $data, $this->template);
 		}
 		else 

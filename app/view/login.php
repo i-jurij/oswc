@@ -84,6 +84,23 @@
               box-shadow: var(--boxshadow);
             }
 
+            .home_p {
+              margin: 1rem auto;
+              padding: 0 0 1rem 0;
+            }
+
+            .home_p a {
+              display: inline-block;
+              padding: 0 0.5rem;
+              width: 8rem;
+              text-align: left;
+            }
+
+            .home_p a img {
+              vertical-align: middle;
+              margin: 0 1rem 0 0;
+            }
+
             .form-element {
               margin-bottom: 1rem;
             }
@@ -152,7 +169,7 @@
     <body>
           <section class="main_section">
               <div>
-                    <p><a href="<?php echo URLROOT; ?>/adm/exit" class="buttons">Home page</a></p>                   
+                    <p class="home_p"><a class="buttons" href="<?php echo URLROOT; ?>/adm/exit"><img src="<?php echo URLROOT.DS.'public'.DS.'imgs'.DS; ?>home.png" alt="Back"/>Home</a></p>                   
                     <form method="post" action="" name="login_form" class="form" id="login_form">
                         <div class="form-element"><?php echo (isset($_SESSION['flash'])) ? $_SESSION['flash'] : "Enter data for log in"; ?></div>
                         <div class="form-element">
@@ -215,7 +232,7 @@
               document.querySelector("#img_"+truee).className += "access";
               //elem.insertAdjacentHTML('afterend','<div><small>После выбора рисунка нажмите Log in.</small></div>');
 
-              document.querySelector('button.sub').addEventListener('click', function(event){
+              document.querySelector('button.sub').addEventListener('click', function(ev){
                 let check = document.querySelector("#captcha_"+truee).checked;
                 if (document.querySelector('#password').value)
                 {
@@ -225,13 +242,13 @@
                   }
                   else
                   {
-                    event.preventDefault();
+                    ev.preventDefault();
                     alert('Выберите, пожалуйста, соответствующий рисунок :)');
                   }
                 }
                 else
                 {
-                  event.preventDefault();
+                  ev.preventDefault();
                   alert('Вы забыли ввести пароль :)');
                 }
               });

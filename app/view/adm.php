@@ -9,8 +9,18 @@
 unset($key, $file); $data['page_list'] = [];
 
 $session = new \App\Lib\Session;
+
 //check for user status and rebuild data
-//for moder
+//for admin out all page include create delete page
+// !!! DON`T REMOVE THIS START !!! //////////
+if ( password_verify("admin", $session->get("status")) ) {
+  //default button for create controller, model, view and insert data of page to db
+  echo '<a href="' . URLROOT . '/create_delete_page" class="buttons">Создать или удалить страницу</a> ';
+  echo '<a href="' . URLROOT . '/change_pass" class="buttons">Изменить данные пользователей</a> ';
+}
+// !!! DON`T REMOVE THIS END !!! ///////////
+
+//for moder: you can rewrite this
 if ( password_verify("moder", $session->get("status")) ) {
   $allow = ['moder', 'user'];
   foreach ($allow as $value) {
@@ -22,7 +32,7 @@ if ( password_verify("moder", $session->get("status")) ) {
   }
   $pages = $res;
 }
-//for user
+//for user: you can rewrite this
 if ( password_verify("user", $session->get("status")) ) {
   foreach ($pages as $file) {
     if (in_array('user', $file)) {
@@ -32,6 +42,15 @@ if ( password_verify("user", $session->get("status")) ) {
   $pages = $res;
 }
 
+// print pages list from db
+/* if (!empty($pages) && is_array($pages)) {
+  foreach ($pages as $page) {
+    echo '<a href="' . URLROOT . '/' . $page['page_alias'] . '">' . $page['page_title'] . '</a> ';
+  }
+}
+*/
+
+//or you can rebuild page array again
 	if (!empty($pages) && is_array($pages)) {
 		foreach ($pages as $page) {
       if ($page['page_alias'] == 'recall' or $page['page_alias'] == 'recall_yes' or $page['page_alias'] == 'master_app' or $page['page_alias'] == 'date_app')
@@ -49,6 +68,7 @@ if ( password_verify("user", $session->get("status")) ) {
 		}                
 	} 
 
+//and print page list
     $arr = array('zvonki_zapisi', 'redaktors', 'oth');
     foreach ($arr as $value) {
         if (!empty($$value)) {
@@ -61,7 +81,5 @@ if ( password_verify("user", $session->get("status")) ) {
             echo "</div>";
         }
     }
-
-
 ?>
 </div>

@@ -373,15 +373,15 @@ a:hover { text-decoration: underline; }
   }
 
 .main {
-  width: 100%;
+  	width: 100%;
 	height: 100%;
 }
 
 .main_section {
 	margin: 0 auto;
-  padding: 1rem 0 0 0;
-  align-items: flex-start;
-  border-radius: var(--radius);
+	padding: 1rem 0 0 0;
+	align-items: flex-start;
+	border-radius: var(--radius);
 	width: 100%;
 	position: relative;
 	background-color: var(--bgcolor);
@@ -401,8 +401,13 @@ a:hover { text-decoration: underline; }
 	box-shadow: var(--boxshadow);
 }
 
+.title img {
+	display: inline-block;
+	margin: 1rem 0;
+}
+
 .map {
-  width: 100%;
+  	width: 100%;
 	padding: 0 1rem 0.5rem 1rem;
 }
 
@@ -616,18 +621,18 @@ float: right;
 }
 
 .buttons {
-  font-size: var(--base-fontsize);
+  	font-size: var(--base-fontsize);
 	font-family: "Liberation Sans", sans-serif;
 	border: 0px solid black;
     padding: 0.5rem 1rem;
     margin: 0 auto;
     text-align: center;
-		text-decoration: none;
+	text-decoration: none;
     color: inherit;
     cursor: pointer;
     border-radius: var(--radius);;
     background-color: var(--bgcolor-content);
-		box-shadow: var(--boxshadow);
+	box-shadow: var(--boxshadow);
 }
 
 .buttons:hover,
@@ -637,7 +642,7 @@ float: right;
 }
 
 .buttons:disabled {
-  background-color: var(--bgcolor);
+  	background-color: var(--bgcolor);
 	color: var(--button-disabled-color);
 }
 
@@ -1581,6 +1586,11 @@ overflow: hidden;
 		font-size: var(--middle-fontsize);
 	}
 
+	.title img {
+		display: inline-block;
+		margin: 0.5rem 0;
+	}
+
 	.gallery_a img {
 		height: 9rem;
 		width: 12rem;
@@ -1609,7 +1619,7 @@ overflow: hidden;
 /* ----------- resolution up to 460px ----------------- */
 @media screen and (max-width: 460px) {
   .he_tlf, .he_adres, .he_soz {
-		padding: 0.2rem;
+	padding: 0.2rem;
     width: 100%;
   }
 

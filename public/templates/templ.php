@@ -43,14 +43,18 @@
     <div class="main ">
       <section class="main_section">
         <div class="flex flex_top">
-          <div class="content">
+          <div class="content title">
             <h2><?php echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2>
           </div>
           <?php 
             if (!empty($data[0]['page_content'])) {
               print htmlspecialchars($data[0]['page_content']);
             }
-            include $content_view; 
+            if ( (new SplFileInfo($content_view))->isReadable() ) {
+              include $content_view; 
+            } elseif (is_string($content_view)) {
+              print $content_view;
+            }
           ?>
         </div>
       </section>

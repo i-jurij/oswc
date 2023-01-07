@@ -240,13 +240,6 @@ class Db_init_sqlite
         ]);
 
         $this->db->insert("adm_pages", [
-            ["page_alias" => "adm",
-            "page_title" => "Управление сайтом",
-            "page_meta_description" => "Управление сайтом",
-            "page_robots" => "NOINDEX, NOFOLLOW",
-            "page_h1" => "Управление сайтом",
-            "page_access" => "user"
-            ],
             ["page_alias" => "master_app",
             "page_title" => "Записи к мастерам",
             "page_meta_description" => "Таблица записей к мастерам",
@@ -332,7 +325,7 @@ class Db_init_sqlite
             "page_access" => "moder"
             ],
         ]);
-*/
 
+*/
     }
 }

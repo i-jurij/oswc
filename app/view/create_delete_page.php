@@ -1,0 +1,4 @@
+create del page
+<?php
+
+?>

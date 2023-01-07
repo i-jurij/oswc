@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-class Masters extends Adm
+class Masters extends Home
 {
     public function get_data($path)
 	{	

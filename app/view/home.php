@@ -24,9 +24,6 @@
 
 <div class="content" style="text-align: left;"> 
 <?php
-print '<a href="'.URLROOT.'/adm">Enter</a>'; 
-
-
 	if (!empty($data['page_db_data'][0]['page_content'])) {
 		if (is_array($data['page_db_data'][0]['page_content'])) {
 			echo '<table>';
@@ -56,6 +53,27 @@ print '</pre>';
 */
 ?>
 </div>
+
 <script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) { 
+		let body = document.querySelector ( 'body' );
+		body.innerHTML = body.innerHTML + '<p id="enter">FirstFramework</p>';
+		
+		document.querySelector("#enter").addEventListener('click', function(){
+			let text = '<div class="content">\
+						<div class="mar">\
+							Для входа в панель управления нажмите "Да".<br />\
+							Потребуется ввод логина и пароля.<br />\
+							Нажмите "Нет", чтобы вернуться обратно.\
+						</div>\
+						<div class="margintb1" style="max-width:35rem;">\
+							<a href="<?php echo URLROOT; ?>/adm" class="buttons display_inline_block" style="width:40%;">Да</a>\
+							<a href="" class="buttons display_inline_block" style="width:40%;">Нет</a>\
+						</div>\
+						</div>';
+			document.querySelector(".main_section .flex_top").innerHTML = text;
+			window.scrollTo(0, 0);
+		});
+	});
 
 </script>
