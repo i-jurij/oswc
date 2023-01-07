@@ -21,7 +21,7 @@ trait Reject
             echo '</head>';
             echo '<body>';
             echo '<h1 style="text-align:center">403 Forbidden</h1>';
-            echo '<p style="background:#ccc;border:solid 1px #aaa;margin:30px au-to;padding:20px;text-align:center;width:700px">';
+            echo '<p style="background:#ccc;border:solid 1px #aaa;margin:30px auto;padding:20px;text-align:center;max-width:700px">';
             echo 'К сожалению, Вы временно заблокированы, из-за частого запроса этой страницы.<br />';
             echo 'Вам придется подождать. Через некоторое время Вы будете автоматически разблокированы.';
             echo '</p>';

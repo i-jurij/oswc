@@ -7,6 +7,13 @@ Creating a page includes create file in app/controllers, app/models, app/view
 and insert data to db.
 After that you can modify this file.
 
+All users who have access to the administration section in the "users" table of the database
+there are entries: username, password, status (fields for email and email_status are not used yet).
+Username and password can be anything (username field length is 25 characters, password is 255).
+Status has three categories: admin, moder, user.
+By default, there are no differences between them, they need to be set in the file app/view/adm.php by splitting
+an array of pages into parts available for different categories of users. The example is in the file itself.
+Statuses, respectively, can still be added.
 
 This use namespase. 
 classes are declared like this:
@@ -47,7 +54,7 @@ Controllers: its own for each page;
 app/controllers/home:
 method __construct load class View;
 method index a gets name of class in which it is located,
-and load method get_data from model ($path, $get_query, $post_query -> from class Rout),
+and load method from model ($path -> from class Rout),
 and load method generate from view ($content_view, $data, $template_view -> explained below).
 
 app/controllers/adm - extends home:

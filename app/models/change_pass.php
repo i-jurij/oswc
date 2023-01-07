@@ -3,26 +3,19 @@ namespace App\Models;
 
 class Change_pass extends Adm
 {
-    function __construct($name_of_table_for_db_query, $page_alias)
-	{
-		$this->db = new \App\Lib\Db_init_sqlite;
-		$this->table = $name_of_table_for_db_query;
-		$this->page = $page_alias;
-		$this->data =  [];
-	}
-
 	protected function db_query() 
 	{
 		$this->data['page_db_data'] = array(array("page_alias" => "change_pass", 
-                                                "page_title" => "Изменить логин и(или) пароль",
+                                                "page_title" => "Изменить данные пользователей",
                                                 "page_meta_description" => "Изменить явки и пароли",
                                                 "page_robots" => "NOINDEX, NOFOLLOW",
-                                                "page_h1" => "Изменить логин и(или) пароль",
+                                                "page_h1" => "Изменить данные пользователей",
                                                 "page_access" => "admin"));
 	}
 
     public function get_data($path)
 	{	
+        $this->data['path'] = $path;
 		$this->db_query();
         $this->data['users'] = $this->db->db->select("users", "username");
 		//add css for head in template
@@ -30,7 +23,18 @@ class Change_pass extends Adm
 		return $this->data;
 	}
 
-    public function change()
+    public function add($path)
+	{	
+        $this->data['test'] = 'rrr';
+        return $this->data;
+	} 
+
+    public function delete($path)
+	{	
+        
+	} 
+
+    public function change($path)
 	{	
         
 	}
