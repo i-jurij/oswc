@@ -58,6 +58,6 @@ use App\Lib\Registry;
     </div>
   </div>
 
-  <script type="text/jsx" src="public/js/fancybox.umd.js"></script>
+  <!-- <script type="text/jsx" src="public/js/fancybox.umd.js"></script> -->
   </body>
 </html>

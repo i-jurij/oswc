@@ -15,13 +15,19 @@ class Change_pass extends Adm
 
     public function add($path)
 	{	
-        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'])) {
-            # code...
+        if (strlen(filter_has_var( INPUT_POST, "login" )) < 256 
+            && filter_has_var( INPUT_POST, "password" )  
+            && filter_has_var( INPUT_POST, "status" ) ) 
+        {
+            $this->data['reg'] = 'DATA is INSERT to TABLE';
         } else {
-            # code...
+            $file = APPROOT.DS.'view'.DS.'registration.php';
+            if (is_readable($file)) {
+                $this->data['reg'] = file_get_contents($file);
+            }else {
+                $this->data['reg'] = 'Проверьте наличие файла '.$file.' и права доступа к нему.';
+            }             
         }
-        
-        $this->data['test'] = 'rrr';
         return $this->data;
 	} 
 
