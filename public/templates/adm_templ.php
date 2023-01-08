@@ -41,7 +41,7 @@ use App\Lib\Registry;
           <?php echo \App\Lib\Registry::get("exit_from_adm"); ?>
           <div class="content stickyheader">
             <!-- <h2><?php //echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2> -->
-            <p class="nav"><?php menu($data); ?></p>
+            <p class="nav"><?php echo menu($data); ?></p>
           </div>
           <?php 
             if (!empty($data[0]['page_content'])) {

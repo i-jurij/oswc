@@ -34,10 +34,12 @@ class Change_pass extends Adm
     public function delete($path)
 	{	
         $this->data['users'] = $this->db->db->select("users", "username");
+        return $this->data;
 	} 
 
     public function change($path)
 	{	
         $this->data['users'] = $this->db->db->select("users", "username");
+        return $this->data;
 	}
 }
