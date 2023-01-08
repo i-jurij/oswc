@@ -23,11 +23,13 @@ class Rout
         $db_create = new $dbinit;
         $db_create->create_tables();
         $url_arr = $this->url_to_arr($siterootpath);
+        Registry::remove('nav');
         //if (empty($url_arr) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr[0].'.php')) 
         if (empty($url_arr) or !class_exists("\App\\Controllers\\".ucwords($url_arr[0]))) 
         {
             $contr = '\App\Controllers\Home';
             $this->controller = new $contr;
+            $nav[] = 'home';
             $url_arr = [];
         }
         else 
@@ -35,13 +37,13 @@ class Rout
             $contr = "\App\\Controllers\\".ucwords($url_arr[0]);
             $this->controller = new $contr;
             //unset($url_arr[0]);
-            array_shift($url_arr);
+            $nav[] = array_shift($url_arr);
             
             if (isset($url_arr[0]) && method_exists($contr, $url_arr[0])) 
             {
                 $this->method = $url_arr[0];
                 //unset($url_arr[1]);
-                array_shift($url_arr);
+                $nav[] = array_shift($url_arr);
             }
 
             if (!empty($url_arr) && array_filter($url_arr, 'is_string') === $url_arr)
@@ -54,6 +56,7 @@ class Rout
                 $this->param = $params;
             }
         }
+        Registry::set('nav', $nav);
         call_user_func_array([$this->controller,$this->method], $this->param);
     }
 

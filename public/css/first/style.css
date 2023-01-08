@@ -1148,6 +1148,15 @@ float: right;
 	color:#5AAC7B;
 }
 
+.nav a {
+	text-decoration: underline;
+}
+
+.nav a:last-child {
+	text-decoration: none;
+	font-size: var(--big-fontsize);
+}
+
 .form_page_add {
 	margin: 0 auto;
 	width: auto;

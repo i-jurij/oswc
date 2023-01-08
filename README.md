@@ -5,7 +5,9 @@ Then "Да" and then login: admin, password: passw.
 Now you can create or delete page.
 Creating a page includes create file in app/controllers, app/models, app/view
 and insert data to db.
-After that you can modify this file.
+After that you can modify these files.
+if you created the data for the pages in the database manually and no created controller, model, view, 
+they will be displayed in the list on the main page, but you will not be able to navigate to them.
 
 All users who have access to the administration section in the "users" table of the database
 there are entries: username, password, status (fields for email and email_status are not used yet).

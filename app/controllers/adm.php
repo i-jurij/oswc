@@ -18,13 +18,10 @@ class Adm extends Home
     {
 		if ($this->auth->check_auth()) 
 		{
-			$str = '<div style="margin: 0 1rem 1rem 1rem; width: 100%;">
-						<div style="float: right;">
+			$str = '<div style="margin: 0 1rem 1rem 1rem; width: 100%; text-align:right;">
 							<span style="margin: 0 1rem 0 0; color: blanchedalmond;">Здравствуйте, <b>' . $_SESSION['user_name'] . '</b></span>
 							<a class="buttons" href="'.URLROOT.'/adm/exit">Выход</a>
-						</div>
-					</div>
-					<div style="clear: both;"></div>';
+					</div>';
 			\App\Lib\Registry::set("exit_from_adm", $str);
 			$arr = explode('\\', static::class);
 			$class = array_pop($arr);
@@ -33,9 +30,10 @@ class Adm extends Home
 				$this->model = new $full_name_class($this->table, strtolower($class));//parameters - tables and page for db query
 				if (!empty($path[0]) && method_exists($this->model, $path[0])) {
 					$method = $path[0];
-					array_shift($path);
-					//$data = $this->model->get_data($path);
-					//$data = $data + $this->model->$method($path);
+					$nav = \App\Lib\Registry::get('nav');
+					array_push($nav, array_shift($path));
+					\App\Lib\Registry::set('nav', $nav);
+					//$data = $this->model->get_data($path) + $this->model->$method($path);
 					$data = array_merge($this->model->get_data($path), $this->model->$method($path));
 				} else {
 					$data = $this->model->get_data($path);

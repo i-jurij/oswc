@@ -34,13 +34,14 @@ use App\Lib\Registry;
 </head>
 <body>
   <div class="wrapper">
-
+    <!-- <header class="stickyheader flex"></header> -->
     <div class="main ">
       <section class="main_section">
         <div class="flex flex_top">
           <?php echo \App\Lib\Registry::get("exit_from_adm"); ?>
-          <div class="content">
-            <h2><?php echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2>
+          <div class="content stickyheader">
+            <!-- <h2><?php //echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2> -->
+            <p class="nav"><?php menu($data); ?></p>
           </div>
           <?php 
             if (!empty($data[0]['page_content'])) {

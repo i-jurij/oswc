@@ -13,29 +13,25 @@ class Change_pass extends Adm
                                                 "page_access" => "admin"));
 	}
 
-    public function get_data($path)
-	{	
-        $this->data['path'] = $path;
-		$this->db_query();
-        $this->data['users'] = $this->db->db->select("users", "username");
-		//add css for head in template
-		$this->data['css'] = $this->css_add('public'.DS.'css'.DS.'first');		
-		return $this->data;
-	}
-
     public function add($path)
 	{	
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'])) {
+            # code...
+        } else {
+            # code...
+        }
+        
         $this->data['test'] = 'rrr';
         return $this->data;
 	} 
 
     public function delete($path)
 	{	
-        
+        $this->data['users'] = $this->db->db->select("users", "username");
 	} 
 
     public function change($path)
 	{	
-        
+        $this->data['users'] = $this->db->db->select("users", "username");
 	}
 }

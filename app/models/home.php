@@ -1,8 +1,9 @@
 <?php
 namespace App\Models;
 
-use App\Lib\Db_init_sqlite;
-use App\Lib\Traits\Css_add;
+use \App\Lib\Db_init_sqlite;
+use \App\Lib\Registry;
+use \App\Lib\Traits\Css_add;
 
 class Home
 {
@@ -27,13 +28,27 @@ class Home
 		if ($this->db->db->has($this->table, ["page_alias" => $this->page])) {
 		$this->data['page_db_data'] = $this->db->db->select($this->table, "*", ["page_alias" => $this->page]);
 		}
+		\App\Lib\Registry::set('page_db_data', $this->data['page_db_data']);
 	}
 
 	public function get_data($path)
 	{	
-		$this->db_query();
+		$this->data['nav'] = Registry::get('nav');
+
+		if ( null !== \App\Lib\Registry::get('page_db_data') ) {
+			$this->data['page_db_data'] = \App\Lib\Registry::get('page_db_data');
+		} else {
+			$this->db_query();
+		}
+
 		//get page list from db
-		$this->data['page_list'] = $this->db->db->select($this->table, "*");
+		if (null !== \App\Lib\Registry::get('page_list')) {
+			$this->data['page_list'] = \App\Lib\Registry::get('page_list');
+		} else {
+			$this->data['page_list'] = $this->db->db->select($this->table, "*");
+			\App\Lib\Registry::set('page_list', $this->data['page_list']);
+		}
+		
 		//add css for head in template
 		$this->data['css'] = $this->css_add('public'.DS.'css'.DS.'first');
 
