@@ -17,7 +17,7 @@
   	color-scheme: light dark;
   --big-fontsize: 1.5rem;
   --base-fontsize: 1.2rem;
-  --middle-fontsize: 1.3rem;
+  --middle-fontsize: 1.1rem;
   --small-fontsize: 1rem;
 
   --base-lineheight: 1.8rem;
@@ -99,11 +99,11 @@ a, h1, h2, h3, h4 {
 	color: var(--fontcolor-light, red);
 	}
 
-a {
+a:link {
 	text-decoration: none;
 }
 
-a:hover { text-decoration: underline; }
+a:visited, a:focus, a:hover,  a:active { text-decoration: underline; }
 
 .but_back {
 	background-color: #C3C3C3;
@@ -223,8 +223,7 @@ a:hover { text-decoration: underline; }
   overflow: hidden;
 }
 
-.display_none,
-#last_name {
+.display_none, #last_name {
   display: none;
 }
 
@@ -248,28 +247,26 @@ a:hover { text-decoration: underline; }
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-  -webkit-flex-flow: row wrap; /* Safari 6.1+ */
-  flex-flow: row wrap;
-
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
+	-webkit-flex-flow: row wrap; /* Safari 6.1+ */
+	flex-flow: row wrap;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
 }
 
 .flex_top {
 	-webkit-box-align: flex-start;
-  -moz-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
+	-moz-box-align: flex-start;
+	-ms-flex-align: flex-start;
+	-webkit-align-items: flex-start;
+	align-items: flex-start;
 }
 
 .horizont-center {
@@ -935,14 +932,14 @@ float: right;
 	display: none;
 	visibility: hidden;
 	opacity: 0;
-  pointer-events: none;
+  	pointer-events: none;
 }
 
 .modal:target {
 	display: block;
-  visibility: visible;
-  opacity: 1;
-  pointer-events: all;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: all;
 	-webkit-transition: opacity 500ms ease-in;
 	-moz-transition: opacity 500ms ease-in;
 	transition: opacity 500ms ease-in;
@@ -980,7 +977,7 @@ float: right;
 	padding: 0.7rem;
 	margin: 0.5rem;
 	border-radius: var(--radius);
-  background-color: var(--bgcolor-content);
+ 	background-color: var(--bgcolor-content);
 	box-shadow: var(--boxshadow);
 }
 
@@ -1073,7 +1070,7 @@ float: right;
 	border: var(--table-border);
 	font-weight: bold;
 	position: sticky;
-  top: 0;
+  	top: 0;
 }
 
 .table td {
@@ -1092,9 +1089,9 @@ float: right;
 */
 .table tbody th {
 	border-right: var(--table-border);
-  position: -webkit-sticky; /* for Safari */
-  position: sticky;
-  left: 0;
+	position: -webkit-sticky; /* for Safari */
+	position: sticky;
+	left: 0;
 }
 /* To have the header in the first column stick to the left: */
 .table thead th:first-child {
@@ -1153,16 +1150,19 @@ float: right;
 }
 
 .nav a {
-	text-decoration: underline;
+	font-family: 'Liberation Sans', Arial, "Helvetica CY", Helvetica, "Nimbus Sans L", "Roboto", "Noto Sans", sans-serif;
+	font-size: var(--small-fontsize);
+	text-decoration: none;
 }
 
 .nav a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 } 
 
 .nav a:last-child {
-	text-decoration: none;
-	font-size: var(--big-fontsize);
+	text-decoration: underline;
+	font-size: var(--base-fontsize);
+	/* font-size: var(--big-fontsize); */
 }
 
 .form_page_add {
@@ -1573,6 +1573,14 @@ overflow: hidden;
 
 /* ----------- resolution up to 620px ----------------- */
 @media screen and (max-width: 620px) {
+	body {
+		font-size: var(--small-fontsize);
+		line-height: normal;
+	  }
+	
+	body a {
+		font-size: var(--middle-fontsize);
+	}
 	.gallery_a img {
 		height: 11rem;
 		width: 15rem;
@@ -1594,15 +1602,6 @@ overflow: hidden;
 
 /* ----------- resolution up to 560px ----------------- */
 @media screen and (max-width: 560px) {
-  body {
-    font-size: var(--small-fontsize);
-    line-height: normal;
-  }
-
-	body a {
-		font-size: var(--middle-fontsize);
-	}
-
 	.title img {
 		display: inline-block;
 		margin: 0.5rem 0;
