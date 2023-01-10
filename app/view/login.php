@@ -175,13 +175,14 @@
                         <div class="form-element">
                           <input type="text" name="login" 
                                   value="<?php echo (isset($_POST["login"])) ? htmlentities($_POST["login"]) : null; // Заполняем поле по умолчанию ?>" 
-                                  maxlength="255"
+                                  minlength="3" maxlength="25"
                                   placeholder="Name" 
+                                  pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$"
                                   required />
                         </div>
 
                         <div class="form-element">
-                          <input type="password" name="password" id="password" placeholder="Password" required />
+                          <input type="password" name="password" id="password" placeholder="Password" minlength="4" maxlength="120" required />
                         </div>
 
                         <div class="capcha"><div class="imgs div_center" style="width:21rem;"></div></div>
@@ -234,7 +235,10 @@
 
               document.querySelector('button.sub').addEventListener('click', function(ev){
                 let check = document.querySelector("#captcha_"+truee).checked;
-                if (document.querySelector('#password').value)
+                var re = /^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/;
+                var loginOK = re.exec(document.querySelector('input[name="login"]').value);
+                var passOK = document.querySelector('#password').value.length;
+                if (passOK > 3 && passOK < 121 && loginOK)
                 {
                   if ( check == true )
                   {
@@ -249,7 +253,7 @@
                 else
                 {
                   ev.preventDefault();
-                  alert('Вы забыли ввести пароль :)');
+                  alert('Неправильное имя или пароль :(');
                 }
               });
 
