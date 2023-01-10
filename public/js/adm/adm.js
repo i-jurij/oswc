@@ -1,6 +1,15 @@
 document.addEventListener("DOMContentLoaded", function() { 
+       /*
+    * event listener for info div in adm/change_pass
+    */
+    const PRO = document.querySelector('#p_pro');
+    if (PRO) {
+        PRO.addEventListener('click', function(e) {
+            document.querySelector('#pro').classList.toggle('display_none');
+        });
+    }
     /*
-    * event listener for registration form
+    * event listener for registration form in adm/change_pass/add
     */
     //document.querySelector('.buttons.sub').disabled = true;
     const btn = document.querySelector('.buttons.sub'); 
@@ -45,5 +54,29 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    
+    /*
+    * event listener for delete, change user form in adm/change_pass/delete or change
+    */
+    const SUB = document.querySelector('#del_ch')
+    if (SUB) {
+        SUB.addEventListener('click', function(ev) {
+            ev.preventDefault();
+            var form_data = new FormData(document.querySelector(".form_del_ch"));
+            if ( form_data.has("delete[]") || form_data.has("change[]"))
+            {
+                //document.querySelector("#chk_option_error").style.visibility = "hidden";
+                document.querySelector(".form_del_ch").submit();
+            }
+            else
+            {
+                if (!document.querySelector("#ermes")) {
+                    document.querySelector(".form_del_ch").insertAdjacentHTML('afterbegin','<div style="color:red;" id="ermes">Please select at least one user.</div>');
+                }
+                //document.getElementById("chk_option_error").style.visibility = "visible";
+            }
+        });
+    }
+
+
+
 });

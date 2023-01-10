@@ -33,18 +33,19 @@
             //output the form
             if ( isset($users) && isset($check))
             {
-                print ' <form action="" method="post" id="'.$form.'" class="pad">
+                print ' <form action="" method="post" id="'.$form.'" class="pad form_del_ch">
+                            <!-- <div style="visibility:hidden; color:red; " id="chk_option_error">Please select at least one user.</div> -->
                             <div class="form-element mar">';
                 foreach ($users as $name) {
                     print '     <label class="checkbox-btn">
-                                    <input type="checkbox" value="'.$name.'" name="'.$check.'" />
+                                    <input type="checkbox" id ="user_'.$name.'" value="'.$name.'" name="'.$check.'" />
                                     <span>'.$name.'</span>
                                 </label>
                             ';
                 }
                 print '     </div>
                             <div class="form-element mar">
-                                <button type="submit" form="'.$form.'" class="buttons">'.$button.'</button>
+                                <button type="submit" form="'.$form.'" class="buttons" id="del_ch">'.$button.'</button>
                                 <button type="reset" form="'.$form.'" class="buttons">Reset</button>
                             </div>
                         </form>';
@@ -63,26 +64,3 @@
         ?>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() { 
-        document.querySelector('#p_pro').addEventListener('click', function(e) {
-            document.querySelector('#pro').classList.toggle('display_none');
-        });
-
-        /* event on each element with >buttons class
-        let elArr = document.querySelectorAll(".buttons");
-        elArr.forEach(function(ev) {
-            ev.addEventListener("click", function() {
-                console.log('Button clicked' + ev.target.innerText);
-            });
-        })
-        */
-
-        //document.getElementById(id).style.display = 'none'; // hide
-        //document.getElementById(id).style.display = ''; // show
-        //document.querySelector('#prolog').style.visibility = "visible"; // show
-        //document.getElementById('prolog').style.visibility = "hidden"; // hide
-
-    }); 
-</script>
