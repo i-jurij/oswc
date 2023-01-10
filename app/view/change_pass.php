@@ -20,24 +20,34 @@
                             <a href="'.URLROOT.'/change_pass/change" class="buttons display_inline_block mar change">Изменить</a>
                         </div>';
             }
-
+            //we change the data for the form depending on the received data array
             if (!empty($data['users_del'])) {
                 $users = $data['users_del'];
-                $check = 'delete[]';
+                $check = 'delete[]'; $button = 'Delete'; $form = 'form_'.$button;
             } elseif (!empty($data['users_change'])) {
                 $users = $data['users_change'];
-                $check = 'change[]';
+                $check = 'change[]'; $button = 'Change'; $form = 'form_'.$button;
             } elseif (!empty($data['users_del']) && !empty($data['users_change'])) {
                 $data['res'] = "Error!";
             }
-
+            //output the form
             if ( isset($users) && isset($check))
             {
-                print '<form action="" method="post" name="users" class="">';
+                print ' <form action="" method="post" id="'.$form.'" class="pad">
+                            <div class="form-element mar">';
                 foreach ($users as $name) {
-                    print '<label class="checkbox-btn"><input type="checkbox" value="'.$name.'" name="'.$check.'" /><span>'.$name.'</span></label>';
+                    print '     <label class="checkbox-btn">
+                                    <input type="checkbox" value="'.$name.'" name="'.$check.'" />
+                                    <span>'.$name.'</span>
+                                </label>
+                            ';
                 }
-                print '<button type="submit" class="buttons">Выбрать</button></form>';
+                print '     </div>
+                            <div class="form-element mar">
+                                <button type="submit" form="'.$form.'" class="buttons">'.$button.'</button>
+                                <button type="reset" form="'.$form.'" class="buttons">Reset</button>
+                            </div>
+                        </form>';
             }
             $pad = '';
             if (!empty($data['res'])) 
@@ -58,7 +68,7 @@
     document.addEventListener("DOMContentLoaded", function() { 
         document.querySelector('#p_pro').addEventListener('click', function(e) {
             document.querySelector('#pro').classList.toggle('display_none');
-        })
+        });
 
         /* event on each element with >buttons class
         let elArr = document.querySelectorAll(".buttons");

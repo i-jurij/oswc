@@ -110,3 +110,10 @@ declare your database init class in config.php, then
 $database = new DBINITNAME;
 $database->db->select("users", "password", ["username" => $inp_login]);
 
+
+app/templates
+adm_templates.php depends on public/css/fist/style.css. Don't remove these.
+Add other templates and css and get path to these to View in controller.
+The same is true for fonts in public/fonts. But they can be rewritten in css file.
+
+public/js/adm/* for admin pages, don't remove.

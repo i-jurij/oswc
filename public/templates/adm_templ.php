@@ -19,17 +19,8 @@ use App\Lib\Registry;
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'NOINDEX, NOFOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
-  <?php 
-  if (!empty($data['css'])) {
-    if (is_array($data['css'])) {
-      foreach ($data['css'] as $css) {
-        echo '<link rel="stylesheet" type="text/css" href="'.URLROOT.DS.htmlspecialchars($css).'" />'; 
-      }
-    } elseif (is_string($data['css'])) {
-      echo '<link rel="stylesheet" type="text/css" href="/'.URLROOT.DS.htmlspecialchars($data['css']).'" />'; 
-    }
-  }
-  ?>
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.DS.'public'.DS.'css'.DS.'first'.DS.'normalize.css'; ?>" />
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.DS.'public'.DS.'css'.DS.'first'.DS.'style.css'; ?>" />
   <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/key.png" />
 </head>
 <body>
@@ -58,6 +49,7 @@ use App\Lib\Registry;
     </div>
   </div>
 
+  <script type="text/javascript" src="<?php echo URLROOT.DS.'public'.DS.'js'.DS.'adm'.DS.'adm.js'; ?>"></script>
   <!-- <script type="text/jsx" src="public/js/fancybox.umd.js"></script> -->
   </body>
 </html>

@@ -3,6 +3,7 @@ namespace App\Models;
 
 class Change_pass extends Adm
 {
+    private array $users;
 	protected function db_query() 
 	{
 		$this->data['page_db_data'] = array(array("page_alias" => "change_pass", 
@@ -11,6 +12,7 @@ class Change_pass extends Adm
                                                 "page_robots" => "NOINDEX, NOFOLLOW",
                                                 "page_h1" => "Пользователи",
                                                 "page_access" => "admin"));
+        $this->users = $this->db->db->select("users", "username");  
 	}
 
     public function add($path)
@@ -21,7 +23,8 @@ class Change_pass extends Adm
             && filter_has_var( INPUT_POST, "reg_status" ) ) 
         {
             
-            $names = $this->db->db->select("users", "username");   
+            //$names = $this->db->db->select("users", "username");   
+            $names = $this->users;
             $name = htmlentities($_POST["reg_name"]);
             if (preg_match("/[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}/", $name)) {
                 if (in_array($name, $names)) {
@@ -41,8 +44,8 @@ class Change_pass extends Adm
                     if ($sql_res->rowCount() > 0) {
                         $this->data['res'] = 'User added.<br />
                                                 Пользователь добавлен.<br /> 
-                                                Username is: '.$name.'<br />
-                                                Status is: '.$status.'';
+                                                Username is: "'.$name.'"<br />
+                                                Status is: "'.$status.'"';
                     } else {
                         $this->data['res'] = 'ERROR!<br /> Data NOT INSERT to database.';
                     }
@@ -53,7 +56,7 @@ class Change_pass extends Adm
         } else {
             $file = APPROOT.DS.'view'.DS.'registration.php';
             if (is_readable($file)) {
-                $this->data['res'] = 'Save the username and password.<br />Запомните имя и пароль.<br />'.file_get_contents($file);
+                $this->data['res'] = 'Save the username and password.<br />'.file_get_contents($file);
             }else {
                 $this->data['res'] = 'Check for the file '.$file.' and access rights to it.';
             }             
@@ -66,9 +69,34 @@ class Change_pass extends Adm
         $this->data['name'] = 'Удалить';
         if ( filter_has_var( INPUT_POST, "delete" ) ) 
         {
-            $this->data['res'] = 'DATA is DELETE from TABLE';
+            $this->data['res'] = '';
+            if (is_array($_POST['delete'])) {
+            /*
+                foreach($_POST['delete'] as $name) {         // walk wthrough array items
+
+                $database->delete("users", [      // run medoo query 
+                "AND" => [
+                    "username" => string($name)          // if whitespaces, make an string
+                    ]
+                ]);
+                }
+            */
+                $sql_res = $this->db->db->delete("users", array(
+                    "username" => $_POST['delete'])
+                );
+
+                $del_user = '"'.implode('", "', $_POST['delete']).'"';
+                if ($sql_res->rowCount() > 0) {
+                    $this->data['res'] = 'Users '.$del_user.'<br /> has been deleted from database.';
+                } else {
+                    $this->data['res'] = 'ERROR!<br /> The data has NOT been DELETED from database.';
+                }
+            } else {
+                $this->data['res'] = 'ERROR! Data from $_POST is not array.';
+            }
         } else {
-            $this->data['users_del'] = $this->db->db->select("users", "username");
+            //$this->data['users_del'] = $this->db->db->select("users", "username");
+            $this->data['users_del'] = $this->users;
         }        
         return $this->data;
 	} 
@@ -80,7 +108,8 @@ class Change_pass extends Adm
         {
             $this->data['res'] = 'DATA is CHANGE in TABLE';
         } else {
-            $this->data['users_change'] = $this->db->db->select("users", "username");
+            //$this->data['users_change'] = $this->db->db->select("users", "username");
+            $this->data['users_change'] = $this->users;
         }        
         return $this->data;
 	}

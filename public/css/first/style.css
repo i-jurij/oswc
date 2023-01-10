@@ -428,8 +428,8 @@ a:visited, a:focus, a:hover,  a:active { text-decoration: underline; }
     padding: 1rem 1rem 1rem 1rem;
     border-radius: var(--radius);
     flex-grow: 1;
-		background: var(--bgcolor-content) none repeat scroll 0% 0%;
-		box-shadow: var(--boxshadow);
+	background: var(--bgcolor-content) none repeat scroll 0% 0%;
+	box-shadow: var(--boxshadow);
   }
 
   .main_section_article .main_section_article_imgdiv {
@@ -737,8 +737,8 @@ float: right;
     padding: 1rem;
     margin: 1rem;
     background-color: var(--bgcolor-content);
-		border-radius: var(--radius);
-		box-shadow: var(--boxshadow);
+	border-radius: var(--radius);
+	box-shadow: var(--boxshadow);
 }
 
 .form_zapis_usluga {
@@ -959,9 +959,18 @@ float: right;
 .form_radio_btn {
 	display: inline-block;
 }
+/*
 .form_radio_btn input[type=radio] {
 	display: none;
 }
+*/
+.form_radio_btn input[type="radio"]:checked, 
+.form_radio_btn input[type="radio"]:not(:checked) 
+{
+    position: absolute;
+    left: -9999px;
+}
+
 .form_radio_btn label {
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -1015,8 +1024,8 @@ float: right;
 .checkbox-btn span {
 	display: inline-block;
 	cursor: pointer;
-	padding: 0 0.5rem;
-	margin: 0.5rem 0;
+	padding: 0.5rem 0.5rem;
+	margin: 0.5rem 0.5rem;
 	border-radius: var(--radius);
 	background-color: var(--bgcolor-content);
 	box-shadow: var(--boxshadow);
