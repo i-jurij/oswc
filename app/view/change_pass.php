@@ -1,5 +1,7 @@
 <div class="content"><p style="margin:0; padding:1rem;" id="p_pro">Показать/скрыть справку</p>
-    <p class="margin_rlb1 text_left display_none" id="pro"> К разделу администрирования имеют доступ все пользователи, на которых в таблице "users" базы данных
+    <p class="margin_rlb1 text_left display_none" id="pro"> 
+        Здесь можно добавить, удалить пользователя, изменить его логин, пароль или статус.<br />
+        К разделу администрирования имеют доступ все пользователи, на которых в таблице "users" базы данных
         есть записи: username, password, status (поля для email и email_status пока не используются).<br />
         Username - длина поля 25 символов (буквы или цифры), password - 120 любых символов.<br />
         Status имеет три категории: admin, moder, user.<br />
@@ -31,17 +33,19 @@
                 $data['res'] = "Error!";
             }
             //output the form
-            if ( isset($users) && isset($check))
+            if ( !empty($users) && is_array($users) && !empty($check) && is_string($check))
             {
                 print ' <form action="" method="post" id="'.$form.'" class="pad form_del_ch">
                             <!-- <div style="visibility:hidden; color:red; " id="chk_option_error">Please select at least one user.</div> -->
                             <div class="form-element mar">';
                 foreach ($users as $name) {
-                    print '     <label class="checkbox-btn">
-                                    <input type="checkbox" id ="user_'.$name.'" value="'.$name.'" name="'.$check.'" />
-                                    <span>'.$name.'</span>
-                                </label>
-                            ';
+                    if (array_key_exists('username', $name)) {
+                        print '     <label class="checkbox-btn">
+                            <input type="checkbox" id ="user_'.$name['username'].'" value="'.$name['username'].'" name="'.$check.'" />
+                            <span>'.$name['username'].'</span>
+                            </label>
+                        ';
+                    }
                 }
                 print '     </div>
                             <div class="form-element mar">

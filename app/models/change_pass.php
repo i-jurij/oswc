@@ -12,7 +12,7 @@ class Change_pass extends Adm
                                                 "page_robots" => "NOINDEX, NOFOLLOW",
                                                 "page_h1" => "Пользователи",
                                                 "page_access" => "admin"));
-        $this->users = $this->db->db->select("users", "username");  
+        $this->users = $this->db->db->select("users", ["username", "status"]);  
 	}
 
     public function add($path)
@@ -26,7 +26,7 @@ class Change_pass extends Adm
             //$names = $this->db->db->select("users", "username");   
             $names = $this->users;
             $name = htmlentities($_POST["reg_name"]);
-            if (preg_match("/[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}/", $name)) {
+            if (preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $name)) {
                 if (in_array($name, $names)) {
                     $this->data['res'] = 'Username exists.<br /> Такое имя уже существует.';
                 } else {
@@ -81,16 +81,33 @@ class Change_pass extends Adm
                 ]);
                 }
             */
-                $sql_res = $this->db->db->delete("users", array(
-                    "username" => $_POST['delete'])
-                );
-
-                $del_user = '"'.implode('", "', $_POST['delete']).'"';
-                if ($sql_res->rowCount() > 0) {
-                    $this->data['res'] = 'Users '.$del_user.'<br /> has been deleted from database.';
-                } else {
-                    $this->data['res'] = 'ERROR!<br /> The data has NOT been DELETED from database.';
+                
+                foreach ($this->users as $user) {
+                    if (in_array('admin', $user)) {
+                        $admins[] = $user['username'];
+                    }
                 }
+
+                foreach ($_POST['delete'] as $name) {
+                   $postdel[] = htmlentities($name);
+                }
+
+                if ( !empty(array_diff($admins, $postdel)) ) {
+                    $sql_res = $this->db->db->delete("users", array(
+                        "username" => $postdel)
+                    );
+    
+                    $del_user = '"'.implode('", "', $_POST['delete']).'"';
+                    if ($sql_res->rowCount() > 0) {
+                        $this->data['res'] = 'Users '.$del_user.'<br /> has been deleted from database.';
+                    } else {
+                        $this->data['res'] = 'ERROR!<br /> The data has NOT been DELETED from database.';
+                    }
+                }
+                else {
+                    $this->data['res'] = "ERROR! You can't delete all users with administrator rights.";
+                }
+
             } else {
                 $this->data['res'] = 'ERROR! Data from $_POST is not array.';
             }
@@ -106,7 +123,15 @@ class Change_pass extends Adm
         $this->data['name'] = 'Изменить';
         if ( filter_has_var( INPUT_POST, "change" ) ) 
         {
-            $this->data['res'] = 'DATA is CHANGE in TABLE';
+
+            $res = implode(', ', $_POST['change']);
+            $this->data['res'] = 'Form output'.$res;
+        } elseif ( filter_has_var( INPUT_POST, "change_name" ) 
+                    || filter_has_var( INPUT_POST, "change_password")
+                    || filter_has_var( INPUT_POST, "change_status" ) ) 
+        {
+            //sql update
+            $this->data['res'] = 'DATA is UPDATE in TABLE';
         } else {
             //$this->data['users_change'] = $this->db->db->select("users", "username");
             $this->data['users_change'] = $this->users;
