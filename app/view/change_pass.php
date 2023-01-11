@@ -58,7 +58,45 @@
             if (!empty($data['res'])) 
             {
                 $pad = 'pad';
-                print '<div class="'.$pad.'">'.$data['res'].'</div>';
+                //for change form after choose users
+                if (is_array($data['res'])) {
+
+                    print ' <form action="" method="post" id="db_change_users_data" class="pad">
+                                <div class="form-element mar">';
+                    foreach ($data['res'] as $key => $value) {
+                        print ' <div class="margin_bottom_1rem shad rad display_inline_block">
+                                    <div class="table_body">
+                                        <label class="table_row ">
+                                            <span class="table_cell text_right">Username</span>
+                                            <span class="table_cell">
+                                                <input type="text" id ="username'.$key.'" value="'.$key.'" name="change_name[]['.$key.']" />
+                                            </span>
+                                        </label>
+                                        <label class="table_row">
+                                            <span class="table_cell text_right">Status</span>
+                                            <span class="table_cell">
+                                                <input type="text" id ="userstatus'.$key.'" value="'.$value.'" name="change_status[]['.$key.']" />
+                                            </span>
+                                        </label>
+                                        <label class="table_row">
+                                            <span class="table_cell text_right">Password</span>
+                                            <span class="table_cell">
+                                                <input type="text" id ="userpass'.$key.'" value="" name="change_pass[]['.$key.']" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                ';
+                    }
+                    print '     </div>
+                                <div class="form-element mar">
+                                    <button type="submit" form="db_change_users_data" class="buttons" id="db_ch_us_data">Save</button>
+                                    <button type="reset" form="db_change_users_data" class="buttons">Reset</button>
+                                </div>
+                            </form>';
+                } else {
+                    print '<div class="'.$pad.'">'.$data['res'].'</div>';
+                }
             }
 
             //print_r($data['path']);

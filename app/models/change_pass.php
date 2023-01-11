@@ -70,7 +70,7 @@ class Change_pass extends Adm
         if ( filter_has_var( INPUT_POST, "delete" ) ) 
         {
             $this->data['res'] = '';
-            if (is_array($_POST['delete'])) {
+            if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
             /*
                 foreach($_POST['delete'] as $name) {         // walk wthrough array items
 
@@ -81,7 +81,6 @@ class Change_pass extends Adm
                 ]);
                 }
             */
-                
                 foreach ($this->users as $user) {
                     if (in_array('admin', $user)) {
                         $admins[] = $user['username'];
@@ -109,7 +108,7 @@ class Change_pass extends Adm
                 }
 
             } else {
-                $this->data['res'] = 'ERROR! Data from $_POST is not array.';
+                $this->data['res'] = 'ERROR! Data from $_POST is empty or not array.';
             }
         } else {
             //$this->data['users_del'] = $this->db->db->select("users", "username");
@@ -123,9 +122,21 @@ class Change_pass extends Adm
         $this->data['name'] = 'Изменить';
         if ( filter_has_var( INPUT_POST, "change" ) ) 
         {
-
-            $res = implode(', ', $_POST['change']);
-            $this->data['res'] = 'Form output'.$res;
+            $this->data['res'] = '';
+            $change = [];
+            if (!empty($_POST['change']) && is_array($_POST['change'])) {
+                foreach ($_POST['change'] as $name) {
+                    foreach ($this->users as $user) {
+                        if ($name == $user['username']) {
+                            $change[$user['username']] = $user['status'];
+                            break;
+                        }
+                    }
+                }
+                $this->data['res'] = $change;
+            } else {
+                $this->data['res'] = 'ERROR! Data from $_POST is empty or not array.';
+            }
         } elseif ( filter_has_var( INPUT_POST, "change_name" ) 
                     || filter_has_var( INPUT_POST, "change_password")
                     || filter_has_var( INPUT_POST, "change_status" ) ) 
