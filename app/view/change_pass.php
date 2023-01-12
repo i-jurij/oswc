@@ -3,7 +3,7 @@
         Здесь можно добавить, удалить пользователя, изменить его логин, пароль или статус.<br />
         К разделу администрирования имеют доступ все пользователи, на которых в таблице "users" базы данных
         есть записи: username, password, status (поля для email и email_status пока не используются).<br />
-        Username - длина поля 25 символов (буквы или цифры), password - 120 любых символов.<br />
+        Username и статус - длина поля 25 символов (буквы или цифры), password - 120 любых символов.<br />
         Status имеет три категории: admin, moder, user.<br />
         По умолчанию между ними нет различий, их нужно установить в файле app/view/adm.php путем разделения
         массива страниц на части, доступных для разных категорий пользователей. Пример в самом файле.
@@ -61,36 +61,36 @@
                 //for change form after choose users
                 if (is_array($data['res'])) {
 
-                    print ' <form action="" method="post" id="db_change_users_data" class="pad">
-                                <div class="form-element mar">';
+                    print ' <form action="" method="post" id="db_change_users_data" class="">
+                                <div class="mar"><p id="info">Изменяйте данные только в тех полях, которые хотите изменить.</p>';
                     foreach ($data['res'] as $key => $value) {
-                        print ' <div class="margin_bottom_1rem shad rad display_inline_block">
-                                    <div class="table_body">
-                                        <label class="table_row ">
-                                            <span class="table_cell text_right">Username</span>
-                                            <span class="table_cell">
-                                                <input type="text" id ="username'.$key.'" value="'.$key.'" name="change_name[]['.$key.']" />
-                                            </span>
-                                        </label>
-                                        <label class="table_row">
-                                            <span class="table_cell text_right">Status</span>
-                                            <span class="table_cell">
-                                                <input type="text" id ="userstatus'.$key.'" value="'.$value.'" name="change_status[]['.$key.']" />
-                                            </span>
-                                        </label>
-                                        <label class="table_row">
-                                            <span class="table_cell text_right">Password</span>
-                                            <span class="table_cell">
-                                                <input type="text" id ="userpass'.$key.'" value="" name="change_pass[]['.$key.']" />
-                                            </span>
-                                        </label>
+                        print '     <div class="shad rad display_inline_block">
+                                        <div class="table_body">
+                                            <label class="table_row ">
+                                                <span class="table_cell text_left">Username</span>
+                                                <span class="table_cell">
+                                                    <input type="text" id ="username'.$key.'" placeholder="'.$key.'" name="change_name['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
+                                                </span>
+                                            </label>
+                                            <label class="table_row">
+                                                <span class="table_cell text_left">Status</span>
+                                                <span class="table_cell">
+                                                    <input type="text" id ="userstatus'.$key.'" placeholder="'.$value.'" name="change_status['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
+                                                </span>
+                                            </label>
+                                            <label class="table_row">
+                                                <span class="table_cell text_left">Password</span>
+                                                <span class="table_cell">
+                                                    <input type="password" id ="userpass'.$key.'" placeholder="Password" name="change_pass['.$key.']" minlength="4" maxlength="120" />
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
                                 ';
                     }
                     print '     </div>
-                                <div class="form-element mar">
-                                    <button type="submit" form="db_change_users_data" class="buttons" id="db_ch_us_data">Save</button>
+                                <div class="margin_bottom_1rem">
+                                    <button type="submit" form="db_change_users_data" class="buttons" id="db_ch_us_data" name="submit">Save</button>
                                     <button type="reset" form="db_change_users_data" class="buttons">Reset</button>
                                 </div>
                             </form>';

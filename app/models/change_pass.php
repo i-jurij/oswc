@@ -17,21 +17,25 @@ class Change_pass extends Adm
 
     public function add($path)
 	{	
+        //name point for menu navigation
         $this->data['name'] = 'Добавить';
         if (strlen(filter_has_var( INPUT_POST, "reg_name" )) < 26 
             && strlen(filter_has_var( INPUT_POST, "reg_password")) < 121
             && filter_has_var( INPUT_POST, "reg_status" ) ) 
         {
             
-            //$names = $this->db->db->select("users", "username");   
-            $names = $this->users;
-            $name = htmlentities($_POST["reg_name"]);
+            //$names = $this->db->db->select("users", "username");  
+            $name = htmlentities( strip_tags( trim($_POST["reg_name"])));
             if (preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $name)) {
-                if (in_array($name, $names)) {
+                $nameisset = false;
+                foreach ($this->users as $key => $value) {
+                    if (in_array($name, $value)) { $nameisset = true; break; }
+                }
+                if ($nameisset) {
                     $this->data['res'] = 'Username exists.<br /> Такое имя уже существует.';
                 } else {
                     $pass = password_hash($_POST['reg_password'], PASSWORD_DEFAULT);
-                    $status = htmlentities($_POST['reg_status']);
+                    $status = htmlentities( strip_tags( trim($_POST['reg_status']) ) );
                     $sql_res = $this->db->db->insert("users", [
                                     [
                                         "username" => $name,
@@ -66,6 +70,7 @@ class Change_pass extends Adm
 
     public function delete($path)
 	{	
+        //name point for menu navigation
         $this->data['name'] = 'Удалить';
         if ( filter_has_var( INPUT_POST, "delete" ) ) 
         {
@@ -88,14 +93,13 @@ class Change_pass extends Adm
                 }
 
                 foreach ($_POST['delete'] as $name) {
-                   $postdel[] = htmlentities($name);
+                   $postdel[] = htmlentities( strip_tags( trim($name)));
                 }
 
                 if ( !empty(array_diff($admins, $postdel)) ) {
                     $sql_res = $this->db->db->delete("users", array(
                         "username" => $postdel)
                     );
-    
                     $del_user = '"'.implode('", "', $_POST['delete']).'"';
                     if ($sql_res->rowCount() > 0) {
                         $this->data['res'] = 'Users '.$del_user.'<br /> has been deleted from database.';
@@ -119,7 +123,9 @@ class Change_pass extends Adm
 
     public function change($path)
 	{	
+        //name point for menu navigation
         $this->data['name'] = 'Изменить';
+        // step 2  - enter new data for users
         if ( filter_has_var( INPUT_POST, "change" ) ) 
         {
             $this->data['res'] = '';
@@ -137,16 +143,70 @@ class Change_pass extends Adm
             } else {
                 $this->data['res'] = 'ERROR! Data from $_POST is empty or not array.';
             }
-        } elseif ( filter_has_var( INPUT_POST, "change_name" ) 
-                    || filter_has_var( INPUT_POST, "change_password")
-                    || filter_has_var( INPUT_POST, "change_status" ) ) 
+        } 
+        // step 3 - sql query for update data for users into db
+        elseif (filter_has_var( INPUT_POST, "submit" ) ) 
         {
-            //sql update
-            $this->data['res'] = 'DATA is UPDATE in TABLE';
-        } else {
-            //$this->data['users_change'] = $this->db->db->select("users", "username");
+            if ( filter_has_var( INPUT_POST, "change_name" ) 
+                    || filter_has_var( INPUT_POST, "change_pass")
+                    || filter_has_var( INPUT_POST, "change_status" ) ) 
+            {
+                $st = false;
+                if (!empty($_POST['change_name']) && is_array($_POST['change_name'])) {
+                    foreach ($_POST['change_name'] as $key => $value) {
+                        $name = htmlentities( strip_tags( trim($value)));
+                        
+                        foreach ($this->users as $val) {
+                            if (in_array($name, $val)) { 
+                                $this->data['res'] = 'Username "'.$name.'" is exists.<br /> Имя "'.$name.'" уже существует.'; 
+                                goto end; 
+                            }
+                        }
+                        //if name is changed
+                        if ( $key !== $value && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $name)) {
+                            $change_user[$key]['username'] = $name;
+                        }
+                    }
+                }
+                if (!empty($_POST['change_status']) && is_array($_POST['change_status'])) {
+                    foreach ($_POST['change_status'] as $ke => $valu) {
+                        $status = htmlentities( strip_tags( trim($valu)));
+                        
+                        foreach ($this->users as $va) {
+                            if ( $status != $va['status']) { $st = true; }
+                        }
+                        if ($st && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $status)) {
+                            $change_user[$ke]['status'] = $status;
+                        }
+                    }
+                }
+                if (!empty($_POST['change_pass']) && is_array($_POST['change_pass'])) {
+                    foreach ($_POST['change_pass'] as $k => $v) {
+                        if (!empty($v)) {
+                            $change_user[$k]['password'] = password_hash($v, PASSWORD_DEFAULT);
+                        }
+                    }
+                }
+
+                if (!empty($change_user)) {
+                    foreach ($change_user as $username => $userarr) {
+                        $sql_res = $this->db->db->update("users", $userarr, ["username" => $username]);
+                    }
+                    if ($sql_res->rowCount() > 0) {
+                        $this->data['res'] = 'DATA has been UPDATED in database.';
+                    } else {
+                        $this->data['res'] = 'ERROR!<br /> The data has been NOT UPDATED in database.';
+                    }
+                } else {
+                    $this->data['res'] = 'Data has been not entered.<br />Данные не были введены.';
+                }
+            } 
+        } 
+        else 
+        { //start position - choose users
             $this->data['users_change'] = $this->users;
         }        
+        end:
         return $this->data;
 	}
 }
