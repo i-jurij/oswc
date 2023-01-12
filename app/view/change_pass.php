@@ -85,13 +85,13 @@
                                             <label class="table_row">
                                                 <span class="table_cell text_left">Status</span>
                                                 <span class="table_cell">
-                                                    <input type="text" id ="userstatus'.$key.'" placeholder="'.$value.'" name="change_status['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
+                                                    <input type="text" class="user_status" id ="userstatus'.$key.'" placeholder="'.$value.'" name="change_status['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
                                                 </span>
                                             </label>
                                             <label class="table_row">
                                                 <span class="table_cell text_left">Password</span>
                                                 <span class="table_cell">
-                                                    <input type="password" id ="userpass'.$key.'" placeholder="****" name="change_pass['.$key.']" minlength="4" maxlength="120" />
+                                                    <input type="password" class="user_password" id ="userpass'.$key.'" placeholder="****" name="change_pass['.$key.']" minlength="4" maxlength="120" />
                                                 </span>
                                             </label>
                                         </div>
