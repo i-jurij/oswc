@@ -39,13 +39,20 @@
                             <!-- <div style="visibility:hidden; color:red; " id="chk_option_error">Please select at least one user.</div> -->
                             <div class="form-element mar">';
                 foreach ($users as $name) {
+                    /*
                     if (array_key_exists('username', $name)) {
                         print '     <label class="checkbox-btn">
-                            <input type="checkbox" id ="user_'.$name['username'].'" value="'.$name['username'].'" name="'.$check.'" />
-                            <span>'.$name['username'].'</span>
-                            </label>
-                        ';
+                                        <input type="checkbox" id ="user_'.$name['username'].'" value="'.$name['username'].'" name="'.$check.'" />
+                                        <span>'.$name['username'].'</span>
+                                    </label>
+                                    ';
                     }
+                    */
+                    print '     <label class="checkbox-btn">
+                                    <input type="checkbox" id ="user_'.$name.'" value="'.$name.'" name="'.$check.'" />
+                                    <span>'.$name.'</span>
+                                </label>
+                                ';
                 }
                 print '     </div>
                             <div class="form-element mar">
@@ -57,10 +64,13 @@
             $pad = '';
             if (!empty($data['res'])) 
             {
+                if (!empty($data['users'])) {
+                    $udat = json_encode($data['users']);
+                    echo "<script> var data = ". $udat . ";\n</script>";
+                }
                 $pad = 'pad';
                 //for change form after choose users
                 if (is_array($data['res'])) {
-
                     print ' <form action="" method="post" id="db_change_users_data" class="">
                                 <div class="mar"><p id="info">Изменяйте данные только в тех полях, которые хотите изменить.</p>';
                     foreach ($data['res'] as $key => $value) {
@@ -69,7 +79,7 @@
                                             <label class="table_row ">
                                                 <span class="table_cell text_left">Username</span>
                                                 <span class="table_cell">
-                                                    <input type="text" id ="username'.$key.'" placeholder="'.$key.'" name="change_name['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
+                                                    <input type="text" class="user_name" id ="username'.$key.'" placeholder="'.$key.'" name="change_name['.$key.']" minlength="3" maxlength="25" pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$" />
                                                 </span>
                                             </label>
                                             <label class="table_row">
@@ -81,7 +91,7 @@
                                             <label class="table_row">
                                                 <span class="table_cell text_left">Password</span>
                                                 <span class="table_cell">
-                                                    <input type="password" id ="userpass'.$key.'" placeholder="Password" name="change_pass['.$key.']" minlength="4" maxlength="120" />
+                                                    <input type="password" id ="userpass'.$key.'" placeholder="****" name="change_pass['.$key.']" minlength="4" maxlength="120" />
                                                 </span>
                                             </label>
                                         </div>
@@ -90,7 +100,7 @@
                     }
                     print '     </div>
                                 <div class="margin_bottom_1rem">
-                                    <button type="submit" form="db_change_users_data" class="buttons" id="db_ch_us_data" name="submit">Save</button>
+                                    <button type="submit" form="db_change_users_data" class="buttons" id="db_ch_us_data">Save</button>
                                     <button type="reset" form="db_change_users_data" class="buttons">Reset</button>
                                 </div>
                             </form>';

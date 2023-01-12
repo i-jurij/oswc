@@ -76,16 +76,6 @@ class Change_pass extends Adm
         {
             $this->data['res'] = '';
             if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
-            /*
-                foreach($_POST['delete'] as $name) {         // walk wthrough array items
-
-                $database->delete("users", [      // run medoo query 
-                "AND" => [
-                    "username" => string($name)          // if whitespaces, make an string
-                    ]
-                ]);
-                }
-            */
                 foreach ($this->users as $user) {
                     if (in_array('admin', $user)) {
                         $admins[] = $user['username'];
@@ -115,8 +105,9 @@ class Change_pass extends Adm
                 $this->data['res'] = 'ERROR! Data from $_POST is empty or not array.';
             }
         } else {
-            //$this->data['users_del'] = $this->db->db->select("users", "username");
-            $this->data['users_del'] = $this->users;
+            foreach ($this->users as $un) {
+                $this->data['users_del'][] = $un['username'];
+            }
         }        
         return $this->data;
 	} 
@@ -128,6 +119,11 @@ class Change_pass extends Adm
         // step 2  - enter new data for users
         if ( filter_has_var( INPUT_POST, "change" ) ) 
         {
+            //get data for js in view for validation on unic name
+            foreach ($this->users as $un) {
+                $this->data['users'][] = $un['username'];
+            }
+            
             $this->data['res'] = '';
             $change = [];
             if (!empty($_POST['change']) && is_array($_POST['change'])) {
@@ -145,66 +141,69 @@ class Change_pass extends Adm
             }
         } 
         // step 3 - sql query for update data for users into db
-        elseif (filter_has_var( INPUT_POST, "submit" ) ) 
+        elseif (    (
+                        filter_has_var( INPUT_POST, "change_name" ) 
+                        || filter_has_var( INPUT_POST, "change_status" ) 
+                        || filter_has_var( INPUT_POST, "change_pass")
+                    ) 
+                    && !filter_has_var( INPUT_POST, "change" )
+                ) 
         {
-            if ( filter_has_var( INPUT_POST, "change_name" ) 
-                    || filter_has_var( INPUT_POST, "change_pass")
-                    || filter_has_var( INPUT_POST, "change_status" ) ) 
-            {
-                $st = false;
-                if (!empty($_POST['change_name']) && is_array($_POST['change_name'])) {
-                    foreach ($_POST['change_name'] as $key => $value) {
-                        $name = htmlentities( strip_tags( trim($value)));
-                        
-                        foreach ($this->users as $val) {
-                            if (in_array($name, $val)) { 
-                                $this->data['res'] = 'Username "'.$name.'" is exists.<br /> Имя "'.$name.'" уже существует.'; 
-                                goto end; 
-                            }
-                        }
-                        //if name is changed
-                        if ( $key !== $value && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $name)) {
-                            $change_user[$key]['username'] = $name;
+            $st = false;
+            if (filter_has_var( INPUT_POST, "change_name" ) && !empty($_POST['change_name']) && is_array($_POST['change_name'])) {
+                foreach ($_POST['change_name'] as $key => $value) {
+                    $name = htmlentities( strip_tags( trim($value)));
+                    
+                    foreach ($this->users as $val) {
+                        if (in_array($name, $val)) { 
+                            $this->data['res'] = 'Username "'.$name.'" is exists.<br /> Имя "'.$name.'" уже существует.'; 
+                            goto end; 
                         }
                     }
-                }
-                if (!empty($_POST['change_status']) && is_array($_POST['change_status'])) {
-                    foreach ($_POST['change_status'] as $ke => $valu) {
-                        $status = htmlentities( strip_tags( trim($valu)));
-                        
-                        foreach ($this->users as $va) {
-                            if ( $status != $va['status']) { $st = true; }
-                        }
-                        if ($st && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $status)) {
-                            $change_user[$ke]['status'] = $status;
-                        }
+                    //if name is changed
+                    if ( $key !== $value && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $name)) {
+                        $change_user[$key]['username'] = $name;
                     }
                 }
-                if (!empty($_POST['change_pass']) && is_array($_POST['change_pass'])) {
-                    foreach ($_POST['change_pass'] as $k => $v) {
-                        if (!empty($v)) {
-                            $change_user[$k]['password'] = password_hash($v, PASSWORD_DEFAULT);
-                        }
+            }
+            if (filter_has_var( INPUT_POST, "change_status" ) && !empty($_POST['change_status']) && is_array($_POST['change_status'])) {
+                foreach ($_POST['change_status'] as $ke => $valu) {
+                    $status = htmlentities( strip_tags( trim($valu)));
+                    
+                    foreach ($this->users as $va) {
+                        if ( $status != $va['status']) { $st = true; }
+                    }
+                    if ($st && preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$/", $status)) {
+                        $change_user[$ke]['status'] = $status;
                     }
                 }
+            }
+            if (filter_has_var( INPUT_POST, "change_pass") && !empty($_POST['change_pass']) && is_array($_POST['change_pass'])) {
+                foreach ($_POST['change_pass'] as $k => $v) {
+                    if (!empty($v)) {
+                        $change_user[$k]['password'] = password_hash($v, PASSWORD_DEFAULT);
+                    }
+                }
+            }
 
-                if (!empty($change_user)) {
-                    foreach ($change_user as $username => $userarr) {
-                        $sql_res = $this->db->db->update("users", $userarr, ["username" => $username]);
-                    }
-                    if ($sql_res->rowCount() > 0) {
-                        $this->data['res'] = 'DATA has been UPDATED in database.';
-                    } else {
-                        $this->data['res'] = 'ERROR!<br /> The data has been NOT UPDATED in database.';
-                    }
-                } else {
-                    $this->data['res'] = 'Data has been not entered.<br />Данные не были введены.';
+            if (!empty($change_user)) {
+                foreach ($change_user as $username => $userarr) {
+                    $sql_res = $this->db->db->update("users", $userarr, ["username" => $username]);
                 }
-            } 
+                if ($sql_res->rowCount() > 0) {
+                    $this->data['res'] = 'DATA has been UPDATED in database.';
+                } else {
+                    $this->data['res'] = 'ERROR!<br /> The data has been NOT UPDATED in database.';
+                }
+            } else {
+                $this->data['res'] = 'Data has been not entered.<br />Данные не были введены.';
+            }
         } 
         else 
         { //start position - choose users
-            $this->data['users_change'] = $this->users;
+            foreach ($this->users as $un) {
+                $this->data['users_change'][] = $un['username'];
+            }
         }        
         end:
         return $this->data;

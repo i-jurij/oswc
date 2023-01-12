@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (SUB) {
         SUB.addEventListener('click', function(ev) {
             ev.preventDefault();
-            var form_data = new FormData(document.querySelector(".form_del_ch"));
+            let form_data = new FormData(document.querySelector(".form_del_ch"));
             if ( form_data.has("delete[]") || form_data.has("change[]"))
             {
                 //document.querySelector("#chk_option_error").style.visibility = "hidden";
@@ -77,6 +77,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    const CHUD = document.querySelector('#db_change_users_data');
+    if (CHUD) {
+        CHUD.addEventListener('submit', function(eve) {
+            eve.preventDefault();
+            var stop = true;
+            let inp_names = document.querySelectorAll(".user_name");
+            if (inp_names.length > 0) {
+                for (let i = 0; i < inp_names.length; i++) {
+                    const inp = inp_names[i].value;
+                    // проверяем, существует ли элемент в проверяемом массиве имен
+                    if (data.includes(inp)) {
+                        alert('Имя "' + inp + '" уже существует в базе данных.');
+                        inp_names[i].focus();
+                        const currentdiv = inp_names[i].parentNode.parentNode;
+                        currentdiv.style.color = 'red';
+                        currentdiv.parentNode.parentNode.scrollIntoView();
+                        stop = false;
+                        break;
+                    }
+                }
+            }
 
+            if (stop) {
+                CHUD.submit();
+            }
+        });
+    }
 
 });
