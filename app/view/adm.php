@@ -15,8 +15,8 @@ $session = new \App\Lib\Session;
 // !!! DON`T REMOVE THIS START !!! //////////
 if ( password_verify("admin", $session->get("status")) ) {
   //default button for create controller, model, view and insert data of page to db
-  echo '<a href="' . URLROOT . '/create_delete_page" class="buttons">Создать или удалить страницу</a> ';
-  echo '<a href="' . URLROOT . '/change_pass" class="buttons">Изменить данные пользователей</a> ';
+  echo '<a href="' . URLROOT . '/create_delete_page" class="buttons">Страницы</a> ';
+  echo '<a href="' . URLROOT . '/change_pass" class="buttons">Пользователи</a> ';
 }
 // !!! DON`T REMOVE THIS END !!! ///////////
 

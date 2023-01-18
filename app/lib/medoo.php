@@ -16,11 +16,11 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
-use PDO;
-use Exception;
-use PDOException;
-use PDOStatement;
-use InvalidArgumentException;
+use \PDO;
+use \Exception;
+use \PDOException;
+use \PDOStatement;
+use \InvalidArgumentException;
 
 /**
  * The Medoo raw object.

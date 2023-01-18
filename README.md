@@ -81,7 +81,7 @@ echo password_hash("your_new_passw", PASSWORD_DEFAULT);
 and copy past to db table (use eg SQLiteStudio).
 
 class Auth use trait Reject from App\Lib\Traits:
-$this->reject_login() - it load header 502 Bad Gateway if password will be wrong enter 4 times
+$this->reject_login() - it load header 403 Access denied if password will be wrong enter 4 times
 
 
 Models: its own for each page.
@@ -117,3 +117,35 @@ Add other templates and css and get path to these to View in controller.
 The same is true for fonts in public/fonts. But they can be rewritten in css file.
 
 public/js/adm/* for admin pages, don't remove.
+
+
+adm/change_pass.php
+Here you can add, delete a user, change his login, password or status.
+All users who have access to the administration section in the "users" table of the database
+there are entries: username, password, status (fields for email and email_status are not used yet).
+Username and status - the length of the field is 25 pieces (letters, numbers, hyphens, underscores), password - 120 any characters.
+Status has three categories: admin, moder, user.
+By default, there are no differences between them, they need to be set in the file app/view/adm.php by splitting
+an array of pages into parts available for different categories of users. The example is in the file itself.
+Statuses, respectively, can still be added.
+
+
+adm/create_del_page.php
+Create or del page:
+add controller, model, view;
+create and add to adm_pages table or pages table vars for template:
+* page_alias(100) - short name of the page preferably in Latin, and unique, and only letters or digits up to 100 letters;
+page_templates - path to the template, excluding public/templates, if necessary, eg "first/templ.php";
+* page_title - short name of the page in your language, letters, numbers, hyphens, underscores up to 100 pieces;
+page_meta_description - description of the site page in the search results, and for SEO,
+page_meta_keywords - a list of keywords corresponding to the content of the site page,
+page_robots - rules for loading and indexing certain pages of the site (https://yandex.ru/support/webmaster/controlling-robot/meta-robots.html),
+* page_h1 - title of page,
+* page_img - path to img of page on home page, exclude public/imgs/pages, eg "about/about.jpg"
+page_content - html|php content of page
+* page_access - access level to page: admin, moder, user.
+* - necessary
+
+Create data for home page too. Records are needed for the template (title and other things for main page of site).
+
+

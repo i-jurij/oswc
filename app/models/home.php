@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 
-use \App\Lib\Db_init_sqlite;
 use \App\Lib\Registry;
 use \App\Lib\Traits\Css_add;
 
@@ -16,7 +15,8 @@ class Home
 
 	function __construct($name_of_table_for_db_query, $page_alias)
 	{
-		$this->db = new Db_init_sqlite;
+		$dbinit = '\App\Lib\\'.DBINITNAME;
+		$this->db = new $dbinit;
 		$this->table = $name_of_table_for_db_query;
 		$this->page = $page_alias;
 		$this->data =  [];

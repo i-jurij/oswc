@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (inp_names.length > 0) {
                 for (let i = 0; i < inp_names.length; i++) {
                     const inp = inp_names[i].value;
-                    let OKNAME = re.exec(inp_names[i].value);
+                    let OKNAME = re.exec(inp);
                     // проверяем, существует ли элемент в проверяемом массиве имен data, полученном во view
                     if (data.includes(inp)) {
                         alert('Имя "' + inp + '" уже существует в базе данных.');
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         stop = false;
                         break;
                     }
-                    if (!OKNAME) {
+                    if (!OKNAME && inp != '' &&  inp != null) {
                         alert("Имя от 3 до 25 букв, цифр, дефисов, подчёркиваний.\n");
                         inp_names[i].focus();
                         const currentdiv = inp_names[i].parentNode.parentNode;
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 for (let i = 0; i < inp_status.length; i++) {
                     const inpstatus = inp_status[i].value;
                     let OKSTATUS = re.exec(inp_status[i].value);
-                    if (!OKSTATUS) {
+                    if (!OKSTATUS && inpstatus != '' && inpstatus != null) {
                         alert("Статус от 3 до 25 букв, цифр, дефисов, подчёркиваний.\n");
                         inp_status[i].focus();
                         const currentdiv = inp_status[i].parentNode.parentNode;
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (inp_pass.length > 0) {
                 for (let i = 0; i < inp_pass.length; i++) {
                     const inppass = inp_pass[i].value;
-                    if (inppass < 4 || inppass > 120) {
+                    if ( (inppass < 4 || inppass > 120) && inppass != '' && inppass != null ) {
                         alert("Пароль от 4 до 120 символов.\n");
                         inp_pass[i].focus();
                         const currentdiv = inp_pass[i].parentNode.parentNode;
@@ -150,5 +150,18 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
+       /*
+    * event listener for div delete templates in adm/create_delete_page.php
+    */
+       const TDEL = document.querySelector('#del_template');
+       if (TDEL) {
+        TDEL.addEventListener('click', function(e) {
+               document.querySelector('#del_template_div').classList.toggle('display_none');
+               if (TDEL.textContent.includes('Показать') ) {
+                    TDEL.innerText = 'Выбрать шаблоны для удаления';
+               } else {
+                    TDEL.innerText = 'Показать шаблоны для удаления';
+               }
+           });
+       }
 });

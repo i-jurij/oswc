@@ -44,7 +44,7 @@
       <section class="main_section">
         <div class="flex flex_top">
           <div class="content title">
-            <h2><?php echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2>
+            <h2><?php echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'Page title';?></h2>
           </div>
           <?php 
             if (!empty($data[0]['page_content'])) {

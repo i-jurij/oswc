@@ -108,11 +108,6 @@
                     print '<div class="'.$pad.'">'.$data['res'].'</div>';
                 }
             }
-
-            //print_r($data['path']);
-            //print '<pre>';
-            //print_r($_SERVER);
-            //print '</pre>';
         ?>
     </div>
 </div>

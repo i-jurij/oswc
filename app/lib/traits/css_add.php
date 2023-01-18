@@ -56,18 +56,20 @@ trait Css_add
     public function css_add($path_to_css = DS.'public'.DS.'css'.DS.'first') 
     {
         $css_files = array();
-        $f = scandir($path_to_css);
-        foreach ($f as $file){
-            if(preg_match('/\.(css)/', $file)){
-                if (strpos($file, 'normalize')) {
-                    if (!empty($css_files[0])) {
-                        $css_files[] = $css_files[0];
-                        $css_files[0] = $path_to_css.DS.$file;
+        if (file_exists($path_to_css)) {
+            $f = scandir($path_to_css);
+            foreach ($f as $file){
+                if(preg_match('/\.(css)/', $file)){
+                    if (strpos($file, 'normalize')) {
+                        if (!empty($css_files[0])) {
+                            $css_files[] = $css_files[0];
+                            $css_files[0] = $path_to_css.DS.$file;
+                        } else {
+                            $css_files[0] = $path_to_css.DS.$file;
+                        }   
                     } else {
-                        $css_files[0] = $path_to_css.DS.$file;
-                    }   
-                } else {
-                    $css_files[] = $path_to_css.DS.$file;
+                        $css_files[] = $path_to_css.DS.$file;
+                    }
                 }
             }
         }

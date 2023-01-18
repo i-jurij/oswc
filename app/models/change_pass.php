@@ -32,17 +32,17 @@ class Change_pass extends Adm
                     if (in_array($name, $value)) { $nameisset = true; break; }
                 }
                 if ($nameisset) {
-                    $this->data['res'] = 'Username exists.<br /> Такое имя уже существует.';
+                    $this->data['res'] = 'ERROR!<br />Username exists.<br /> Такое имя уже существует.';
                 } else {
                     $pass = password_hash($_POST['reg_password'], PASSWORD_DEFAULT);
                     $status = htmlentities( strip_tags( trim($_POST['reg_status']) ) );
                     $sql_res = $this->db->db->insert("users", [
                                     [
-                                        "username" => $name,
-                                        "password" => $pass,
+                                        "username" => \App\Lib\Medoo::raw(':name', [':name' => $name]),
+                                        "password" => \App\Lib\Medoo::raw(':pass', [':pass' => $pass]),
                                         "email" => "foo@bar.com",
                                         "email_status" => "0",
-                                        "status" => $status
+                                        "status" => \App\Lib\Medoo::raw(':status', [':status' => $status])
                                     ]
                                 ]);
                     if ($sql_res->rowCount() > 0) {
@@ -51,18 +51,18 @@ class Change_pass extends Adm
                                                 Username is: "'.$name.'"<br />
                                                 Status is: "'.$status.'"';
                     } else {
-                        $this->data['res'] = 'ERROR!<br /> Data NOT INSERT to database.';
+                        $this->data['res'] = 'ERROR!<br />Data NOT INSERT to database.';
                     }
                 }
             } else {
-                $this->data['res'] = 'ERROR!<br /> Username is not valid.';
+                $this->data['res'] = 'ERROR!<br />Username is not valid.';
             }
         } else {
             $file = APPROOT.DS.'view'.DS.'registration.php';
             if (is_readable($file)) {
                 $this->data['res'] = 'Save the username and password.<br />'.file_get_contents($file);
             }else {
-                $this->data['res'] = 'Check for the file '.$file.' and access rights to it.';
+                $this->data['res'] = 'ERROR!<br />Check for the file '.$file.' and access rights to it.';
             }             
         }
         return $this->data;
@@ -94,7 +94,7 @@ class Change_pass extends Adm
                     if ($sql_res->rowCount() > 0) {
                         $this->data['res'] = 'Users '.$del_user.'<br /> has been deleted from database.';
                     } else {
-                        $this->data['res'] = 'ERROR!<br /> The data has NOT been DELETED from database.';
+                        $this->data['res'] = 'ERROR!<br /> The data has NOT been DELETED from database.<br />'.$this->db->db->error;
                     }
                 }
                 else {

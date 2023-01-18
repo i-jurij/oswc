@@ -125,6 +125,14 @@ a:visited, a:focus, a:hover,  a:active { text-decoration: underline; }
 	margin: 0.5rem 1rem;
 }
 
+.margintb1rl05{
+	margin: 1rem 0.5rem;
+}
+
+.margint0b1rl05{
+	margin: 0 0.5rem 1rem 0.5rem;
+}
+
 .margintb1 {
 	margin: 1rem auto;
 }
@@ -139,6 +147,10 @@ a:visited, a:focus, a:hover,  a:active { text-decoration: underline; }
 
 .margin_bottom_1rem {
 	margin: 0 auto 1rem auto;
+}
+
+.margin_top_1rem {
+	margin: 1rem auto 0 auto;
 }
 
 .shad {

@@ -1,17 +1,19 @@
-<?php
+<?php 
 namespace App\Lib;
 
-class Db_init_sqlite
+class Db_init_mysql
 {
     public $db;
 
     public function __construct($params = [
-                                'type' => 'sqlite',
-                                'database' => APPROOT.DS.'db'.DS.DB_NAME.'.sqlite',
+                                'type' => 'mariadb',
+                                'host' => 'localhost',
+                                'database' => 'name',
+                                'username' => 'your_username',
+                                'password' => 'your_password',
                                 'charset' => 'utf8mb4',
                                 'collation' => 'utf8mb4_general_ci',
-                                'error' => \PDO::ERRMODE_EXCEPTION,
-                                'port' => 3306
+                                'error' => \PDO::ERRMODE_EXCEPTION
                                 ])
     {
         //init $db
@@ -35,10 +37,10 @@ class Db_init_sqlite
                 "VARCHAR(100)"
             ],
             "page_title" => [
-                "VARCHAR(100)"
+                "VARCHAR(255)"
             ],
             "page_meta_description" => [
-                "VARCHAR(255)"
+                "VARCHAR(100)"
             ],
             "page_meta_keywords" => [
                 "VARCHAR(500)"
@@ -63,9 +65,10 @@ class Db_init_sqlite
 
         $this->db->create("adm_pages", [
             "page_id" => [
-                "INTEGER PRIMARY KEY",
-                "AUTOINCREMENT",
-                "NOT NULL"
+                "INT",
+                "NOT NULL",
+                "AUTO_INCREMENT",
+                "PRIMARY KEY"
             ],
             "page_alias" => [
                 "VARCHAR(100)",
@@ -329,3 +332,4 @@ class Db_init_sqlite
 */
     }
 }
+?>

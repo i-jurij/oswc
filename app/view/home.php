@@ -2,16 +2,18 @@
 	if (!empty($data['page_list']) && is_array($data['page_list'])) {
 		foreach ($data['page_list'] as $page) {
 			if ($page['page_alias'] !== "home") {
+				$tit = (!empty($page['page_title'])) ? $page['page_title'] : 'Title';
+				$desc = (!empty($page['page_meta_description'])) ? $page['page_meta_description'] : 'Description';
 				print '<article class="main_section_article ">
 				<a class="main_section_article_content_a" href="' . $page['page_alias'] . '" >
 				<div class="main_section_article_imgdiv">
-				<img src="' . $page['page_img'] . '" alt="Фото ' . $page['page_title'] . '" class="main_section_article_imgdiv_img" />
+				<img src="' . URLROOT.DS.'public'.DS.'imgs'.DS.'pages'.DS.$page['page_img'] . '" alt="Фото ' . $page['page_title'] . '" class="main_section_article_imgdiv_img" />
 				</div>
 
 				<div class="main_section_article_content">
-					<h3>' . $page['page_title'] . '</h3>
+					<h3>' . $tit . '</h3>
 					<span>
-					' . $page['page_meta_description'] . '
+					' . $desc . '
 					</span>
 				</div>
 				</a>

@@ -10,10 +10,12 @@ function getOutput ($file) {
 function files_in_dir($path, $ext) 
 {
   $files = array();
-  $f = scandir($path);
-  foreach ($f as $file){
-    if(preg_match("/\.($ext)/", $file)) {
-      $files[] = $file;
+  if (file_exists($path)) {
+    $f = scandir($path);
+    foreach ($f as $file){
+      if(preg_match("/\.($ext)/", $file)) {
+        $files[] = $file;
+      }
     }
   }
   return $files;
