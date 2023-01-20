@@ -65,7 +65,7 @@ class Create_delete_page extends Adm
 
             //UPLOAD FILES "TEMPLATE", "PICTURE"
             $input_data_array = ['template' => array( 
-                                    'new_file_name' => 'if empty = sanitize old filename', 
+                                    'new_file_name' => '', 
                                     'destination_dir' => PUBLICROOT.DS.'templates', 
                                     'file_size' => '', 
                                     'file_type' => ['php', 'html']
