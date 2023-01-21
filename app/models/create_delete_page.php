@@ -64,18 +64,25 @@ class Create_delete_page extends Adm
             }
 
             //UPLOAD FILES "TEMPLATE", "PICTURE"
-            $input_data_array = ['template' => array( 
-                                    'new_file_name' => '', 
-                                    'destination_dir' => PUBLICROOT.DS.'templates', 
-                                    'file_size' => '', 
-                                    'file_type' => ['php', 'html']
-                                ),
-                                'picture' => array( 
-                                    'new_file_name' => '', 
-                                    'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
-                                    'file_size' => '', 
-                                    'file_type' => ['jpg', 'png', 'webp', 'jpeg', 'image']
-                                )    ];
+            $input_data_array = [   'template' => array( 
+                                        'new_file_name' => '', 
+                                        'destination_dir' => PUBLICROOT.DS.'templates', 
+                                        'file_size' => '', 
+                                        'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
+                                        'file_ext' => ['php', 'html'],
+                                        'permissions' => '', // default 0700
+                                        'replace_old_file' => '' //default false
+                                    ),
+                                    'picture' => array( 
+                                        'new_file_name' => '', 
+                                        'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
+                                        'file_size' => 1024000, //1MB
+                                        'file_mimetype' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
+                                        'file_ext' => '',
+                                        'permissions' => '', // default 0700
+                                        'replace_old_file' => '' //default false
+                                    )
+                                ];
             $files = new Upload($input_data_array);
             $this->data['res'] .= $files->message;
 

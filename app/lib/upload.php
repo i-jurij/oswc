@@ -7,27 +7,36 @@
 * the input data array for the class should be of this type
 * A) single input $input_data_array =   array( 
                                 'name' => array( 
-                                                    'new_file_name' => '', //if empty = sanitize old filename, 
-                                                    'destination_dir' => 'required', 
-                                                    'file_size' => ''
-                                                    'file_mimetype' => '' //string or array, audio or ['image', 'audio', 'video'], 
-                                                    'file_ext' => '', //string or array(), jpg or ['php', 'html', 'txt']
+                                                    'new_file_name' => '', // if empty = sanitize old filename
+                                                    'destination_dir' => 'required' // path to destination dir
+                                                    'file_size' => '' // integer, default 3072000 Byte
+                                                    'file_mimetype' => '' // string or array, audio or ['image', 'audio', 'video']
+                                                    'file_ext' => '', // string or array(), jpg or ['php', 'html', 'txt']
+                                                    'permissions' => '', // binary, default 0700
+                                                    'replace_old_file' => '', // yes, no or true, false or 0, 1; if empty - no
+                                                    'rotate' => '',
+                                                    'crop' => '',
+                                                    'resize' => ''
                                                 )
                                 );
 * A) eg two input $input_data_array =   array( 
                                 'name_0' => array( 
-                                                    'new_file_name_0' => '', 
-                                                    'destination_dir_0' => '', 
-                                                    'file_size_0' => ''
+                                                    'new_file_name' => '', 
+                                                    'destination_dir' => '', 
+                                                    'file_size' => ''
                                                     'file_mimetype' => '', 
-                                                    'file_ext_0' => '',
+                                                    'file_ext' => '',
+                                                    'permissions' => '', // default 0700
+                                                    'replace_old_file' => '' //default no
                                                 ),
                                 'name_1' => array( 
-                                                    'new_file_name_1' => '', 
-                                                    'destination_dir_1' => '', 
-                                                    'file_size_1' => ''
+                                                    'new_file_name' => '', 
+                                                    'destination_dir' => '', 
+                                                    'file_size' => ''
                                                     'file_mimetype' => '', 
-                                                    'file_ext_1' => '',
+                                                    'file_ext' => '',
+                                                    'permissions' => '', // default 0700
+                                                    'replace_old_file' => '' //default no
                                                 )    
                                 );
 * B) $input_data_array = ['names' => 
@@ -37,6 +46,8 @@
                                             'file_size' => ''
                                             'file_mimetype' => '' //string or array, audio or ['image', 'audio', 'video'], 
                                             'file_ext' => '', //string or array(), jpg or ['php', 'html', 'txt']
+                                            'permissions' => '', // default 0700
+                                            'replace_old_file' => '' //default no
                                         ] 
                         ];
 * B) the name of each file will be "sanitize_new_file_name_Inputs_index" or "sanitize_old_name_index"
@@ -65,8 +76,9 @@ class Upload
     protected array $message_value;
     protected $create_dest_dir;
     protected $file_size;
-    protected $file_mimetype; 
+    protected $file_mimetype;
     protected $permissions;
+
 
     public function __construct($data_array) {
         $this->go($data_array) ;
@@ -109,16 +121,23 @@ class Upload
                 } else {
                     if (!empty(self::normalize_files_array($_FILES))) {
                         $this->files = self::normalize_files_array($_FILES);
-                        //$this->message = 'Array $_FILES normalized<br />';
+                        //$this->message .= 'Array $_FILES normalized<br />';
                         if (isset($this->files[$input_data])) {
+                            //$this->message .= 'Messages for input "'.$input_data.'":<br />';
                             if ( is_array($this->files[$input_data])) {
                                 foreach ($this->files[$input_data] as $key => $val) {
                                     if ($val['error'] === 0) {
+                                        //get patrs of files name 
+                                        if (!empty($val['name'])) {
+                                            $path_parts = pathinfo($val['name']);
+                                            $ext = $path_parts['extension'];
+                                        } else {
+                                            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "name" from $_FILES is empty.<br />';
+                                            break;
+                                        }
                                         //sanitize filename or create filename from old filename
                                         if (empty($input_value['new_file_name'])) {
                                             //create new file name
-                                            $path_parts = pathinfo($val['name']);
-                                            $ext = $path_parts['extension'];
                                             if (count($this->files[$input_data]) > 1) {
                                                 $name = $this->sanitize_string($path_parts['filename']);
                                                 $new_name = $key.'_'.$name.'.'.$ext;
@@ -127,39 +146,47 @@ class Upload
                                                 $new_name = $name.'.'.$ext;
                                             }
                                         } else {
-                                            $new_name = $this->sanitize_string($input_value['new_file_name']);
-                                        }
-                                        //check file_exists file with sanitize filename
-
-                                        //check filesize
-
-                                        //check mimetype and ext
-
+                                            $new_name = $this->sanitize_string($input_value['new_file_name']).'.'.$ext;
+                                        }   
                                         // check dest dir
-                                        if ($this->check_dest_dir($input_value['destination_dir'], $input_data)) {
-                                            // move_upload to tmp dir
-                                            // file processing (rotate, crop, resize etc)
-                                            // copy or move to dest_dir
-                                            // empty or unlink tmp dir
-                                            $this->message .= 'OK';
+                                        if (    $this->check_dest_dir($input_data, $input_value) 
+                                                //check file size
+                                                && $this->check_file_size($input_data, $input_value, $key, $val)
+                                                //check mimetype
+                                                && $this->check_mime_type($input_data, $input_value, $key, $val)
+                                                //check ext
+
+                                            ) 
+                                            {
+                                            //check file_exists file with sanitize filename
+                                            if ($this->check_new_file_name($input_data, $input_value['destination_dir'], $input_value['replace_old_file'], $new_name)) {
+                                                $this->message .= 'Ok';
+                                                // move_upload to tmp dir
+                                                // file processing (rotate, crop, resize etc)
+                                                // copy or move to dest_dir
+                                                // empty or unlink tmp dir
+                                            } else {
+                                                break;
+                                            }
                                         } else {
                                             break;
                                         }
-                                        
-
-                                            
-                                        
                                     } else {
                                         if (array_key_exists($val['error'], $this->phpFileUploadErrors)) {
                                             $this->errors[$input_data][$key] = 'ERROR in input "'.$input_data.'['.$key.']" :<br />'.$this->phpFileUploadErrors[$val['error']];
+                                        } else {
+                                            $this->errors[$input_data][$key] = 'UNKNOWN ERROR! In input "'.$input_data.'['.$key.']".<br />';
                                         }
                                     }
                                 }
                             } else {
                                 $this->message .= 'ERROR! Processed $_FILES data is not an array.<br />: "'.$input_data.'".<br />';
                             }
+                            $this->message .= '<br />';
                         } else {
-                            $this->message .= 'Name of input not isset in $_FILES. <br />Maybe it\'s a mistake in the name of input '.'"'.$input_data.'" for class Upload.';
+                            $this->message .= 'Name of input "'.$input_data.'" not isset in $_FILES. <br />
+                                                Reasons:    1) error in the name of input '.'"'.$input_data.'" in model,<br />
+                                                            2) or you didn\'t upload the file.<br />';
                         }
                     } else {
                         $this->message .= 'Array $_FILES["'.$input_data.'"] is empty.<br />If you don\'t upload file - it\'s OK.<br />';
@@ -169,10 +196,74 @@ class Upload
         }
     }
 
-    public function check_dest_dir($dest_dir, $input_data) {
+    function check_mime_type($input_data, $input_value, $key, $val) {
+        $mt = $this->get_mime_type($val['tmp_name']);
+        list($core, $type) = explode('/', $mt);
+        if ( empty($input_value['file_mimetype']) ) {
+            return true;
+        }
+        elseif (!empty($coe) && in_array($core, $input_value['file_mimetype'])) {
+            return true;
+        }
+        elseif (in_array($mt, $input_value['file_mimetype'])) {
+            return true;
+        } else {
+            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong mimetype "'.$mt.'", expected "'.implode('", "', $input_value['file_mimetype']).'".<br />';
+			return false;
+		}
+	}
+
+    function get_mime_type($file) {
+		$mtype = false;
+		if (function_exists('finfo_open')) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mtype = finfo_file($finfo, $file);
+			finfo_close($finfo);
+		} elseif (function_exists('mime_content_type')) {
+			$mtype = mime_content_type($file);
+		} 
+		return $mtype;
+	}
+
+    protected function check_file_size($input_data, $input_value, $key, $val) {
+        if (!empty($val['size'])) {
+            $size = (!empty($input_value['file_size']) && is_numeric($input_value['file_size'])) ? $input_value['file_size'] : $this->file_size;
+            if ( $val['size'] <= $size) {
+               return true;
+            } else {
+                $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": Size "'.$val['name'].'" is too large.<br />';
+                return false;
+            }
+        } else {
+            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "size" from $_FILES is empty.<br />';
+            return false;
+        }
+    }
+
+    protected function check_new_file_name($input_data, $dest_dir, $replace, $new_name) {
+        if (file_exists($dest_dir.DIRECTORY_SEPARATOR.$new_name)) {
+            if ($replace === 'yes' || $replace === true || $replace == 1 ) {
+                return true;
+            } else {
+                $this->message .= 'ERROR in data from input "'.$input_data.'"!<br /> 
+                                    A file "'.$new_name.'"exists in "'.$dest_dir.'".<br />
+                                    Change "new_file_name" in array for upload class in model<br />
+                                    or set "replace_old_file" = true or yes or 1.<br />';
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+    
+    public function check_dest_dir($input_data, $input_value) {
+        $dest_dir = htmlentities($input_value['destination_dir']);
+        if (!empty($input_value['permissions'])) {
+            $this->permissions = htmlentities($input_value['permissions']);
+        } 
         if (file_exists($dest_dir)) {
             if (is_dir($dest_dir)) {
-                if (!is_writable($dest_dir) && !chmod($dest_dir, 0755)) {
+                if (!is_writable($dest_dir) && !chmod($dest_dir, $this->permissions)) {
                     $this->message .= 'Cannot change the mode of dir "'.$dest_dir.'" for input "'.$input_data.'"';
                     return false;
                 } else {

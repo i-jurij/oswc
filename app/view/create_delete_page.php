@@ -39,7 +39,7 @@ if (empty($data['colname']) && empty($data['pagename']) && empty($data['res'])) 
                         <p class="margin_rlb1">Выберите файлы</p>
                         <label class="display_inline_block margin_bottom_1rem">Файл шаблона (при необходимости, .php, .html, < 300KB):<br /> 
                             <input type="hidden" name="MAX_FILE_SIZE" value="307200" />
-                            <input type="file" name="template" accept=".php, .html, text/html, text/php, text/x-php, text/plain">
+                            <input type="file" name="template" >
                         </label>';
 
     if (strpos($data['name'], 'в pages')) {
