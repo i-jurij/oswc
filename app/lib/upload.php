@@ -1,10 +1,12 @@
 <?php
 /*
-*
+* The class processes the entire FILES array at once.
 * Only for single or multiple file uploads in next format
 * A) <input type="file" name="name" > or 
 * B) <input type="file" name="names[]" >
 * the input data array for the class should be of this type
+* required $input_data_array =   array( 'name' => array( 'destination_dir' => 'path/to/dir_for_upload_file') );
+* or full $input_data_array:
 * A) single input $input_data_array =   array( 
                                 'name' => array( 
                                                     'new_file_name' => '', // if empty = sanitize old filename
@@ -12,8 +14,10 @@
                                                     'file_size' => '' // integer, default 3072000 Byte
                                                     'file_mimetype' => '' // string or array, 'audio' or ['image', 'audio', 'video']
                                                     'file_ext' => '', // string or array(), 'jpg' or ['php', 'html', 'txt']
-                                                    'permissions' => '', // binary, default 0700
+                                                    'dir_permissions' => '', // binary, default 0755
+                                                    'file_permissions' => '', // binary, default 0644
                                                     'replace_old_file' => '', // yes, no or true, false or 0, 1; if empty - no
+                                                    'tmp_dir' => '', // 'path_to_tmp_dir', default public/tmp
                                                     'rotate' => '',
                                                     'crop' => '',
                                                     'resize' => ''
@@ -26,7 +30,7 @@
                                                     'file_size' => ''
                                                     'file_mimetype' => '', 
                                                     'file_ext' => '',
-                                                    'permissions' => '', // default 0700
+                                                    'dir_permissions' => '', // default 0755
                                                     'replace_old_file' => '' //default no
                                                 ),
                                 'name_1' => array( 
@@ -35,7 +39,7 @@
                                                     'file_size' => ''
                                                     'file_mimetype' => '', 
                                                     'file_ext' => '',
-                                                    'permissions' => '', // default 0700
+                                                    'dir_permissions' => '', // default 0755
                                                     'replace_old_file' => '' //default no
                                                 )    
                                 );
@@ -46,7 +50,7 @@
                                             'file_size' => ''
                                             'file_mimetype' => '' //string or array, audio or ['image', 'audio', 'video'], 
                                             'file_ext' => '', //string or array(), jpg or ['php', 'html', 'txt']
-                                            'permissions' => '', // default 0700
+                                            'dir_permissions' => '', // default 0755
                                             'replace_old_file' => '' //default no
                                         ] 
                         ];
@@ -62,6 +66,11 @@
 * if the extension of the downloaded file is suitable for mimetype, 
 * but does not match the extension specified by the user - the file will not be uploaded.
 *
+* dir_permissions - permissions for destination dir and tmp_dir
+*
+* file_permissions - permisssions for move_uploaded files
+*
+* tmp_dir - directory for temporary saved files, eg for postprocessing
 */
 namespace App\Lib;
 
@@ -75,10 +84,13 @@ class Upload
     public array $errors;
     public string $message;
     protected array $message_value;
-    protected $create_dest_dir;
+    protected $create_dir;
     protected $file_size;
     protected $file_mimetype;
-    protected $permissions;
+    protected $dir_permissions;
+    protected $file_permissions;
+    protected $new_file_name;
+    protected $tmp_dir;
 
 
     public function __construct($data_array) {
@@ -87,10 +99,12 @@ class Upload
 
     protected function init() {
         //declaring variables
-        $this->create_dest_dir = false;
+        $this->create_dir = false;
         $this->file_size = 3072000; // 3MB
         $this->file_mimetype = '';
-        $this->permissions = 0700;
+        $this->dir_permissions = 0755;
+        $this->file_permissions = 0644;
+        $this->tmp_dir = PUBLICROOT.DS.'tmp'.DIRECTORY_SEPARATOR;
         $this->message = '';
         $this->errors = [];
         $this->phpFileUploadErrors = array(
@@ -131,7 +145,7 @@ class Upload
                                 foreach ($this->files[$input_data] as $key => $val) {
                                     if ($val['error'] === 0) {
                                         // check dest dir
-                                        if (    $this->check_dest_dir($input_data, $input_value) 
+                                        if (    $this->check_dest_dir($input_value) 
                                                 //check file size
                                                 && $this->check_file_size($input_data, $input_value, $key, $val)
                                                 //check mimetype
@@ -142,10 +156,14 @@ class Upload
                                                 && $this->check_new_file_name($input_data, $input_value, $key, $val)
                                             ) {
                                                 // move_upload to tmp dir
-                                                // file processing (rotate, crop, resize etc)
-                                                // copy or move to dest_dir
-                                                // empty or unlink tmp dir
-                                                $this->message .= 'Ok';
+                                                if ($this->move_upload($input_value, $val)) {
+                                                    // file processing (rotate, crop, resize etc) $file = $this->tmp_dir.$this->new_file_name
+                                                    // copy or move to dest_dir
+                                                    // empty or unlink tmp dir
+                                                    $this->message .= 'File is uploaded to: "'.$this->tmp_dir.$this->new_file_name.'".';
+                                                } else {
+                                                    break;
+                                                }
                                             } else {
                                                 break;
                                             }
@@ -173,11 +191,29 @@ class Upload
         }
     }
 
+    protected function move_upload($input_value, $val) {
+        if (!empty($input_value['tmp_dir'])) {
+            $this->tmp_dir = $input_value['tmp_dir'].DIRECTORY_SEPARATOR;
+        }
+        if ($this->check_or_create_dir($this->tmp_dir, $this->dir_perm($input_value) )) {
+            if (move_uploaded_file($val['tmp_name'] , $this->tmp_dir.$this->new_file_name)) {
+                chmod($this->tmp_dir.$this->new_file_name , $this->file_permissions);
+                return true;
+            } else {
+                $this->message .= 'ERROR! Possible file upload attack: "'.$val['tmp_name'].'".';
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     protected function check_new_file_name($input_data, $input_value, $key, $val) {
         if ($this->new_name($input_data, $input_value, $key, $val)) {
             $new_name = $this->new_name($input_data, $input_value, $key, $val).$this->get_point_ext($val['name']);
             if (file_exists($input_value['destination_dir'].DIRECTORY_SEPARATOR.$new_name)) {
                 if ($input_value['replace_old_file'] === 'yes' || $input_value['replace_old_file'] === true || $input_value['replace_old_file'] == 1 ) {
+                    $this->new_file_name = $new_name; 
                     return true;
                 } else {
                     $this->message .= 'ERROR in data from input "'.$input_data.'"!<br /> 
@@ -187,6 +223,7 @@ class Upload
                     return false;
                 }
             } else {
+                $this->new_file_name = $new_name;
                 return true;
             }
         } else {
@@ -339,34 +376,45 @@ class Upload
         }
     }
     
-    public function check_dest_dir($input_data, $input_value) {
-        $dest_dir = htmlentities($input_value['destination_dir']);
-        if (!empty($input_value['permissions'])) {
-            $this->permissions = htmlentities($input_value['permissions']);
+    protected function dir_perm($input_value) {
+        if (!empty($input_value['dir_permissions'])) {
+            $this->dir_permissions = htmlentities($input_value['dir_permissions']);
         } 
-        if (file_exists($dest_dir)) {
-            if (is_dir($dest_dir)) {
-                if (!is_writable($dest_dir) && !chmod($dest_dir, $this->permissions)) {
-                    $this->message .= 'ERROR! Cannot change the mode of dir "'.$dest_dir.'" for input "'.$input_data.'"';
+    }
+
+    public function check_dest_dir($input_value) {
+        $dest_dir = htmlentities($input_value['destination_dir']);
+        if ($this->check_or_create_dir($dest_dir, $this->dir_perm($input_value) )) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function check_or_create_dir($dir, $permissions ) {
+        if (file_exists($dir)) {
+            if (is_dir($dir)) {
+                if ( !is_writable($dir) && !chmod($dir, $permissions) ) {
+                    $this->message .= 'ERROR! Cannot change the mode of dir "'.$dir.'".';
                     return false;
                 } else {
                     return true;
                 }
             } else {
-                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" is file.';
+                $this->message .= 'ERROR! "'.$dir.'" is file.';
                 return false;
             }
         } else {
-            # create dir if $create_dest_dir = true or message - dir not exists
-            if ($this->create_dest_dir) {
-                if (mkdir($dest_dir, $this->permissions, true)) {
+            # create dir if $create_dir = true or message - dir not exists
+            if ($this->create_dir) {
+                if (mkdir($dir, $permissions, true)) {
                     return true;
                 } else {
-                    $this->message .= 'ERROR! Failed to create directory "'.$dest_dir.'" for input "'.$input_data.'".';
+                    $this->message .= 'ERROR! Failed to create directory "'.$dir.'".';
                     return false;
                 }
             } else {
-                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" NOT EXISTS.';
+                $this->message .= 'ERROR! "'.$dir.'" not exists and $create_dir = false.';
                 return false;
             }
         }
