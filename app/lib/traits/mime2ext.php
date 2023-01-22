@@ -4,7 +4,7 @@ namespace App\Lib\Traits;
 /**
  * Mim
  */
-trait mime2ext
+trait Mime2ext
 {
     function mime2ext($mime) {
         $mime_map = [

@@ -68,6 +68,7 @@ namespace App\Lib;
 class Upload
 {
     use \App\Lib\Traits\Sanitize;
+    use \App\Lib\Traits\Mime2ext;
 
     public array $files;
     public array $phpFileUploadErrors;
@@ -109,15 +110,17 @@ class Upload
         if (is_array($data_array)) {
             $data_array_is_array = true;
         } else {
-            $this->message .= 'ERROR! Input data is not an array<br />';
+            $this->message .= 'ERROR! Input data is not an array.';
         }
 
         if ($data_array_is_array && empty($data_array)) {
-            $this->message .= 'Input data array for class upload is empty.<br />If you don\'t upload file - it\'s OK.<br />';
+            $this->message .= 'Input data array for class upload is empty.<br />If you don\'t upload file - it\'s OK.';
         } else {
             foreach ($data_array as $input_data=> $input_value) {
+                $this->message .= 'Input "'.$input_data.'":<br />';
+
                 if (empty($input_value['destination_dir'])) {
-                    $this->message .= 'ERROR! Set the destination folder in input data array for class upload.<br />';
+                    $this->message .= 'ERROR! Set the destination folder in input data array for class upload.';
                 } else {
                     if (!empty(self::normalize_files_array($_FILES))) {
                         $this->files = self::normalize_files_array($_FILES);
@@ -138,11 +141,11 @@ class Upload
                                                 //check file_exists file with sanitize filename
                                                 && $this->check_new_file_name($input_data, $input_value, $key, $val)
                                             ) {
-                                                $this->message .= 'Ok';
                                                 // move_upload to tmp dir
                                                 // file processing (rotate, crop, resize etc)
                                                 // copy or move to dest_dir
                                                 // empty or unlink tmp dir
+                                                $this->message .= 'Ok';
                                             } else {
                                                 break;
                                             }
@@ -150,30 +153,29 @@ class Upload
                                         if (array_key_exists($val['error'], $this->phpFileUploadErrors)) {
                                             $this->errors[$input_data][$key] = 'ERROR in input "'.$input_data.'['.$key.']" :<br />'.$this->phpFileUploadErrors[$val['error']];
                                         } else {
-                                            $this->errors[$input_data][$key] = 'UNKNOWN ERROR! In input "'.$input_data.'['.$key.']".<br />';
+                                            $this->errors[$input_data][$key] = 'UNKNOWN ERROR! In input "'.$input_data.'['.$key.']".';
                                         }
                                     }
                                 }
                             } else {
-                                $this->message .= 'ERROR! Processed $_FILES data is not an array.<br />: "'.$input_data.'".<br />';
+                                $this->message .= 'ERROR! Processed $_FILES data is not an array.<br />: "'.$input_data.'".';
                             }
-                            $this->message .= '<br />';
                         } else {
-                            $this->message .= 'Name of input "'.$input_data.'" not isset in $_FILES. <br />
-                                                Reasons:    1) error in the name of input '.'"'.$input_data.'" in model,<br />
-                                                            2) or you didn\'t upload the file.<br />';
+                            $this->message .= 'You didn\'t upload the file "'.$input_data.'".';
                         }
                     } else {
-                        $this->message .= 'Array $_FILES["'.$input_data.'"] is empty.<br />If you don\'t upload file - it\'s OK.<br />';
+                        $this->message .= 'Array $_FILES["'.$input_data.'"] is empty.<br />If you don\'t upload file - it\'s OK.';
                     }
                 }
+                $this->message .= '<br />';
+                //$this->message .= '<hr width="50%" color="SteelBlue" align="center" />';
             }
         }
     }
 
     protected function check_new_file_name($input_data, $input_value, $key, $val) {
         if ($this->new_name($input_data, $input_value, $key, $val)) {
-            $new_name = $this->new_name($input_data, $input_value, $key, $val);
+            $new_name = $this->new_name($input_data, $input_value, $key, $val).$this->get_point_ext($val['name']);
             if (file_exists($input_value['destination_dir'].DIRECTORY_SEPARATOR.$new_name)) {
                 if ($input_value['replace_old_file'] === 'yes' || $input_value['replace_old_file'] === true || $input_value['replace_old_file'] == 1 ) {
                     return true;
@@ -181,7 +183,7 @@ class Upload
                     $this->message .= 'ERROR in data from input "'.$input_data.'"!<br /> 
                                         A file "'.$new_name.'"exists in "'.$input_value['destination_dir'].'".<br />
                                         Change "new_file_name" in array for upload class in model<br />
-                                        or set "replace_old_file" = true or yes or 1.<br />';
+                                        or set "replace_old_file" = true or yes or 1.';
                     return false;
                 }
             } else {
@@ -197,7 +199,7 @@ class Upload
         if (!empty($val['name'])) {
             $path_parts = pathinfo($val['name']);
         } else {
-            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "name" from $_FILES is empty.<br />';
+            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "name" from $_FILES is empty.';
             return false;
         }
         //sanitize filename or create filename from old filename
@@ -222,27 +224,43 @@ class Upload
         if (empty($input_value['file_ext'])) {
             return true;
         } else {
-            if (is_string($input_value['file_ext']) && ($ext === $input_value['file_ext'] || $pext === $input_value['file_ext'])) {
-                return true;
-            } elseif (is_array($input_value['file_ext'])) {
-                if (in_array($ext, $input_value['file_ext']) || in_array($pext, $input_value['file_ext'])) {
-                    return true;
+            $mt = $this->get_mime_type($val['tmp_name']);
+            // crutch for jpg
+            if ( ($mt === "image/jpeg" or $mt === "image/pjpeg") && $ext === 'jpg' ) {
+                $r = true;
+            } else {
+                if ($this->mime2ext($mt) === $ext) {
+                    $r = true;
                 } else {
-                    $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong extension "'.$ext.'", expected "'.implode('", "', $input_value['file_ext']).'".<br />';
+                    $r = false;
+                }
+            }
+            if ($r) {
+                if (is_string($input_value['file_ext']) && ($ext === $input_value['file_ext'] || $pext === $input_value['file_ext'])) {
+                    return true;
+                } elseif (is_array($input_value['file_ext'])) {
+                    if (in_array($ext, $input_value['file_ext']) || in_array($pext, $input_value['file_ext'])) {
+                        return true;
+                    } else {
+                        $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong extension "'.$ext.'", expected "'.implode('", "', $input_value['file_ext']).'".';
+                        return false;
+                    }
+                } else {
+                    $this->message .= 'ERROR! Wrong type in input data "file_ext", must be empty, string or array.';
                     return false;
                 }
             } else {
-                $this->message .= 'ERROR! Wrong type in input data "file_ext", must be empty, string or array.<br />';
-                return false;
+                $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']":<br />
+                                    wrong extension "'.$ext.'", because mimetype of file for upload is: "'.$mt.'".';
+                    return false;
             }
-            
         }
 	}
 
     public function get_extension($filename) {
 		//$ext = strtolower(substr(strrchr($filename, '.'), 1));
         $path_info = pathinfo($filename);
-        $ext = $path_info['extension'];
+        $ext = strtolower($path_info['extension']);
 		return $ext;
 	}
 
@@ -275,7 +293,7 @@ class Upload
                 if ((!empty($core) && $input_value['file_mimetype'] === $core) || $input_value['file_mimetype'] === $mt) {
                     return true;
                 } else {
-                    $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong mimetype "'.$mt.'", expected "'.$input_value['file_mimetype'].'".<br />';
+                    $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong mimetype "'.$mt.'", expected "'.$input_value['file_mimetype'].'".';
 			        return false;
                 }
             } else {
@@ -283,11 +301,11 @@ class Upload
                     if ( (!empty($core) && in_array($core, $input_value['file_mimetype'])) || in_array($mt, $input_value['file_mimetype']) ) {
                         return true;
                     } else {
-                        $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong mimetype "'.$mt.'", expected "'.implode('", "', $input_value['file_mimetype']).'".<br />';
+                        $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": wrong mimetype "'.$mt.'", expected "'.implode('", "', $input_value['file_mimetype']).'".';
 			            return false;
                     }
                 } else {
-                    $this->message .= 'ERROR! Wrong type in input data "file_mimetype", must be empty, string or array.<br />';
+                    $this->message .= 'ERROR! Wrong type in input data "file_mimetype", must be empty, string or array.';
                     return false;
                 }
             }
@@ -312,11 +330,11 @@ class Upload
             if ( $val['size'] <= $size) {
                return true;
             } else {
-                $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": Size "'.$val['name'].'" is too large.<br />';
+                $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": Size "'.$val['name'].'" is too large.';
                 return false;
             }
         } else {
-            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "size" from $_FILES is empty.<br />';
+            $this->message .= 'ERROR! In input "'.$input_data.'['.$key.']": "size" from $_FILES is empty.';
             return false;
         }
     }
@@ -329,13 +347,13 @@ class Upload
         if (file_exists($dest_dir)) {
             if (is_dir($dest_dir)) {
                 if (!is_writable($dest_dir) && !chmod($dest_dir, $this->permissions)) {
-                    $this->message .= 'Cannot change the mode of dir "'.$dest_dir.'" for input "'.$input_data.'"';
+                    $this->message .= 'ERROR! Cannot change the mode of dir "'.$dest_dir.'" for input "'.$input_data.'"';
                     return false;
                 } else {
                     return true;
                 }
             } else {
-                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" is file.<br />';
+                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" is file.';
                 return false;
             }
         } else {
@@ -344,11 +362,11 @@ class Upload
                 if (mkdir($dest_dir, $this->permissions, true)) {
                     return true;
                 } else {
-                    $this->message .= 'ERROR! Failed to create directory "'.$dest_dir.'" for input "'.$input_data.'".<br />';
+                    $this->message .= 'ERROR! Failed to create directory "'.$dest_dir.'" for input "'.$input_data.'".';
                     return false;
                 }
             } else {
-                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" NOT EXISTS.<br />';
+                $this->message .= 'ERROR! "'.$dest_dir.'" for input "'.$input_data.'" NOT EXISTS.';
                 return false;
             }
         }

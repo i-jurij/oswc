@@ -103,7 +103,7 @@ class Create_delete_page extends Adm
 
             //OUTPUT MESSAGE if isset error
             if (strpos($this->data['res'], 'RROR') or strpos($this->data['res'], 'rror')) {
-                $this->data['res'] .= 'if there are errors, delete page and enter all page data again<br />';
+                $this->data['res'] .= 'ATTENTION! If there are errors, delete page and enter all page data again<br />';
             } 
 
             unset($post,$table, $aliases, $value, $key, $end, $res, $filename );
