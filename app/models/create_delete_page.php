@@ -69,7 +69,7 @@ class Create_delete_page extends Adm
                                         'destination_dir' => PUBLICROOT.DS.'templates', 
                                         'file_size' => '', 
                                         'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
-                                        'file_ext' => ['php', 'html'],
+                                        'file_ext' => ['php', '.html'],
                                         'permissions' => '', // default 0700
                                         'replace_old_file' => '' //default false
                                     ),
@@ -77,8 +77,8 @@ class Create_delete_page extends Adm
                                         'new_file_name' => '', 
                                         'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
                                         'file_size' => 1024000, //1MB
-                                        'file_mimetype' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
-                                        'file_ext' => '',
+                                        'file_mimetype' => 'image',
+                                        'file_ext' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
                                         'permissions' => '', // default 0700
                                         'replace_old_file' => '' //default false
                                     )
