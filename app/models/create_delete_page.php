@@ -70,7 +70,7 @@ class Create_delete_page extends Adm
                                         'file_size' => '', 
                                         'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
                                         'file_ext' => ['php', '.html'],
-                                        'dir_permissions' => '', // default 0700
+                                        'dir_permissions' => '', // default 0755
                                         'replace_old_file' => '', //default false
                                         'tmp_dir' => ''
                                     ),
@@ -80,9 +80,10 @@ class Create_delete_page extends Adm
                                         'file_size' => 1024000, //1MB
                                         'file_mimetype' => 'image',
                                         'file_ext' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
-                                        'dir_permissions' => '', // default 0700
+                                        'dir_permissions' => '', // default 0755
                                         'replace_old_file' => '', //default false
-                                        'tmp_dir' => ''
+                                        'tmp_dir' => '',
+                                        'processing' => ['resizeToBestFit' => ['1024', '640']]
                                     )
                                 ];
             $files = new Upload($input_data_array);

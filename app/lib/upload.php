@@ -18,9 +18,7 @@
                                                     'file_permissions' => '', // binary, default 0644
                                                     'replace_old_file' => '', // yes, no or true, false or 0, 1; if empty - no
                                                     'tmp_dir' => '', // 'path_to_tmp_dir', default public/tmp
-                                                    'rotate' => '',
-                                                    'crop' => '',
-                                                    'resize' => ''
+                                                    'processing' => ['resizeToBestFit' => '300, 200', 'crop' => '200, 200'],  // array where key is method and value is parameters for imageresize class
                                                 )
                                 );
 * A) eg two input $input_data_array =   array( 
@@ -78,6 +76,8 @@ class Upload
 {
     use \App\Lib\Traits\Sanitize;
     use \App\Lib\Traits\Mime2ext;
+    use \App\Lib\Traits\Count_parametrs_of_method;
+    use \App\Lib\Traits\Recursive_delete_files;
 
     public array $files;
     public array $phpFileUploadErrors;
@@ -89,6 +89,7 @@ class Upload
     protected $file_mimetype;
     protected $dir_permissions;
     protected $file_permissions;
+    protected $tmp_file_name;
     protected $new_file_name;
     protected $tmp_dir;
 
@@ -158,9 +159,17 @@ class Upload
                                                 // move_upload to tmp dir
                                                 if ($this->move_upload($input_value, $val)) {
                                                     // file processing (rotate, crop, resize etc) $file = $this->tmp_dir.$this->new_file_name
-                                                    // copy or move to dest_dir
-                                                    // empty or unlink tmp dir
-                                                    $this->message .= 'File is uploaded to: "'.$this->tmp_dir.$this->new_file_name.'".';
+                                                    if ( $this->check_processing($input_value) ) { 
+                                                        $this->img_proc($input_value);
+                                                        // clear tmp dir
+                                                        if (self::delTree($this->tmp_dir) === true) {
+                                                            $this->message .= 'Tmp dir "'.$this->tmp_dir.'" has been cleared.';
+                                                        } else {
+                                                            $this->message .= self::delTree($this->tmp_dir);
+                                                        }
+                                                    }  else {
+                                                        break;
+                                                    }
                                                 } else {
                                                     break;
                                                 }
@@ -185,19 +194,66 @@ class Upload
                         $this->message .= 'Array $_FILES["'.$input_data.'"] is empty.<br />If you don\'t upload file - it\'s OK.';
                     }
                 }
-                $this->message .= '<br />';
+                $this->message .= '<br /><br />';
                 //$this->message .= '<hr width="50%" color="SteelBlue" align="center" />';
             }
         }
     }
 
-    protected function move_upload($input_value, $val) {
-        if (!empty($input_value['tmp_dir'])) {
-            $this->tmp_dir = $input_value['tmp_dir'].DIRECTORY_SEPARATOR;
+    protected function img_proc($input_value) {
+        $file = $this->tmp_dir.$this->new_file_name;
+        try{
+            $image = new \App\Lib\Imageresize($file);
+            if ( is_array($input_value['processing']) ) {
+                foreach ($input_value['processing'] as $key => $value) {
+                    if ( method_exists($image,$key) ) {
+                        if (is_array($value) && $this->count_parameters_of_method($image, $key) == count($value)) {                            
+                            call_user_func_array(array($image, $key), $value); //$value - array of parameters
+                        } else {
+                            $this->message .= 'ERROR! The "processing" value of "'.$key.'" is not array, or wrong numbers key of array (parameters for method of class App\Lib\Imageresize)';
+                            return false;
+                        }
+                    } else {
+                        $this->message .= 'ERROR! Method "'.$key.'" not exists in class App\Lib\Imageresize';
+                        return false;
+                    }
+                }
+            } 
+            $image->save($input_value['destination_dir'].DIRECTORY_SEPARATOR.$this->new_file_name); 
+            $this->message .= 'SUCCES! File has been processed and copied to <br />"'.$input_value['destination_dir'].DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
+            return true;
+        } catch (\App\Lib\Imageresizeexception $e) {
+            $this->message .= "ERROR! Something went wrong" . $e->getMessage();
+            return false;
         }
+    }
+
+    protected function check_processing($input_value) {
+        if (empty($input_value['processing'])) {
+            return false;
+        } else { 
+            if ( is_array($input_value['processing']) && !empty($input_value['processing']) ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    protected function move_upload($input_value, $val) {
+        if ( !empty($input_value['tmp_dir']) ) {
+            $this->tmp_dir = $input_value['tmp_dir'].DIRECTORY_SEPARATOR;
+        } 
+        elseif ( empty($input_value['tmp_dir']) ) {
+            if ( !$this->check_processing($input_value) ) { 
+                $this->tmp_dir = $input_value['destination_dir'].DIRECTORY_SEPARATOR;
+            } 
+        } 
+
         if ($this->check_or_create_dir($this->tmp_dir, $this->dir_perm($input_value) )) {
             if (move_uploaded_file($val['tmp_name'] , $this->tmp_dir.$this->new_file_name)) {
                 chmod($this->tmp_dir.$this->new_file_name , $this->file_permissions);
+                $this->message .= 'File is uploaded to: "'.$this->tmp_dir.$this->new_file_name.'".<br />'; 
                 return true;
             } else {
                 $this->message .= 'ERROR! Possible file upload attack: "'.$val['tmp_name'].'".';
@@ -216,8 +272,8 @@ class Upload
                     $this->new_file_name = $new_name; 
                     return true;
                 } else {
-                    $this->message .= 'ERROR in data from input "'.$input_data.'"!<br /> 
-                                        A file "'.$new_name.'"exists in "'.$input_value['destination_dir'].'".<br />
+                    $this->message .= 'WARNING!<br /> 
+                                        A file "'.$new_name.'" exists in "'.$input_value['destination_dir'].'".<br />
                                         Change "new_file_name" in array for upload class in model<br />
                                         or set "replace_old_file" = true or yes or 1.';
                     return false;
