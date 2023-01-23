@@ -3,7 +3,8 @@ Simple php framework with a single entry point
 For enter to admin page list home page to end and click on "FistFramework".
 Then "Да" and then login: admin, password: passw.
 Now you can create or delete page.
-Creating a page includes create file in app/controllers, app/models, app/view
+Creating a page includes create file in app/controllers, app/models, app/view. 
+Controllers for adm_pages extends Adm controller, but model for adm_pages extends Home model.
 and insert data to db.
 After that you can modify these files.
 if you created the data for the pages in the database manually and no created controller, model, view, 

@@ -1,5 +1,5 @@
 <?php
-/*
+/** 
 * The class processes the entire FILES array at once.
 * Only for single or multiple file uploads in next format
 * A) <input type="file" name="name" > or 

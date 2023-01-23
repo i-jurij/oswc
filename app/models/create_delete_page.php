@@ -51,66 +51,97 @@ class Create_delete_page extends Adm
             if ( isset($end) && $end === true ) {
                 goto end;
             }
-            //INSERT DATA INTO SQL TABLE
+            
             if ( isset($post) ) {
+                //INSERT DATA INTO SQL TABLE
                 /*
                 $res = $this->db->db->insert($table, $post);
                 if ($res->rowCount()) {
                     $this->data['res'] .= 'Page data has been inserted to db.<br />';
                 } else {
                     $this->data['res'] .= 'ERROR! <br />Page DATA has NOT been INSERTED to db.<br />';
+                    goto end;
                 }
                 */
-            }
 
-            //UPLOAD FILES "TEMPLATE", "PICTURE"
-            $input_data_array = [   'template' => array( 
-                                        'new_file_name' => '', 
-                                        'destination_dir' => PUBLICROOT.DS.'templates', 
-                                        'file_size' => '', 
-                                        'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
-                                        'file_ext' => ['php', '.html'],
-                                        'dir_permissions' => '', // default 0755
-                                        'replace_old_file' => '', //default false
-                                        'tmp_dir' => ''
-                                    ),
-                                    'picture' => array( 
-                                        'new_file_name' => '', 
-                                        'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
-                                        'file_size' => 1024000, //1MB
-                                        'file_mimetype' => 'image',
-                                        'file_ext' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
-                                        'dir_permissions' => '', // default 0755
-                                        'replace_old_file' => '', //default false
-                                        'tmp_dir' => '',
-                                        'processing' => ['resizeToBestFit' => ['1024', '640']]
-                                    )
-                                ];
-            $files = new Upload($input_data_array);
-            $this->data['res'] .= $files->message;
-
-            print '<pre>';
-            if (isset($files->files)) {
-                print_r($files->files);
-                if (isset($files->errors)) {
-                    print_r ($files->errors);
+                //CREATE CONTROLLER, MODEL, VIEW
+                $filename = $post['page_alias'].'.php';
+                if (function_exists('mb_ucfirst')){
+                    $classname = mb_ucfirst($post['page_alias'], 'UTF-8');
                 }
+                
+                $models = [ '<?php'.PHP_EOL, 'namespace App\Models;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
+                $view = [ '<div class="content">'.PHP_EOL, $filename.PHP_EOL, '</div>'.PHP_EOL ];
+                if ($table === 'adm_pages') {
+                    $controllers = [ '<?php'.PHP_EOL, 'namespace App\Controllers;'.PHP_EOL, 'class '.$classname.' extends Adm'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
+                } else {
+                    $controllers = [ '<?php'.PHP_EOL, 'namespace App\Controllers;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
+                }
+                $file_array = ['controllers', 'models', 'view'];
+                foreach ($file_array as $value) {
+                    if (function_exists('mb_ucfirst')){
+                        $name = mb_ucfirst($value, 'UTF-8');
+                        if ( substr($name, -1) === 's' ) {
+                            $name = substr($name, 0, -1);
+                        }     
+                    }
+                    if (file_exists(APPROOT.DS.$value.DS.$filename)) {
+                        $this->data['res'] .= 'ERROR! <br />File "'.APPROOT.DS.$value.DS.$filename.'" exists.<br />';
+                        goto end;
+                    } else {
+                        if ( is_dir(APPROOT.DS.$value) ) {
+                            if ( !is_writable(APPROOT.DS.$value) && !chmod(APPROOT.DS.$value, 0755) ) {
+                                $this->data['res'] .=  'ERROR!<br /> Cannot change the mode of dir "'.APPROOT.DS.$value.'".';
+                                goto end;
+                            } else {
+                                if (file_put_contents(APPROOT.DS.$value.DS.$filename, $$value, LOCK_EX) === false) {
+                                    $this->data['res'] .= 'ERROR!<br /> Cannot created file "'.APPROOT.DS.$value.DS.$filename.'".<br />';
+                                    goto end;
+                                } else {
+                                    $this->data['res'] .= 'SUCCESS!<br />'.$name.' "'.$filename.'" has been created <br />'; //in dir "'.APPROOT.DS.$value.'".<br />';
+                                }
+                            }
+                        } else {
+                            $this->data['res'] .= 'ERROR! <br />"'.APPROOT.DS.$value.DS.$filename.'" is not a directory.<br />';
+                            goto end;
+                        }
+                    }
+                }
+
+                //UPLOAD FILES "TEMPLATE", "PICTURE"
+                $input_data_array = [   'template' => array( 
+                    'new_file_name' => $filename, 
+                    'destination_dir' => PUBLICROOT.DS.'templates', 
+                    'file_size' => '', 
+                    'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
+                    'file_ext' => ['php', '.html'],
+                    'dir_permissions' => '', // default 0755
+                    'replace_old_file' => '', //default false
+                    'tmp_dir' => ''
+                ),
+                'picture' => array( 
+                    'new_file_name' => $filename, 
+                    'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
+                    'file_size' => 1024000, //1MB
+                    'file_mimetype' => 'image',
+                    'file_ext' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
+                    'dir_permissions' => '', // default 0755
+                    'replace_old_file' => '', //default false
+                    'tmp_dir' => '',
+                    'processing' => ['resizeToBestFit' => ['1024', '640']]
+                )
+                ];
+                /*
+                $files = new Upload($input_data_array);
+                $this->data['res'] .= $files->message;
+                */
             }
-            print '</pre>';
-
-
-            //CREATE CONTROLLER, MODEL, VIEW
-            if ( isset($post) ) {
-               $filename = $post['page_alias'];
-            }
-
+            end:
             //OUTPUT MESSAGE if isset error
             if (strpos($this->data['res'], 'RROR') or strpos($this->data['res'], 'rror')) {
-                $this->data['res'] .= 'ATTENTION! If there are errors, delete page and enter all page data again<br />';
+                $this->data['res'] .= 'ATTENTION!<br /> If there are errors, delete page and enter all page data again<br />';
             } 
-
-            unset($post,$table, $aliases, $value, $key, $end, $res, $filename );
-            end:
+            unset($post,$table, $aliases, $value, $key, $end, $res, $filename, $model, $controller, $view );
         } else {
             //print_r($_GET);
             $q = $_SERVER['QUERY_STRING'];
