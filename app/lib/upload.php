@@ -83,7 +83,7 @@ class Upload
     use \App\Lib\Traits\Sanitize;
     use \App\Lib\Traits\Mime2ext;
     use \App\Lib\Traits\Count_parametrs_of_method;
-    use \App\Lib\Traits\Recursive_delete_files;
+    use \App\Lib\Traits\Delete_files;
     use \App\Lib\Traits\Check_create_dir;
     use \App\Lib\Traits\Translit2lat;
 
@@ -172,10 +172,10 @@ class Upload
                                                     if ( $this->check_processing($input_value) ) { 
                                                         $this->img_proc($input_value);
                                                         // clear tmp dir
-                                                        if (self::delTree($this->tmp_dir) === true) {
+                                                        if (self::del_files_in_dir($this->tmp_dir, true) === true) {
                                                             $this->message .= 'Tmp dir "'.$this->tmp_dir.'" has been cleared.';
                                                         } else {
-                                                            $this->message .= self::delTree($this->tmp_dir);
+                                                            $this->message .= self::del_files_in_dir($this->tmp_dir, true);
                                                         }
                                                     }  else {
                                                         break;

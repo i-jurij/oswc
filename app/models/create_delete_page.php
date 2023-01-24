@@ -6,6 +6,9 @@ use App\Lib\Upload;
 
 class Create_delete_page extends Adm
 {
+    use \App\Lib\Traits\Delete_files;
+    use \App\Lib\Traits\File_find;
+
 	protected function db_query() 
 	{
 		$this->data['page_db_data'] = array(array("page_alias" => "create_delete_page", 
@@ -166,32 +169,85 @@ class Create_delete_page extends Adm
             elseif ($q === 'b') { $table = 'pages'; $this->data['name'] .= '&nbsp;в pages';}
         }
         if (filter_has_var(INPUT_POST, 'delete_page')) {
-            //delete controller, model, view (except adm, home)
-
-            //delete template (except adm_templ.php and templ.php if is the only one)
-
-            //delete page img
-
-            //delete data from db
             if (is_array($_POST['delete_page'])) {
                 foreach ($_POST['delete_page'] as $value) {
                     if (!empty($value)) {
                         $postdel[] = htmlentities($value);
                     }
                 }
-                $res = $this->db->db->delete($table, ["page_alias" => $postdel]);
-                if ($res->rowCount() > 0) {
-                    $this->data['res'] .= 'Pages data has been deleted from db table';
+                if (!empty($postdel)) {
+                    //delete data from db
+                    $res = $this->db->db->delete($table, ["page_alias" => $postdel]);
+                    if ($res->rowCount() > 0) {
+                        $this->data['res'] .= 'Pages data has been deleted from db table.<br />';
+                    } else {
+                        $this->data['res'] .= 'ERROR!<br /> The data has NOT been DELETED from database.<br />'.$this->db->db->error;
+                    }                
+                    foreach ($postdel as $val) {
+                        //delete controller, model, view (except adm, home)
+                        $file_array = ['controllers', 'models', 'view'];
+                        foreach ($file_array as $va) {
+                            $path = APPROOT.DS.$va.DS.$val.'.php';
+                            if (function_exists('mb_ucfirst')){
+                                $name = mb_ucfirst($va, 'UTF-8');
+                                if ( substr($name, -1) === 's' ) {
+                                    $name = substr($name, 0, -1);
+                                }     
+                            }
+                            if (self::del_file($path) === true) {
+                                $this->data['res'] .= $name.' "'.$value.'" has been deleted.<br />';
+                            } else {
+                                $this->data['res'] .= self::del_file($path).'<br />';
+                            }
+                        }
+                        unset($path);
+                        //delete page img
+                        $path = PUBLICROOT.DS.'imgs'.DS.'pages'; 
+                        if ( self::find_by_filename($path, $val) === false ) {
+                            $this->data['res'] .= 'WARNING! Image named "'.$val.'" was not found for deletion.<br />';
+                        } else {
+                            $file_for_del = self::find_by_filename($path, $val);
+                            if (self::del_file($file_for_del)) {
+                                $this->data['res'] .= 'Image "'.$val.'" has been deleted.<br />';
+                            } else {
+                                $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted.<br />';
+                            }
+                        }
+                        //delete template (except adm_templ.php and templ.php if is the only one)
+                        unset($path);
+                        //delete page img
+                        $path = PUBLICROOT.DS.'templates'; 
+                        if ($val != 'adm_templ' || $val != 'templ') {
+                            if ( self::find_by_filename($path, $val) === false ) {
+                                $this->data['res'] .= 'WARNING! Template named "'.$val.'" was not found for deletion.<br />';
+                            } else {
+                                $file_for_del = self::find_by_filename($path, $val);
+                                if (self::del_file($file_for_del)) {
+                                    $this->data['res'] .= 'Template "'.$val.'" has been deleted.<br />';
+                                } else {
+                                    $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted.<br />';
+                                }
+                            }
+                        } else {
+                            $this->data['res'] .= 'WARNING! We need to replace "adm_teml.php" or "templ.php", otherwise everything will break.<br />';
+                        }
+                    }
                 } else {
-                    $this->data['res'] .= 'ERROR!<br /> The data has NOT been DELETED from database.<br />'.$this->db->db->error;
+                    $this->data['res'] .= 'ERROR!<br /> Empty array of pages for delete.<br />';
                 }
             } else { 
-                $this->data['res'] .= 'ERROR! Data is not array.';
+                $this->data['res'] .= 'ERROR! Data is not array.<br />';
             }
-            unset($value, $res);
+            unset($value, $val, $va, $res, $path, $files, $k, $v);
         } else {
             if ($table === 'pages') {
-                $this->data['pagename'] = $this->db->db->select($table, ["page_alias", "page_title", "page_templates", "page_img"]);
+                $pagename = $this->db->db->select($table, ["page_alias", "page_title", "page_templates", "page_img"]);
+                print_r($pagename);
+                foreach ($pagename as $page) {
+                    if ($page['page_alias'] != 'home') {
+                        $this->data['pagename'][] = $page;
+                    }
+                }
             } else {
                 $this->data['pagename'] = $this->db->db->select($table, ["page_alias", "page_title", "page_templates"]);
             }

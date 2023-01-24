@@ -18,7 +18,6 @@ trait Check_create_dir
             # create dir if $create_dir = true or message - dir not exists
             if ($create) {
                 if (mkdir($dir, $permissions, true)) {
-                    chmod($dir, $permissions);
                     $mes = true;
                 } else {
                     $mes = 'ERROR! Failed to create directory "'.$dir.'".';
