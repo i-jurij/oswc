@@ -54,7 +54,6 @@ class Create_delete_page extends Adm
             
             if ( isset($post) ) {
                 //INSERT DATA INTO SQL TABLE
-                /*
                 $res = $this->db->db->insert($table, $post);
                 if ($res->rowCount()) {
                     $this->data['res'] .= 'Page data has been inserted to db.<br />';
@@ -62,14 +61,13 @@ class Create_delete_page extends Adm
                     $this->data['res'] .= 'ERROR! <br />Page DATA has NOT been INSERTED to db.<br />';
                     goto end;
                 }
-                */
 
                 //CREATE CONTROLLER, MODEL, VIEW
                 $filename = $post['page_alias'].'.php';
                 if (function_exists('mb_ucfirst')){
                     $classname = mb_ucfirst($post['page_alias'], 'UTF-8');
                 }
-                
+
                 $models = [ '<?php'.PHP_EOL, 'namespace App\Models;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
                 $view = [ '<div class="content">'.PHP_EOL, $filename.PHP_EOL, '</div>'.PHP_EOL ];
                 if ($table === 'adm_pages') {
@@ -86,7 +84,7 @@ class Create_delete_page extends Adm
                         }     
                     }
                     if (file_exists(APPROOT.DS.$value.DS.$filename)) {
-                        $this->data['res'] .= 'ERROR! <br />File "'.APPROOT.DS.$value.DS.$filename.'" exists.<br />';
+                        $this->data['res'] .= 'ERROR! <br />Dir or file "'.APPROOT.DS.$value.DS.$filename.'" exists.<br />';
                         goto end;
                     } else {
                         if ( is_dir(APPROOT.DS.$value) ) {
@@ -110,7 +108,7 @@ class Create_delete_page extends Adm
 
                 //UPLOAD FILES "TEMPLATE", "PICTURE"
                 $input_data_array = [   'template' => array( 
-                    'new_file_name' => $filename, 
+                    'new_file_name' => $post['page_alias'], 
                     'destination_dir' => PUBLICROOT.DS.'templates', 
                     'file_size' => '', 
                     'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
@@ -120,21 +118,21 @@ class Create_delete_page extends Adm
                     'tmp_dir' => ''
                 ),
                 'picture' => array( 
-                    'new_file_name' => $filename, 
+                    'new_file_name' => $post['page_alias'], 
                     'destination_dir' => PUBLICROOT.DS.'imgs/pages', 
                     'file_size' => 1024000, //1MB
                     'file_mimetype' => 'image',
                     'file_ext' => ['jpg', 'png', 'webp', 'jpeg', 'image'],
                     'dir_permissions' => '', // default 0755
                     'replace_old_file' => '', //default false
-                    'tmp_dir' => '',
+                    'tmp_dir' => PUBLICROOT.DS.'tmp',
                     'processing' => ['resizeToBestFit' => ['1024', '640']]
                 )
                 ];
-                /*
+                
                 $files = new Upload($input_data_array);
                 $this->data['res'] .= $files->message;
-                */
+                
             }
             end:
             //OUTPUT MESSAGE if isset error
