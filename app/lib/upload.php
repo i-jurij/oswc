@@ -1,20 +1,20 @@
 <?php
-/** 
+/**
 * The class processes the entire FILES array at once.
 *
 * Only for single or multiple file uploads in next format
-* A) <input type="file" name="name" > or 
+* A) <input type="file" name="name" > or
 * B) <input type="file" name="names[]" >
 *
 * The input data array must contain the path to the folder for uploading files.
 * $input_data_array =   array( 'name' => array( 'destination_dir' => 'required') );
-* where required - 
-* string 'path/to/dir_for_upload_file' 
+* where required -
+* string 'path/to/dir_for_upload_file'
 * or array ['path2dir', true], path and true|yes|1 for created destination dir (by default $this->create_dir = false)
 *
 * or full $input_data_array:
-* A) single input $input_data_array =   array( 
-                                'name' => array( 
+* A) single input $input_data_array =   array(
+                                'name' => array(
                                                     'new_file_name' => '', // if empty = sanitize old filename
                                                     'destination_dir' => 'path_to_dir', // ['path2dir', true]
                                                     'file_size' => '' // integer, default 3072000 Byte
@@ -24,50 +24,50 @@
                                                     'file_permissions' => '', // binary, default 0644
                                                     'replace_old_file' => '', // yes, no or true, false or 0, 1; if empty - no
                                                     'tmp_dir' => '', // 'path_to_tmp_dir', default /tmp
-                                                    'processing' => ['resizeToBestFit' => '300, 200', 'crop' => '200, 200'],  // array where key is method and value is parameters for imageresize class
+                                                    'processing' => ['resizeToBestFit' => ['1024', '640'], 'crop' => ['1024', '640']],  // array where key is method and value is parameters for imageresize class
                                                 )
                                 );
-* A) eg two input $input_data_array =   array( 
-                                'name_0' => array( 
-                                                    'new_file_name' => '', 
-                                                    'destination_dir' => '', 
+* A) eg two input $input_data_array =   array(
+                                'name_0' => array(
+                                                    'new_file_name' => '',
+                                                    'destination_dir' => '',
                                                     'file_size' => ''
-                                                    'file_mimetype' => '', 
+                                                    'file_mimetype' => '',
                                                     'file_ext' => '',
                                                     'dir_permissions' => '', // default 0755
                                                     'replace_old_file' => '' //default no
                                                 ),
-                                'name_1' => array( 
-                                                    'new_file_name' => '', 
-                                                    'destination_dir' => '', 
+                                'name_1' => array(
+                                                    'new_file_name' => '',
+                                                    'destination_dir' => '',
                                                     'file_size' => ''
-                                                    'file_mimetype' => '', 
+                                                    'file_mimetype' => '',
                                                     'file_ext' => '',
                                                     'dir_permissions' => '', // default 0755
                                                     'replace_old_file' => '' //default no
-                                                )    
+                                                )
                                 );
-* B) $input_data_array = ['names' => 
+* B) $input_data_array = ['names' =>
                                         [
-                                            'new_file_name' => 'if empty = sanitize old filename', 
-                                            'destination_dir' => 'required', 
+                                            'new_file_name' => 'if empty = sanitize old filename',
+                                            'destination_dir' => 'required',
                                             'file_size' => ''
-                                            'file_mimetype' => '' //string or array, audio or ['image', 'audio', 'video'], 
+                                            'file_mimetype' => '' //string or array, audio or ['image', 'audio', 'video'],
                                             'file_ext' => '', //string or array(), jpg or ['php', 'html', 'txt']
                                             'dir_permissions' => '', // default 0755
                                             'replace_old_file' => '' //default no
-                                        ] 
+                                        ]
                         ];
 * B) the name of each file will be "sanitize_new_file_name_Inputs_index" or "sanitize_old_name_index"
 * dest_dir, file_size, File_type - will be the same for all files
 *
 * in function init: $create_dest_dir = false - default
 *
-* file_size - default 3MB, can be changed in function init 
+* file_size - default 3MB, can be changed in function init
 *
-* file_mimetype and file_ext - default empty (all files can be uploaded), can be changed in function init 
-* the extension refines the mimetype. mimetype is checked first, then extension is checked, 
-* if the extension of the downloaded file is suitable for mimetype, 
+* file_mimetype and file_ext - default empty (all files can be uploaded), can be changed in function init
+* the extension refines the mimetype. mimetype is checked first, then extension is checked,
+* if the extension of the downloaded file is suitable for mimetype,
 * but does not match the extension specified by the user - the file will not be uploaded.
 *
 * dir_permissions - permissions for destination dir and tmp_dir
@@ -130,7 +130,7 @@ class Upload
         );
     }
 
-    public function go($data_array) { 
+    public function go($data_array) {
         $this->init();
         if (is_array($data_array)) {
             $data_array_is_array = true;
@@ -156,7 +156,7 @@ class Upload
                                 foreach ($this->files[$input_data] as $key => $val) {
                                     if ($val['error'] === 0) {
                                         // check dest dir
-                                        if (    $this->check_dest_dir($input_value) 
+                                        if (    $this->check_dest_dir($input_value)
                                                 //check file size
                                                 && $this->check_file_size($input_data, $input_value, $key, $val)
                                                 //check mimetype
@@ -169,7 +169,7 @@ class Upload
                                                 // move_upload to tmp dir
                                                 if ($this->move_upload($input_value, $val)) {
                                                     // file processing (rotate, crop, resize etc) $file = $this->tmp_dir.$this->new_file_name
-                                                    if ( $this->check_processing($input_value) ) { 
+                                                    if ( $this->check_processing($input_value) ) {
                                                         $this->img_proc($input_value);
                                                         // clear tmp dir
                                                         if (self::del_files_in_dir($this->tmp_dir, true) === true) {
@@ -217,7 +217,7 @@ class Upload
             if ( is_array($input_value['processing']) ) {
                 foreach ($input_value['processing'] as $key => $value) {
                     if ( method_exists($image,$key) ) {
-                        if (is_array($value) && $this->count_parameters_of_method($image, $key) == count($value)) {                            
+                        if (is_array($value) && $this->count_parameters_of_method($image, $key) == count($value)) {
                             call_user_func_array(array($image, $key), $value); //$value - array of parameters
                         } else {
                             $this->message .= 'ERROR! The "processing" value of "'.$key.'" is not array, or wrong numbers key of array (parameters for method of class App\Lib\Imageresize)';
@@ -228,8 +228,8 @@ class Upload
                         return false;
                     }
                 }
-            } 
-            $image->save($this->destination_dir.DIRECTORY_SEPARATOR.$this->new_file_name); 
+            }
+            $image->save($this->destination_dir.DIRECTORY_SEPARATOR.$this->new_file_name);
             $this->message .= 'SUCCES! File has been processed and copied to <br />"'.$this->destination_dir.DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
             return true;
         } catch (\App\Lib\Imageresizeexception $e) {
@@ -241,7 +241,7 @@ class Upload
     protected function check_processing($input_value) {
         if (empty($input_value['processing'])) {
             return false;
-        } else { 
+        } else {
             if ( is_array($input_value['processing']) && !empty($input_value['processing']) ) {
                 return true;
             } else {
@@ -253,17 +253,17 @@ class Upload
     protected function move_upload($input_value, $val) {
         if ( !empty($input_value['tmp_dir']) ) {
             $this->tmp_dir = $input_value['tmp_dir'].DIRECTORY_SEPARATOR;
-        } 
+        }
         elseif ( empty($input_value['tmp_dir']) ) {
-            if ( !$this->check_processing($input_value) ) { 
+            if ( !$this->check_processing($input_value) ) {
                 $this->tmp_dir = $this->destination_dir.DIRECTORY_SEPARATOR;
-            } 
-        } 
+            }
+        }
 
         if ( $this->check_or_create_dir($this->tmp_dir, $this->dir_perm($input_value), $this->create_dir) ) {
             if (move_uploaded_file($val['tmp_name'] , $this->tmp_dir.$this->new_file_name)) {
                 chmod($this->tmp_dir.$this->new_file_name , $this->file_permissions);
-                $this->message .= 'File is uploaded to: "'.$this->tmp_dir.$this->new_file_name.'".<br />'; 
+                $this->message .= 'File is uploaded to: "'.$this->tmp_dir.$this->new_file_name.'".<br />';
                 return true;
             } else {
                 $this->message .= 'ERROR! Possible file upload attack: "'.$val['tmp_name'].'".';
@@ -279,10 +279,10 @@ class Upload
             $new_name = $this->name.$this->get_point_ext($val['name']);
             if (file_exists($this->destination_dir.DIRECTORY_SEPARATOR.$new_name)) {
                 if ($input_value['replace_old_file'] === 'yes' || $input_value['replace_old_file'] === true || $input_value['replace_old_file'] == 1 ) {
-                    $this->new_file_name = $new_name; 
+                    $this->new_file_name = $new_name;
                     return true;
                 } else {
-                    $this->message .= 'WARNING!<br /> 
+                    $this->message .= 'WARNING!<br />
                                         A file "'.$new_name.'" exists in "'.$this->destination_dir.'".<br />
                                         Change "new_file_name" in array for upload class in model<br />
                                         or set "replace_old_file" = true or yes or 1.';
@@ -298,7 +298,7 @@ class Upload
     }
 
     protected function new_name($input_data, $input_value, $key, $val) {
-        //get patrs of files name 
+        //get patrs of files name
         if (!empty($val['name'])) {
             $path_parts = pathinfo($val['name']);
         } else {
@@ -318,7 +318,7 @@ class Upload
         } else {
             $this->name = $this->sanitize_string($this->translit_cyr_to_lat($input_value['new_file_name']));
             return true;
-        }   
+        }
     }
 
     protected function check_extension($input_data, $input_value, $key, $val) {
@@ -423,7 +423,7 @@ class Upload
 			finfo_close($finfo);
 		} elseif (function_exists('mime_content_type')) {
 			$mtype = mime_content_type($file);
-		} 
+		}
 		return $mtype;
 	}
 
@@ -441,11 +441,11 @@ class Upload
             return false;
         }
     }
-    
+
     protected function dir_perm($input_value) {
         if (!empty($input_value['dir_permissions'])) {
             $this->dir_permissions = htmlentities($input_value['dir_permissions']);
-        } 
+        }
     }
 
     public function check_dest_dir($input_value) {
