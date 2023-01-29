@@ -24,11 +24,21 @@ class Home
 
 	protected function db_query() 
 	{
-		//add data for head in template
-		if ($this->db->db->has($this->table, ["page_alias" => $this->page])) {
-		$this->data['page_db_data'] = $this->db->db->select($this->table, "*", ["page_alias" => $this->page]);
+		if ($this->page === 'home' ) {
+			$this->data['page_db_data'] = [
+				["page_alias" => "home",
+				"page_title" => "Главная страница",
+				"page_meta_description" => "Главная страница",
+				"page_robots" => "INDEX, FOLLOW",
+				"page_h1" => "Главная страница"
+				]];
+		} else {
+			//add data for head in template
+			if ($this->db->db->has($this->table, ["page_alias" => $this->page])) {
+				$this->data['page_db_data'] = $this->db->db->select($this->table, "*", ["page_alias" => $this->page]);
+			}
+			\App\Lib\Registry::set('page_db_data', $this->data['page_db_data']);
 		}
-		\App\Lib\Registry::set('page_db_data', $this->data['page_db_data']);
 	}
 
 	public function get_data($path)

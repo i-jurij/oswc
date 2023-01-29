@@ -140,13 +140,14 @@ page_templates - path to the template, excluding public/templates, if necessary,
 * page_title - short name of the page in your language, letters, numbers, hyphens, underscores up to 100 pieces;
 page_meta_description - description of the site page in the search results, and for SEO,
 page_meta_keywords - a list of keywords corresponding to the content of the site page,
-page_robots - rules for loading and indexing certain pages of the site (https://yandex.ru/support/webmaster/controlling-robot/meta-robots.html),
+page_robots - rules for loading and indexing certain pages of the site   
+(https://yandex.ru/support/webmaster/controlling-robot/meta-robots.html),
 * page_h1 - title of page,
 * page_img - path to img of page on home page, exclude public/imgs/pages, eg "about/about.jpg"
 page_content - html|php content of page
 * page_access - access level to page: admin, moder, user.
 * - necessary
 
-Create data for home page too. Records are needed for the template (title and other things for main page of site).
-
+The home page data required for template (title and other things for main page of site)  
+is given in the model and will need to be changed manually.
 

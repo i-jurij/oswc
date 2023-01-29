@@ -37,7 +37,7 @@
 <body>
   <div class="wrapper">
     <header class="he stickyheader flex">
-      <?php include PUBLICROOT.DS.'templates'.DS.'contacts.php'; ?>
+      <?php include PUBLICROOT.DS.'templates'.DS.'templ_contacts.php'; ?>
     </header>
 
     <div class="main ">
@@ -62,7 +62,7 @@
 
     <footer class="foot">
       <div class="foot_div">
-          <?php include PUBLICROOT.DS.'templates'.DS.'contacts.php'; ?>
+          <?php include PUBLICROOT.DS.'templates'.DS.'templ_contacts.php'; ?>
       </div>
       <div class="foot_div">
         <?php echo "2022 - " . date('Y') . PHP_EOL; ?>
