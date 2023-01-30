@@ -149,5 +149,17 @@ page_content - html|php content of page
 * - necessary
 
 The home page data required for template (title and other things for main page of site)  
-is given in the model and will need to be changed manually.
-
+is given in the model and will need to be changed manually in app/models/home.php in   
+`protected function db_query()`   
+	`{`   
+		`if ($this->page === 'home' ) {`   
+			`$this->data['page_db_data'] = [`    
+				`["page_alias" => "home",`   
+				`"page_title" => "Главная страница",`   
+				`"page_meta_description" => "Главная страница",`    
+				`"page_robots" => "INDEX, FOLLOW",`    
+				`"page_h1" => "Главная страница"`   
+				`]];`    
+		`} ... `
+    `}`    
+    
