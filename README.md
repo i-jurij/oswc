@@ -70,33 +70,35 @@ Controllers: its own for each page;
 
 app/controllers/home:   
 method __construct load class View;   
-method index a gets name of class in which it is located,   
+method "index" a gets name of class in which it is located,   
 and load method from model ($path -> from class Rout),   
 and load method generate from view ($content_view, $data, $template_view -> explained below).   
 
 app/controllers/adm - extends home:   
 `protected string $template = TEMPLATEROOT.DS.'first/templ.php';` - the path to the template,   
 it is possible to override it in child classes;    
-method index override parents method from Home,    
+method "index" override parents method from Home,    
 
 load App\Lib\Let_adm_login which load simple authenticate class App\Lib/Auth,   
 which uses the class App\Lib\Session (methods for vars in php session).   
 
-Adm controller set $_SESSION vars: 'user_name' for authentication and    
-'status' (admin, moder, user - readed from `users` db) for autorisation   
-in pages views class.   
+Adm controller set $_SESSION vars:   
+'user_name' for authentication and    
+'status' (admin, moder, user - readed from `users` db)   
+for autorization in pages views class.   
+
 Autorization is simple: for each status formed array of page alias and  
 user will to see only this page.   
 Or you can check status in method of view class.  
 Also, the 'page_access' field for each page in the database table indicates the user who is allowed access.
 
 Admins LOGIN and PASSWORD is in app/db/oswc.sqlite in table `users`,   
-default is 'login' => 'admin', 'pass' => 'passw;    
-password in db - "password" => password_hash("passw", PASSWORD_DEFAULT);  
+default is `'login' => 'admin', 'pass' => 'passw;`    
+password in db - `"password" => password_hash("passw", PASSWORD_DEFAULT);`  
 
 
 class Auth use trait Reject from App\Lib\Traits:    
-$this->reject_login() - it load header 403 Access denied if password will be wrong enter 4 times    
+`$this->reject_login()` - it load header 403 Access denied if password will be wrong enter 4 times    
 
 
 Models: its own for each page.   

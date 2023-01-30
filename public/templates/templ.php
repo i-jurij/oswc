@@ -66,6 +66,7 @@
       </div>
       <div class="foot_div">
         <?php echo "2022 - " . date('Y') . PHP_EOL; ?>
+        <br /><small id="mail">Copyright © <a href="https://github.com/i-jurij" >I-Jurij</a></small>
       </div>
     </footer>
   </div>
