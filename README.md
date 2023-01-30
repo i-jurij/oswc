@@ -1,4 +1,9 @@
-Simple php framework with a single entry point
+# Simple php framework with a single entry point   
+
+First of all, when creating your web application: change the name of the project folder,   
+set the same name in RewriteBase in .htaccess, and in app/configs/configs.php,   
+in the same place in the config, specify the name of the database and rename the database   
+if it already exists in the project.
 
 For enter to admin page list home page to end and click on "FistFramework".
 Then "Да" and then login: admin, password: passw.
