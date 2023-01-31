@@ -43,6 +43,7 @@ class Home
 
 	public function get_data($path)
 	{	
+		// START required
 		$this->data['nav'] = Registry::get('nav');
 
 		if ( null !== \App\Lib\Registry::get('page_db_data') ) {
@@ -70,7 +71,8 @@ class Home
 			} elseif (!empty($value['contacts_data'])) {
 				$this->data[$value['contacts_type']] = $value['contacts_data'];
 			}
-		} 	
+		} 
+		// END required	
 /*		
 		if (empty($this->data['page_db_data'][0]['page_content'])) {
 			$this->data['page_db_data'][0]['page_content'] = (file_exists('README.md')) ? file('README.md') : array(
