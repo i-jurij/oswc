@@ -30,12 +30,8 @@
 if (empty($data['colname']) && empty($data['pagename']) && empty($data['res'])) {
     print '<div class="margin_bottom_1rem ">
                 <div class="display_inline_block">
-                    <a href="'.URLROOT.'/create_delete_page/create?a" class="buttons display_inline_block mar">Создать в adm_pages</a>
-                    <a href="'.URLROOT.'/create_delete_page/create?b" class="buttons display_inline_block mar">Создать в pages</a>
-                </div>
-                <div class="display_inline_block">
-                    <a href="'.URLROOT.'/create_delete_page/delete?a" class="buttons display_inline_block mar">Удалить в adm_pages</a>
-                    <a href="'.URLROOT.'/create_delete_page/delete?b" class="buttons display_inline_block mar">Удалить в pages</a>
+                <a href="'.URLROOT.'/create_delete_page/create?b" class="buttons display_inline_block mar">Создать</a>
+                <a href="'.URLROOT.'/create_delete_page/delete?b" class="buttons display_inline_block mar">Удалить</a>
                 </div>
             </div>
             ';

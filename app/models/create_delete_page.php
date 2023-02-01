@@ -168,16 +168,9 @@ class Create_delete_page extends Adm
             } 
             unset($post,$table, $aliases, $value, $key, $end, $res, $filename, $model, $controller, $view );
         } else {
-            //print_r($_GET);
-            $q = $_SERVER['QUERY_STRING'];
-            if (is_string($q) && strlen(htmlentities(trim($q))) === 1 ) {
-                if ($q === 'a') { $table = 'adm_pages'; $this->data['name'] .= '&nbsp;в adm_pages';}
-                elseif ($q === 'b') { $table = 'pages'; $this->data['name'] .= '&nbsp;в pages';}
-                if (!empty($table)) {
-                    $colnames = (new Sql_col_names($this->db, $table))->res;
-                    $this->data['colname'] = $colnames;
-                }
-            }
+            $table = 'pages';
+            $colnames = (new Sql_col_names($this->db, $table))->res;
+            $this->data['colname'] = $colnames;
             unset($q,$table, $colnames );
         }
         return $this->data;
@@ -187,11 +180,14 @@ class Create_delete_page extends Adm
 	{	
         $this->data['name'] = 'Удалить';
         $this->data['res'] = null;
+        $table = 'pages';
+        /*
         $q = $_SERVER['QUERY_STRING'];
         if (is_string($q) && strlen(htmlentities(trim($q))) === 1 ) {
             if ($q === 'a') { $table = 'adm_pages'; $this->data['name'] .= '&nbsp;в adm_pages';}
             elseif ($q === 'b') { $table = 'pages'; $this->data['name'] .= '&nbsp;в pages';}
         }
+        */
         if (filter_has_var(INPUT_POST, 'delete_page')) {
             if (is_array($_POST['delete_page'])) {
                 foreach ($_POST['delete_page'] as $value) {
