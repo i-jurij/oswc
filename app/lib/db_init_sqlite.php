@@ -31,9 +31,6 @@ class Db_init_sqlite
                 "VARCHAR(100)",
                 "UNIQUE"
             ],
-            "page_templates" => [
-                "VARCHAR(100)"
-            ],
             "page_title" => [
                 "VARCHAR(100)"
             ],
@@ -106,7 +103,97 @@ class Db_init_sqlite
                 "VARCHAR(100)",
                 "UNIQUE"
             ]
-        ]);    
+        ]);
+
+        $this->db->create("masters", [
+            "id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "master_name" => [
+                "VARCHAR(30)"
+            ],
+            "sec_name" => [
+                "VARCHAR(30)"
+            ],
+            "master_fam" => [
+                "VARCHAR(30)"
+            ],
+            "master_phone_number" => [
+                "VARCHAR(20)",
+                "UNIQUE"
+            ],
+            "spec" => [
+                "VARCHAR(50)"
+            ],
+            "data_priema" => [
+                "TEXT",
+                "NOT NULL"
+            ],
+            "data_uvoln" => [
+                "VARCHAR(30)"
+            ]
+        ]);
+
+        $this->db->create("client_phone_numbers", [
+            "id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "name" => [
+                "TEXT"
+            ],
+            "phone_number" => [
+                "TEXT",
+                "NOT NULL"
+            ],
+            "send" => [
+                "TEXT"
+            ],
+            "date_time" => [
+                "TEXT",
+                "NOT NULL"
+            ],
+            "recall" => [
+                "INTEGER"
+            ]      
+        ]);
+        $this->db->create("about", [
+            "id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "article_title" => [
+                "TEXT"
+            ],
+            "article_content" => [
+                "TEXT",
+                "NOT NULL"
+            ],
+            "article_image" => [
+                "TEXT"
+            ]
+        ]);
+        $this->db->create("map", [
+            "id" => [
+                "INTEGER PRIMARY KEY",
+                "AUTOINCREMENT",
+                "NOT NULL"
+            ],
+            "article_title" => [
+                "TEXT"
+            ],
+            "article_content" => [
+                "TEXT",
+                "NOT NULL"
+            ],
+            "article_image" => [
+                "TEXT"
+            ]
+        ]);
 
         $contacts = $this->db->select("contacts", "*");
         if(!$contacts){ // SELECT failed 
