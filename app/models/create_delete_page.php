@@ -71,11 +71,24 @@ class Create_delete_page extends Adm
                 }
 
                 $models = [ '<?php'.PHP_EOL, 'namespace App\Models;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
-                $view = [ '<div class="content">'.PHP_EOL, $filename.PHP_EOL, '</div>'.PHP_EOL ];
+                $view_adm = [ '<div class="content">'.PHP_EOL, $filename.PHP_EOL, '</div>'.PHP_EOL ];
+                $view_user = ['<div class="content">
+                            <?php
+                            if (!empty($data[\'res\'])) {
+                            } else {
+                                print \'res\';
+                                include_once APPROOT.DS."view".DS."js_back.html";
+                            } else {
+                                print \'start\';
+                                include_once APPROOT.DS."view".DS."back_home.html";
+                            }?>
+                        </div>'];
                 if (!empty($post['page_admin']) && $post['page_admin'] == 1 ) {
                     $controllers = [ '<?php'.PHP_EOL, 'namespace App\Controllers;'.PHP_EOL, 'class '.$classname.' extends Adm'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
+                    $view = $view_adm;
                 } else {
                     $controllers = [ '<?php'.PHP_EOL, 'namespace App\Controllers;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
+                    $view = $view_user;
                 }
                 $file_array = ['controllers', 'models', 'view'];
                 foreach ($file_array as $value) {
