@@ -7,14 +7,28 @@ function getOutput ($file) {
   return $output;
 }
 
-function files_in_dir($path, $ext) 
+/**
+ * @param string $path - dir for scan
+ * @param string $ext - extension of files eg 'png' or 'png, webp, jpg'
+ * @return array path to files
+ */
+function files_in_dir($path, $ext = '') 
 {
   $files = array();
   if (file_exists($path)) {
     $f = scandir($path);
     foreach ($f as $file){
-      if(preg_match("/\.($ext)/", $file)) {
+      if (is_dir($file)) continue;
+      if (empty($ext)) {
         $files[] = $file;
+      } else {
+        $arr = explode(',', $ext);
+        foreach ($arr as $value) {
+          $extt = trim($value);
+          if(preg_match("/\.($extt)/", $file)) {
+            $files[] = $file;
+          }
+        }
       }
     }
   }

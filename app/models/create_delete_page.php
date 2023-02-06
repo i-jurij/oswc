@@ -276,7 +276,7 @@ class Create_delete_page extends Adm
                 }
             }
             //list of files in templates dir
-            $this->data['templates_list'] = files_in_dir(PUBLICROOT.DS.'templates', 'php');
+            $this->data['templates_list'] = files_in_dir(PUBLICROOT.DS.'templates', 'php, html');
         }
         return $this->data;
 	}
