@@ -75,7 +75,7 @@ class Create_delete_page extends Adm
                 $view_user = ['<div class="content">'.PHP_EOL
                                 .'<?php'.PHP_EOL
                                 .'if (!empty($data[\'res\'])) {'.PHP_EOL
-                                    .'print \'res\';'.PHP_EOL
+                                    .'print $data[\'res\'];'.PHP_EOL
                                     .'include_once APPROOT.DS."view".DS."js_back.html";'.PHP_EOL
                                 .'} else {'.PHP_EOL
                                     .'print \'start\';'.PHP_EOL
