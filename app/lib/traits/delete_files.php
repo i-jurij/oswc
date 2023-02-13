@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Delete_files 
+trait Delete_files
 {
   public static function del_files_in_dir(string $dir, bool $recursive = true) {
     $mes = '';
@@ -25,21 +25,21 @@ trait Delete_files
   }
   /**
   * delete a file or files
-  * 
+  *
   * @param string $path2file
-  * @return string or @return true
+  * @return true or string (check if $this === true)
   */
   public static function del_file(string $path2file) {
     $mes = '';
     if (is_string($path2file)) {
-      $real = realpath($path2file);
-      if (file_exists($real)) {
-        if (is_writable($real)) {
-          if (!unlink($real)) {
+      //$path2file = realpath($path2file);
+      if (file_exists($path2file)) {
+        if (is_writable($path2file)) {
+          if (unlink($path2file)) {
+            return true;
+          } else {
             $mes .= 'ERROR! Not unlink "'.$path2file.'".';
             return $mes;
-          } else {
-            return true;
           }
         } else {
           $mes .= 'ERROR! File "'.$path2file.'" is not writable.';
@@ -54,12 +54,22 @@ trait Delete_files
       return $mes;
     }
   }
-  
+
+  function del_empty_dir($dir) {
+    if ( [] === ( array_diff(scandir($dir), array('.', '..')) ) ) {
+      if (rmdir($dir)) {
+          return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   /**
   * delete a file or directory
   * automatically traversing directories if needed.
   * PS: has not been tested with self-referencing symlink shenanigans, that might cause a infinite recursion, i don't know.
-  * 
+  *
   * @param string $cmd
   * @throws \RuntimeException if unlink fails
   * @throws \RuntimeException if rmdir fails
