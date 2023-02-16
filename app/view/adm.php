@@ -19,9 +19,10 @@ if (!empty($data['res'])) {
   if ( password_verify("admin", $session->get("status")) ) {
     //default button for create controller, model, view and insert data of page to db
     echo '<p class="margin_bottom_1rem">
-            <a href="' . URLROOT . '/create_delete_page/" class="buttons">Страницы</a> 
-            <a href="' . URLROOT . '/change_pass/" class="buttons">Пользователи</a> 
-            <a href="' . URLROOT . '/adm/clear/" class="buttons">Чистка журналов</a> 
+            <a href="' . URLROOT . '/create_delete_page/" class="buttons">Страницы</a>
+            <a href="' . URLROOT . '/change_pass/" class="buttons">Пользователи</a>
+            <a href="' . URLROOT . '/logs_view/" class="buttons">Просмотр логов</a>
+            <a href="' . URLROOT . '/adm/clear/" class="buttons">Чистка логов</a>
           </p>';
   }
   // !!! DON`T REMOVE THIS END !!! ///////////
@@ -59,11 +60,11 @@ if (!empty($data['res'])) {
   //or you can rebuild page array again
 	if (!empty($pages) && is_array($pages)) {
 		foreach ($pages as $page) {
-      if ($page['page_alias'] == 'recall' or $page['page_alias'] == 'recall_yes' or $page['page_alias'] == 'master_app' or $page['page_alias'] == 'date_app')
+      if ($page['page_alias'] == 'recall_no' or $page['page_alias'] == 'recall_yes' or $page['page_alias'] == 'master_app' or $page['page_alias'] == 'date_app')
       {
         $zvonki_zapisi[] = $page['page_alias'] . '#' . $page['page_title'];
       }
-      elseif ( $page['page_alias'] == 'contacts' or $page['page_alias'] == 'grafik' or $page['page_alias'] == 'price' or $page['page_alias'] == 'masters' )
+      elseif ( $page['page_alias'] == 'contacts' or $page['page_alias'] == 'grafiki' or $page['page_alias'] == 'price_edit' or $page['page_alias'] == 'masters' )
       {
         $redaktors[] = $page['page_alias'] . '#' . $page['page_title'];
       }
@@ -71,10 +72,10 @@ if (!empty($data['res'])) {
       {
         $oth[] = $page['page_alias'] . '#' . $page['page_title'];
       }
-		}                
-	} 
+		}
+	}
 
-  //and print page list
+//and print page list
     $arr = array('zvonki_zapisi', 'redaktors', 'oth');
     foreach ($arr as $value) {
         if (!empty($$value)) {
@@ -82,7 +83,7 @@ if (!empty($data['res'])) {
             foreach ($$value as $value11)
             {
                 list($alias, $title) = explode('#', $value11);
-                echo '<a href="' . URLROOT . '/' . $alias . '" class="buttons">' . $title . '</a> ';
+                echo '<a href="' . URLROOT . '/' . $alias . '/" class="buttons">' . $title . '</a> ';
             }
             echo "</div>";
         }
