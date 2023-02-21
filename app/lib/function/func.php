@@ -322,4 +322,13 @@ function human_filesize($bytes, $decimals = 2) {
   $factor = floor((strlen($bytes) - 1) / 3);
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
+
+function in_array_rec($needle, $haystack, $strict = false) {
+  foreach ($haystack as $item) {
+      if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_rec($needle, $item, $strict))) {
+          return true;
+      }
+  }
+  return false;
+}
 ?>
