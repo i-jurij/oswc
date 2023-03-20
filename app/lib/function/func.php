@@ -85,10 +85,10 @@ function menu($data)
   //set empty value for main pages 'home' and 'admin'
   if(!empty($data['page_db_data'][0])){
     $ress[$data['page_db_data'][0]['page_alias']] = $data['page_db_data'][0]['page_h1'];
-    if ($data['page_db_data'][0]['page_alias'] == 'home' or $data['page_db_data'][0]['page_alias'] == 'adm') {
+    if ($data['page_db_data'][0]['page_alias'] === 'home' or $data['page_db_data'][0]['page_alias'] === 'adm') {
       $nav = '';
     } else {
-      $nav = '<a href="'.URLROOT.'/adm">Главная</a>';
+      $nav = '<a href="'.URLROOT.'/adm/">Главная</a>';
     }
   }
 //get full path for links

@@ -3,15 +3,15 @@
     <p class="margin_rlb1 text_left display_none" id="pro">
     Создание страниц:<br />
     Данные для шаблона страницы:<br />
-    * page_alias(100) - короткое имя для страницы для URL, желательно латиницей, должен иметь уникальное значение, 
-    те не может быть страниц с одинаковым alias, состоит только из букв, цифр, дефисов, подчеркиваний количеством до 100, обязателен;<br /> 
-    page_templates(100) - путь к шаблону без public/templates, если шаблон отличается от основного, например "first/templ.php", вес файла до 100КБ ;<br /> 
-    * page_title(100) - название страницы;<br /> 
-    page_meta_description(255) - описание страницы сайта для отображения в результатах поиска и для SEO;<br /> 
+    * page_alias(100) - короткое имя для страницы для URL, желательно латиницей, должен иметь уникальное значение,
+    те не может быть страниц с одинаковым alias, состоит только из букв, цифр, дефисов, подчеркиваний количеством до 100, обязателен;<br />
+    page_templates(100) - путь к шаблону без public/templates, если шаблон отличается от основного, например "first/templ.php", вес файла до 100КБ ;<br />
+    * page_title(100) - название страницы;<br />
+    page_meta_description(255) - описание страницы сайта для отображения в результатах поиска и для SEO;<br />
     page_meta_keywords - набор ключевых фраз для страницы;<br />
-    page_robots - правила для поисковых роботов (https://yandex.ru/support/webmaster/controlling-robot/meta-robots.html);<br /> 
-    * page_h1 - заголовок страницы, обычно такой же как title;<br /> 
-    * page_img - путь к изображению страницы в меню на главной странице без public/imgs/pages, например "about/about.jpg", вес - до 1МБ, формат - jpg, png, webp;<br /> 
+    page_robots - правила для поисковых роботов (https://yandex.ru/support/webmaster/controlling-robot/meta-robots.html);<br />
+    * page_h1 - заголовок страницы, обычно такой же как title;<br />
+    * page_img - путь к изображению страницы в меню на главной странице без public/imgs/pages, например "about/about.jpg", вес - до 1МБ, формат - jpg, png, webp;<br />
     page_content - html|php содержимое страницы;<br />
     * page_access - уровень доступа к странице: admin, moder, user.<br />
     * page_admin - 1 для страницы из админки, пусто для обычной.<br />
@@ -33,12 +33,12 @@ if (!empty($data['colname'])) {
                 <form action="" method="post" enctype="multipart/form-data" name="create_page" id="create_page" >
                     <div class="back shad rad pad margin_rlb1">
                         <p class="margin_rlb1">Выберите файлы</p>
-                        <label class="display_inline_block margin_bottom_1rem">Файл шаблона (при необходимости, .php, .html, < 300KB):<br /> 
+                        <label class="display_inline_block margin_bottom_1rem">Файл шаблона (при необходимости, .php, .html, < 300KB):<br />
                             <input type="hidden" name="MAX_FILE_SIZE" value="307200" />
                             <input type="file" name="template" accept=".php, .html, text/html, text/php, text/x-php, text/plain">
                         </label>';
 
-    print '             <label class="display_inline_block margin_bottom_1rem">Файл изображения страницы (jpg, png, webp, < 1MB):<br /> 
+    print '             <label class="display_inline_block margin_bottom_1rem">Файл изображения страницы (jpg, png, webp, < 1MB):<br />
                             <input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
                             <input type="file" name="picture" accept="image/jpeg, image/pjpeg, image/png, image/webp">
                         </label>';
@@ -65,7 +65,7 @@ if (!empty($data['colname'])) {
                             $length = (isset($length)) ? $length : 1;
 
                             if ($key != "page_id" && $key != "page_img") {
-                                print ' <label class="display_inline_block margin_bottom_1rem">'.$key.' ('.$length.')<br /> 
+                                print ' <label class="display_inline_block margin_bottom_1rem">'.$key.' ('.$length.')<br />
                                             <input type="text" name="'.$key.'" maxlength="'.$length.'" value="'.$value.'" '.$required.' />
                                         </label>'.PHP_EOL;
                             }
@@ -77,10 +77,10 @@ if (!empty($data['colname'])) {
                         <button type="reset" form="create_page" class="buttons">Reset</button>
                     </div>
                 </form>
-            </div>               
+            </div>
             ';
     unset($required, $type, $length, $value, $key, $val );
-} elseif (!empty($data['templates_list'])) { 
+} elseif (!empty($data['templates_list'])) {
     print ' <div class="">
                 <form action="" method="post" name="del_page" id="del_page">
                     <div class="">';
@@ -137,7 +137,7 @@ if (!empty($data['colname'])) {
                         <button type="reset" form="del_page" class="buttons">Reset</button>
                     </div>
                 </form>
-            </div>               
+            </div>
             ';
     unset($titl, $tit, $data, $value, $key, $val );
 } elseif (!empty($data['res'])) {
@@ -145,8 +145,8 @@ if (!empty($data['colname'])) {
 } else {
     print '<div class="margin_bottom_1rem ">
                 <div class="display_inline_block">
-                <a href="'.URLROOT.'/create_delete_page/create?b" class="buttons display_inline_block mar">Создать</a>
-                <a href="'.URLROOT.'/create_delete_page/delete?b" class="buttons display_inline_block mar">Удалить</a>
+                <a href="'.URLROOT.'/create_delete_page/create/" class="buttons display_inline_block mar">Создать</a>
+                <a href="'.URLROOT.'/create_delete_page/delete/" class="buttons display_inline_block mar">Удалить</a>
                 </div>
             </div>
             ';

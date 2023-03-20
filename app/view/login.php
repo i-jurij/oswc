@@ -169,14 +169,14 @@
     <body>
           <section class="main_section">
               <div>
-                    <p class="home_p"><a class="buttons" href="<?php echo URLROOT; ?>/adm/exit"><img src="<?php echo URLROOT.DS.'public'.DS.'imgs'.DS; ?>home.png" alt="Back"/>Home</a></p>                   
+                    <p class="home_p"><a class="buttons" href="<?php echo URLROOT; ?>/adm/exit/"><img src="<?php echo URLROOT.DS.'public'.DS.'imgs'.DS; ?>home.png" alt="Back"/>Home</a></p>
                     <form method="post" action="" name="login_form" class="form" id="login_form">
                         <div class="form-element"><?php echo (isset($_SESSION['flash'])) ? $_SESSION['flash'] : "Enter data for log in"; ?></div>
                         <div class="form-element">
-                          <input type="text" name="login" 
-                                  value="<?php echo (isset($_POST["login"])) ? htmlentities($_POST["login"]) : null; // Заполняем поле по умолчанию ?>" 
+                          <input type="text" name="login"
+                                  value="<?php echo (isset($_POST["login"])) ? htmlentities($_POST["login"]) : null; // Заполняем поле по умолчанию ?>"
                                   minlength="3" maxlength="25"
-                                  placeholder="Name" 
+                                  placeholder="Name"
                                   pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$"
                                   required />
                         </div>
@@ -200,7 +200,7 @@
               return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
             }
 
-            document.addEventListener("DOMContentLoaded", function(event) { 
+            document.addEventListener("DOMContentLoaded", function(event) {
               var uniqids = [];
               for (var i = 0; i < 6; i++)
               {
@@ -214,11 +214,11 @@
               for (var i = 0; i < uniqids.length; i++)
               {
                 let ii = i+1;
-                imgs[uniqids[i]] = '<img src="public/imgs/captcha_imgs/'+ii+'.jpg" style="width:5rem;" />';
+                imgs[uniqids[i]] = '<img src="<?php echo URLROOT; ?>/public/imgs/captcha_imgs/'+ii+'.jpg" style="width:5rem;" />';
                 //console.log(imgs[uniqids[i]]);
                 strings[i] = '<input id="captcha_'+uniqids[i]+'" class="captcha" name="dada" value="'+ii+'" type="radio" />\
                 <label class="captcha_img" for="captcha_'+uniqids[i]+'">\
-                <img src="public/imgs/captcha_imgs/'+ii+'.jpg" id="img_'+uniqids[i]+'"/>\
+                <img src="<?php echo URLROOT; ?>/public/imgs/captcha_imgs/'+ii+'.jpg" id="img_'+uniqids[i]+'"/>\
                 </label>';
               }
 
