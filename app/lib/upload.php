@@ -82,6 +82,7 @@ class Upload
     public int $file_size;
     public $file_mimetype;
     public $file_ext;
+    public $result_file_ext;
     public $new_file_name; //string or array ['filename, 'noindex'] - where noindex for input with multiple uploads (but you must get different name for file)
     public bool $replace_old_file;
     public string $tmp_dir;
@@ -140,6 +141,7 @@ class Upload
         //$this->file_size = 1024000; // set in check_file_size
         $this->file_mimetype = '';
         $this->file_ext = '';
+        $this->result_file_ext = 'jpg';
         $this->new_file_name = '';
         $this->replace_old_file = false;
         $this->tmp_dir = '';
@@ -237,31 +239,52 @@ class Upload
      */
     public function img_proc() {
         $file = $this->tmp_dir.DIRECTORY_SEPARATOR.$this->new_file_name;
-        try{
-            //$imageresize = new \App\Lib\Imageresize($file);
-            $imageresize = new \App\Lib\Zebra_Image($file);
-            foreach ($this->processing as $method => $value) {
-                if ( method_exists($imageresize,$method) ) {
-                    if (is_array($value) && $this->count_parameters_of_method($imageresize, $method) == count($value)) {
-                        call_user_func_array(array($imageresize, $method), $value); //$value - array of parameters
-                    } else {
-                        //$this->error = 'ERROR!<br />The "processing" value of "'.$method.'" is not array, or wrong numbers key of array (parameters for method of class Imageresize)';
-                        $this->error = 'ERROR!<br />The "processing" value of "'.$method.'" is not array, or wrong numbers key of array (parameters for method of class Zebra_Image)';
-                        return false;
+        $imageresize = new \App\Lib\Zebra_image($file);
+        $imageresize->source_path = $file;
+        $imageresize->target_path = $this->dest_dir.DS.pathinfo($file, PATHINFO_FILENAME).'.'.$this->result_file_ext;
+        //$imageresize->resize(150, 150, ZEBRA_IMAGE_CROP_CENTER);
+        foreach ($this->processing as $method => $value) {
+            if ( method_exists($imageresize,$method) ) {
+                if (!call_user_func_array(array($imageresize, $method), $value)) {
+                    $this->error = 'ERROR! ';
+                    switch ($imageresize->error) {
+                        case 1:
+                            $this->error .= 'Source file could not be found<br />';
+                            break;
+                        case 2:
+                            $this->error .= 'Source file is not readable<br />';
+                            break;
+                        case 3:
+                            $this->error .= 'Could not write target file<br />';
+                            break;
+                        case 4:
+                            $this->error .= 'Unsupported source file type<br />';
+                            break;
+                        case 5:
+                            $this->error .= 'Unsupported target file type<br />';
+                            break;
+                        case 6:
+                            $this->error .= 'GD library version does not support target file format<br />';
+                            break;
+                        case 7:
+                            $this->error .= 'GD library is not installed<br />';
+                            break;
+                        case 8:
+                            $this->error .= '"chmod" command is disabled via configuration<br />';
+                            break;
+                        case 9:
+                            $this->error .= '"exif_read_data" function is not available<br />';
+                            break;
                     }
-                } else {
-                    //$this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Imageresize';
-                    $this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Zebra_Image';
                     return false;
+                } else {
+                    $this->message .= 'SUCCESS!<br />File has been processed and copied to <br />"'.$this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
+                    return true;
                 }
+            } else {
+                $this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Zebra_Image<br />';
+                return false;
             }
-            //$imageresize->save($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name);
-            //chmod($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name , $this->file_permissions);
-            $this->message .= 'SUCCESS!<br />File has been processed and copied to <br />"'.$this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
-            return true;
-        } catch (\App\Lib\Imageresizeexception $e) {
-            $this->error = "ERROR!<br />Something went wrong.<br />" . $e->getMessage();
-            return false;
         }
     }
 
