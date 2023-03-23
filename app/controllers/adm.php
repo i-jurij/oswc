@@ -18,11 +18,6 @@ class Adm extends Home
     {
 		if ($this->auth->check_auth())
 		{
-			$str = '<div style="margin: 0 1rem 1rem 1rem; width: 100%; text-align:right;">
-							<span style="margin: 0 1rem 0 0; color: blanchedalmond;">Здравствуйте, <b>' . $_SESSION['user_name'] . '</b></span>
-							<a class="buttons" href="'.URLROOT.'/adm/exit/">Выход</a>
-					</div>';
-			\App\Lib\Registry::set("exit_from_adm", $str);
 			$arr = explode('\\', static::class);
 			$class = array_pop($arr);
 			$full_name_class = '\App\Models\\'.$class;

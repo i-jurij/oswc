@@ -238,22 +238,25 @@ class Upload
     public function img_proc() {
         $file = $this->tmp_dir.DIRECTORY_SEPARATOR.$this->new_file_name;
         try{
-            $imageresize = new \App\Lib\Imageresize($file);
+            //$imageresize = new \App\Lib\Imageresize($file);
+            $imageresize = new \App\Lib\Zebra_Image($file);
             foreach ($this->processing as $method => $value) {
                 if ( method_exists($imageresize,$method) ) {
                     if (is_array($value) && $this->count_parameters_of_method($imageresize, $method) == count($value)) {
                         call_user_func_array(array($imageresize, $method), $value); //$value - array of parameters
                     } else {
-                        $this->error = 'ERROR!<br />The "processing" value of "'.$method.'" is not array, or wrong numbers key of array (parameters for method of class Imageresize)';
+                        //$this->error = 'ERROR!<br />The "processing" value of "'.$method.'" is not array, or wrong numbers key of array (parameters for method of class Imageresize)';
+                        $this->error = 'ERROR!<br />The "processing" value of "'.$method.'" is not array, or wrong numbers key of array (parameters for method of class Zebra_Image)';
                         return false;
                     }
                 } else {
-                    $this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Imageresize';
+                    //$this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Imageresize';
+                    $this->error = 'ERROR!<br />Method "'.$method.'" not exists in class App\Lib\Zebra_Image';
                     return false;
                 }
             }
-            $imageresize->save($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name);
-            chmod($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name , $this->file_permissions);
+            //$imageresize->save($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name);
+            //chmod($this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name , $this->file_permissions);
             $this->message .= 'SUCCESS!<br />File has been processed and copied to <br />"'.$this->dest_dir.DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
             return true;
         } catch (\App\Lib\Imageresizeexception $e) {
