@@ -11,7 +11,7 @@ use App\Lib\Registry;
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <title>
-    <?php 
+    <?php
       echo $c = (isset($db['page_title']) and !empty($db['page_title'])) ? htmlspecialchars($db['page_title']) : 'Title of page';
     ?>
   </title>
@@ -29,17 +29,20 @@ use App\Lib\Registry;
     <div class="main ">
       <section class="main_section">
         <div class="flex flex_top">
-          <?php echo \App\Lib\Registry::get("exit_from_adm"); ?>
+          <div style="margin: 0 1rem 1rem 1rem; width: 100%; text-align:right;">
+							<span style="margin: 0 1rem 0 0; color: blanchedalmond;">Здравствуйте, <b><?php echo $_SESSION['user_name']; ?></b></span>
+							<a class="buttons" href="<?php echo URLROOT; ?>/adm/exit/">Выход</a>
+					</div>
           <div class="content stickyheader">
             <!-- <h2><?php //echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2> -->
             <p class="nav"><?php echo menu($data); ?></p>
           </div>
-          <?php 
+          <?php
             if (!empty($data[0]['page_content'])) {
               print htmlspecialchars($data[0]['page_content']);
             }
             if ( (new SplFileInfo($content_view))->isReadable() ) {
-              include $content_view; 
+              include $content_view;
             } elseif (is_string($content_view)) {
               print $content_view;
             }
