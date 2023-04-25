@@ -153,7 +153,7 @@ class Create_delete_page extends Adm
                                 $load->file_size = 1*1000*1024; //1MB
                                 $load->file_mimetype = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
                                 $load->file_ext = ['.jpg', '.jpeg', '.png', '.webp'];
-                                $load->result_file_ext = 'jpg';
+                                $load->result_file_ext = 'jpg'; // !! jpg use in view/home.php
                                 $load->new_file_name = $post['page_alias'];
                                 //$load->processing = ['resizeToBestFit' => ['1024', '640']];
                                 $load->processing = ['resize' => ['1024', '640', 'ZEBRA_IMAGE_CROP_CENTER']];
