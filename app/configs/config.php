@@ -12,7 +12,7 @@ define('ROOT', dirname(dirname(dirname(__FILE__))));
 define('APPROOT', dirname(dirname(__FILE__)));
 define('PUBLICROOT', dirname(dirname(dirname(__FILE__))).DS.'public');
 // site name
-define('SITENAME', 'localhost/new_welder');
+define('SITENAME', 'localhost/oswc');
 // define('SITENAME', 'new_welder');
 // define('URLROOT', 'http'.((isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']=='on') ? 's': '').'://'.SITENAME.'.net');
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
