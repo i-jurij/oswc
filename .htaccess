@@ -1,6 +1,11 @@
 <IfModule mod_rewrite.c>
 Options All -ExecCGI -Indexes -Includes +FollowSymLinks
-RewriteBase /oswc
+
+#rewritebase for xampp
+#RewriteBase /oswc
+#rewritebase for ospanel
+RewriteBase /
+
 RewriteEngine on
 #RewriteRule ^.*$ first.oswc [L]
 # ----- 1 var -------------------
