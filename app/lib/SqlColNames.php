@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib;
 
-class Sql_col_names
+class SqlColNames
 {
     protected $pdo;
     protected string $table;

@@ -1,7 +1,7 @@
 <?php 
 namespace App\Lib;
 
-class Db_init_mysql
+class DbInitMysql
 {
     public $db;
 

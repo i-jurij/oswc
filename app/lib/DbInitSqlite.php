@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib;
 
-class Db_init_sqlite
+class DbInitSqlite
 {
     public $db;
 
