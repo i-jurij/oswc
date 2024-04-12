@@ -59,7 +59,7 @@ print '</pre>';
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(event) {
 		let body = document.querySelector ( 'body' );
-		body.innerHTML = body.innerHTML + '<p id="enter">FirstFramework</p>';
+		body.innerHTML = body.innerHTML + '<p style="color: var(--bgcolor-content);" id="enter">FirstFramework</p>';
 
 		document.querySelector("#enter").addEventListener('click', function(){
 			let text = '<div class="content">\
