@@ -24,9 +24,9 @@ class Home
 			$this->model = new $full_name_class($this->table, strtolower($class));//parameters - tables and page for db query
 			if (!empty($path[0]) && method_exists($this->model, $path[0])) {
 				$method = $path[0];
-				$nav = \App\Lib\Registry::get('nav');
+				$nav = Registry::get('nav');
 				array_push($nav, array_shift($path));
-				\App\Lib\Registry::set('nav', $nav);
+				Registry::set('nav', $nav);
 				//$data = ($this->model)->$method($path);
 				$data = array_merge($this->model->get_data($path), $this->model->$method($path));
 			} else {

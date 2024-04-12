@@ -3,7 +3,7 @@ namespace App\Lib\Traits;
 
 trait Sanitize
 {
-    public function sanitize_string($var) 
+    public function sanitizeString($var) 
     {
         if (is_string($var) && !empty($var)) {
             // remove HTML tags

@@ -29,10 +29,10 @@
   ?>
   <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/favicon.png" />
   <?php 
-    foreach (files_in_dir(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
+    foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
       print '<script type="text/javascript" src="'.URLROOT.DS.'public'.DS.'js'.DS.'core'.DS.$value.'"></script>';
     }
-    foreach (files_in_dir(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
+    foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
       print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'other'.DS.$value.'"></script>';
     }
   ?>
@@ -75,7 +75,7 @@
   </div>
 
   <?php 
-    foreach (files_in_dir(PUBLICROOT.DS.'js'.DS.'other', 'js') as $value) {
+    foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'other', 'js') as $value) {
       print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'other'.DS.$value.'"></script>';
     }
   ?>

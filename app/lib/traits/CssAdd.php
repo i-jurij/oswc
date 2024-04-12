@@ -1,9 +1,9 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Css_add
+trait CssAdd
 {
-    public function css_add($abs_path_to_css = PUBLICROOT.DS.'css'.DS.'first')
+    public function cssAdd($abs_path_to_css = PUBLICROOT.DS.'css'.DS.'first')
     {
         $x = explode('/', URLROOT);
         $x = array_pop($x);

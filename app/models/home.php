@@ -2,11 +2,11 @@
 namespace App\Models;
 
 use \App\Lib\Registry;
-use \App\Lib\Traits\Css_add;
+use \App\Lib\Traits\CssAdd;
 
 class Home
 {
-	use Css_add;
+	use CssAdd;
 
 	public array $data;
 	protected $db;
@@ -22,7 +22,7 @@ class Home
 		$this->data =  [];
 	}
 
-	protected function db_query() 
+	protected function dbQuery() 
 	{
 		if ($this->page === 'home' ) {
 			$this->data['page_db_data'] = [
@@ -49,7 +49,7 @@ class Home
 		if ( null !== \App\Lib\Registry::get('page_db_data') ) {
 			$this->data['page_db_data'] = \App\Lib\Registry::get('page_db_data');
 		} else {
-			$this->db_query();
+			$this->dbQuery();
 		}
 
 		//get page list from db
@@ -69,7 +69,7 @@ class Home
 		}
 		
 		//add css for head in template
-		$this->data['css'] = $this->css_add('public'.DS.'css'.DS.'first');
+		$this->data['css'] = $this->cssAdd('public'.DS.'css'.DS.'first');
 
 		$i = 0;
 		foreach ($this->db->db->select("contacts", ["contacts_type", "contacts_data"]) as $value) {

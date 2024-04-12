@@ -1,9 +1,9 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Delete_files
+trait DeleteFiles
 {
-  public static function del_files_in_dir(string $dir, bool $recursive = true) {
+  public static function delFilesInDir(string $dir, bool $recursive = true) {
     $mes = '';
     if (!is_readable($dir)) {
       $mes .= 'ERROR! Not readable "'.$dir.'".';
@@ -12,7 +12,7 @@ trait Delete_files
     $files = array_diff(scandir($dir), array('.','..'));
     foreach ($files as $file) {
       if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $recursive === true) {
-          self::del_files_in_dir($dir.DIRECTORY_SEPARATOR.$file, true);
+          self::delFilesInDir($dir.DIRECTORY_SEPARATOR.$file, true);
       } else {
         if (!unlink($dir.DIRECTORY_SEPARATOR.$file)) {
           $mes .= 'ERROR! Not unlink "'.$dir/$file.'".';
@@ -29,7 +29,7 @@ trait Delete_files
   * @param string $path2file
   * @return true or string (check if $this === true)
   */
-  public static function del_file(string $path2file) {
+  public static function delFile(string $path2file) {
     $mes = '';
     if (is_string($path2file)) {
       //$path2file = realpath($path2file);

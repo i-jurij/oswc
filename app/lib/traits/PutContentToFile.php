@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Put_content_to_file
+trait PutContentToFile
 {
     public function put($file, $content, $dir_permissions = 0755, $append = false) {
         $param = ($append) ? 'FILE_APPEND | LOCK_EX' : 'LOCK_EX';
@@ -37,7 +37,7 @@ trait Put_content_to_file
      * @param int $num_string - number of string for replace
      * 
      */
-    function replace_string($file, $new_string, int $num_string = 0)
+    function replaceString($file, $new_string, int $num_string = 0)
     {
         $array = file( $file );
         if($array)

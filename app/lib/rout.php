@@ -38,7 +38,6 @@ class Rout
             $this->controller = new $contr;
             //unset($url_arr[0]);
             $nav[] = array_shift($url_arr);
-
             if (isset($url_arr[0]) && method_exists($contr, $url_arr[0]))
             {
                 $this->method = $url_arr[0];

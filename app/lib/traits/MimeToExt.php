@@ -4,9 +4,9 @@ namespace App\Lib\Traits;
 /**
  * Mim
  */
-trait Mime2ext
+trait MimeToExt
 {
-    function mime2ext($mime) {
+    function mimeToExt($mime) {
         $mime_map = [
             'video/3gpp2'                                                               => '3g2',
             'video/3gp'                                                                 => '3gp',

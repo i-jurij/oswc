@@ -1,12 +1,12 @@
 <?php
 namespace App\Models;
 
-class Logs_view extends Adm
+class LogsView extends Adm
 {
     public array $logs;
-	protected function db_query()
+	protected function dbQuery()
 	{
-		$this->data['page_db_data'] = array(array("page_alias" => "logs_view",
+		$this->data['page_db_data'] = array(array("page_alias" => "LogsView",
                                                 "page_title" => "Просмотр логов",
                                                 "page_meta_description" => "Просмотр логов",
                                                 "page_robots" => "NOINDEX, NOFOLLOW",

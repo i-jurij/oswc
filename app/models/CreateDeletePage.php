@@ -1,17 +1,19 @@
 <?php
 namespace App\Models;
 
-use App\Lib\Sql_col_names;
+use App\Lib\SqlColNames;
 use App\Lib\Upload;
 
-class Create_delete_page extends Adm
+class CreateDeletePage extends Adm
 {
-    use \App\Lib\Traits\Delete_files;
-    use \App\Lib\Traits\File_find;
+    use \App\Lib\Traits\DeleteFiles;
+    use \App\Lib\Traits\FileFind;
+    use \App\Lib\Traits\FilesInDir;
+    use \App\Lib\Traits\MbUcfirst;
 
-	protected function db_query()
+	protected function dbQuery()
 	{
-		$this->data['page_db_data'] = array(array("page_alias" => "create_delete_page",
+		$this->data['page_db_data'] = array(array("page_alias" => "CreateDeletePage",
                                                 "page_title" => "Страницы",
                                                 "page_meta_description" => "Создать или удалить страницу",
                                                 "page_robots" => "NOINDEX, NOFOLLOW",
@@ -66,9 +68,12 @@ class Create_delete_page extends Adm
 
                 //CREATE CONTROLLER, MODEL, VIEW
                 $filename = $post['page_alias'].'.php';
+                /*
                 if (function_exists('mb_ucfirst')){
                     $classname = mb_ucfirst($post['page_alias'], 'UTF-8');
                 }
+                */
+                $classname = $this->mbUcfirst($post['page_alias'], 'UTF-8');
 
                 $models = [ '<?php'.PHP_EOL, 'namespace App\Models;'.PHP_EOL, 'class '.$classname.' extends Home'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
                 $view_adm = [ '<div class="content">'.PHP_EOL, $filename.PHP_EOL, '</div>'.PHP_EOL ];
@@ -91,12 +96,18 @@ class Create_delete_page extends Adm
                 }
                 $file_array = ['controllers', 'models', 'view'];
                 foreach ($file_array as $value) {
+                    /*
                     if (function_exists('mb_ucfirst')){
                         $name = mb_ucfirst($value, 'UTF-8');
                         if ( substr($name, -1) === 's' ) {
                             $name = substr($name, 0, -1);
                         }
                     }
+                    */
+                    $name = $this->mbUcfirst($value, 'UTF-8');
+                        if ( substr($name, -1) === 's' ) {
+                            $name = substr($name, 0, -1);
+                        }
                     if (file_exists(APPROOT.DS.$value.DS.$filename)) {
                         $this->data['res'] .= 'ERROR! <br />Dir or file "'.APPROOT.DS.$value.DS.$filename.'" exists.<br />';
                         goto end;
@@ -181,7 +192,7 @@ class Create_delete_page extends Adm
             }
             unset($post, $aliases, $value, $key, $end, $res, $filename, $model, $controller, $view );
         } else {
-            $colnames = (new Sql_col_names($this->db, $this->table))->res;
+            $colnames = (new SqlColNames($this->db, $this->table))->res;
             $this->data['colname'] = $colnames;
             unset($q, $colnames );
         }
@@ -212,26 +223,32 @@ class Create_delete_page extends Adm
                         $file_array = ['controllers', 'models', 'view'];
                         foreach ($file_array as $va) {
                             $path = APPROOT.DS.$va.DS.$val.'.php';
+                            /*
                             if (function_exists('mb_ucfirst')){
                                 $name = mb_ucfirst($va, 'UTF-8');
                                 if ( substr($name, -1) === 's' ) {
                                     $name = substr($name, 0, -1);
                                 }
                             }
-                            if (self::del_file($path) === true) {
+                            */
+                            $name = $this->mbUcfirst($va, 'UTF-8');
+                            if ( substr($name, -1) === 's' ) {
+                                $name = substr($name, 0, -1);
+                            }
+                            if (self::delFile($path) === true) {
                                 $this->data['res'] .= $name.' "'.$value.'" has been deleted.<br />';
                             } else {
-                                $this->data['res'] .= self::del_file($path).'<br />';
+                                $this->data['res'] .= self::delFile($path).'<br />';
                             }
                         }
                         unset($path);
                         //delete page img
                         $path = PUBLICROOT.DS.'imgs'.DS.'pages';
-                        if ( self::find_by_filename($path, $val) === false ) {
+                        if ( self::findByFilename($path, $val) === false ) {
                             $this->data['res'] .= 'WARNING! Image named "'.$val.'" was not found for deletion.<br />';
                         } else {
-                            $file_for_del = self::find_by_filename($path, $val);
-                            if (self::del_file($file_for_del)) {
+                            $file_for_del = self::findByFilename($path, $val);
+                            if (self::delFile($file_for_del)) {
                                 $this->data['res'] .= 'Image "'.$val.'" has been deleted.<br />';
                             } else {
                                 $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted.<br />';
@@ -242,11 +259,11 @@ class Create_delete_page extends Adm
                         //delete page img
                         $path = PUBLICROOT.DS.'templates';
                         if ($val != 'adm_templ' || $val != 'templ') {
-                            if ( self::find_by_filename($path, $val) === false ) {
+                            if ( self::findByFilename($path, $val) === false ) {
                                 $this->data['res'] .= 'WARNING! Template named "'.$val.'" was not found for deletion.<br />';
                             } else {
-                                $file_for_del = self::find_by_filename($path, $val);
-                                if (self::del_file($file_for_del)) {
+                                $file_for_del = self::findByFilename($path, $val);
+                                if (self::delFile($file_for_del)) {
                                     $this->data['res'] .= 'Template "'.$val.'" has been deleted.<br />';
                                 } else {
                                     $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted.<br />';
@@ -278,7 +295,7 @@ class Create_delete_page extends Adm
                 }
             }
             //list of files in templates dir
-            $this->data['templates_list'] = files_in_dir(PUBLICROOT.DS.'templates', 'php, html');
+            $this->data['templates_list'] = $this->filesInDirScan(PUBLICROOT.DS.'templates', 'php, html');
         }
         return $this->data;
 	}

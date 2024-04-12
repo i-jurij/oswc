@@ -15,7 +15,7 @@ function getOutput($file)
  *
  * @return array path to files
  */
-function files_in_dir($path, $ext = '')
+function filesInDirScan($path, $ext = '')
 {
     $files = [];
     if (file_exists($path)) {
@@ -46,13 +46,13 @@ function files_in_dir($path, $ext = '')
 
     return $files;
 }
+
 /**
  * @param string $dir - dir for scan
  * @param string $ext - extension of files eg 'png' or 'png, webp, jpg'
- *
  * @return array basename  of files or false
  */
-function filesindir($dir, $ext = '')
+function filesInDirIter($dir, $ext = '')
 {
     if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
         foreach (new DirectoryIterator($dir) as $fileInfo) {
@@ -100,7 +100,7 @@ function menu($data)
         if ($data['page_db_data'][0]['page_alias'] === 'home' or $data['page_db_data'][0]['page_alias'] === 'adm') {
             $nav = '';
         } else {
-            $nav = '<a href="'.URLROOT.'/adm/">Главная</a>';
+            $nav = '<a href="' . URLROOT . '/adm/">Главная</a>';
         }
     }
     // get full path for links
@@ -111,15 +111,15 @@ function menu($data)
                 $value = (!empty($data['name'])) ? $data['name'] : $key;
             }
             if (!empty($prevk)) {
-                $nav .= ' / <a href="'.URLROOT.$prevk.'/'.$key.'/">'.$value.'</a>';
-                $prevk .= DS.$key;
+                $nav .= ' / <a href="' . URLROOT . $prevk . '/' . $key . '/">' . $value . '</a>';
+                $prevk .= DS . $key;
             } else {
                 if (empty($nav)) {
-                    $nav = '<a href="'.URLROOT.'/'.$key.'/">'.$value.'</a>';
+                    $nav = '<a href="' . URLROOT . '/' . $key . '/">' . $value . '</a>';
                 } else {
-                    $nav .= ' / <a href="'.URLROOT.'/'.$key.'/">'.$value.'</a>';
+                    $nav .= ' / <a href="' . URLROOT . '/' . $key . '/">' . $value . '</a>';
                 }
-                $prevk .= DS.$key;
+                $prevk .= DS . $key;
             }
         }
     }
@@ -136,14 +136,18 @@ function sanitize($filename)
     // remove illegal file system characters
     $filename = str_replace(array_map('chr', range(0, 31)), '', $filename);
     // remove dangerous characters for file names
-    $chars = ['?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '’', '%20',
-                   '+', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', '^', chr(0)];
+    $chars = [
+        '?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '’', '%20',
+        '+', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', '^', chr(0)
+    ];
     $filename = str_replace($chars, '_', $filename);
     // remove break/tabs/return carriage
     $filename = preg_replace('/[\r\n\t -]+/', '_', $filename);
     // convert some special letters
-    $convert = ['Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss',
-                     'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'];
+    $convert = [
+        'Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss',
+        'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'
+    ];
     $filename = strtr($filename, $convert);
     // remove foreign accents by converting to HTML entities, and then remove the code
     $filename = html_entity_decode($filename, ENT_QUOTES, 'utf-8');
@@ -165,7 +169,7 @@ function my_mb_ucfirst($str)
 {
     $fc = mb_strtoupper(mb_substr($str, 0, 1));
 
-    return $fc.mb_substr($str, 1);
+    return $fc . mb_substr($str, 1);
 }
 
 function mb_ucfirst($string, $encoding)
@@ -173,7 +177,7 @@ function mb_ucfirst($string, $encoding)
     $firstChar = mb_substr($string, 0, 1, $encoding);
     $then = mb_substr($string, 1, null, $encoding);
 
-    return mb_strtoupper($firstChar, $encoding).$then;
+    return mb_strtoupper($firstChar, $encoding) . $then;
 }
 
 function test_input($data)
@@ -204,7 +208,7 @@ function phone_number_view($sPhone)
         $sNumber1 = mb_substr($sPhone, 4, 3);
         $sNumber2 = mb_substr($sPhone, 7, 2);
         $sNumber3 = mb_substr($sPhone, 9, 2);
-        $sPhone = '+'.$sArea.' ('.$sPrefix.') '.$sNumber1.' '.$sNumber2.' '.$sNumber3;
+        $sPhone = '+' . $sArea . ' (' . $sPrefix . ') ' . $sNumber1 . ' ' . $sNumber2 . ' ' . $sNumber3;
 
         return $sPhone;
     } else {
@@ -221,9 +225,11 @@ function phone_number_view($sPhone)
  */
 function translit_ostslav_to_lat($textcyr)
 {
-    $cyr = ['Ц', 'ц', 'а', 'б', 'в', 'ў', 'г', 'ґ', 'д', 'е', 'є', 'ё', 'ж', 'з', 'и', 'ï', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Ў', 'Г', 'Ґ', 'Д', 'Е', 'Є', 'Ё', 'Ж', 'З', 'И', 'Ї', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я',
+    $cyr = [
+        'Ц', 'ц', 'а', 'б', 'в', 'ў', 'г', 'ґ', 'д', 'е', 'є', 'ё', 'ж', 'з', 'и', 'ï', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Ў', 'Г', 'Ґ', 'Д', 'Е', 'Є', 'Ё', 'Ж', 'З', 'И', 'Ї', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я',
     ];
-    $lat = ['C', 'c', 'a', 'b', 'v', 'w', 'g', 'g', 'd', 'e', 'ye', 'io', 'zh', 'z', 'i', 'yi', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'ts', 'ch', 'sh', 'sht', 'a', 'i', 'y', 'e', 'yu', 'ya', 'A', 'B', 'V', 'W', 'G', 'G', 'D', 'E', 'Ye', 'Io', 'Zh', 'Z', 'I', 'Yi', 'Y', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya',
+    $lat = [
+        'C', 'c', 'a', 'b', 'v', 'w', 'g', 'g', 'd', 'e', 'ye', 'io', 'zh', 'z', 'i', 'yi', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'ts', 'ch', 'sh', 'sht', 'a', 'i', 'y', 'e', 'yu', 'ya', 'A', 'B', 'V', 'W', 'G', 'G', 'D', 'E', 'Ye', 'Io', 'Zh', 'Z', 'I', 'Yi', 'Y', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya',
     ];
     $textlat = str_replace($cyr, $lat, $textcyr);
 
@@ -269,12 +275,12 @@ function find_by_filename($path, $filename)
 
 function get_master_photo($master_id)
 {
-    $path = IMGDIR.DS.'masters'.DS;
-    $filename = 'master_photo_'.$master_id;
+    $path = IMGDIR . DS . 'masters' . DS;
+    $filename = 'master_photo_' . $master_id;
     if (find_by_filename($path, $filename) === false) {
-        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'ddd.jpg';
+        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'ddd.jpg';
     } else {
-        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'masters'.DS.find_by_filename($path, $filename);
+        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'masters' . DS . find_by_filename($path, $filename);
     }
 
     return $img;
@@ -282,11 +288,11 @@ function get_master_photo($master_id)
 
 function get_page_image($page_alias)
 {
-    $path = IMGDIR.DS.'pages'.DS;
+    $path = IMGDIR . DS . 'pages' . DS;
     if (find_by_filename($path, $page_alias) === false) {
-        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'ddd.jpg';
+        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'ddd.jpg';
     } else {
-        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'pages'.DS.find_by_filename($path, $page_alias);
+        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'pages' . DS . find_by_filename($path, $page_alias);
     }
 
     return $img;
@@ -301,7 +307,7 @@ function replace_string($file, $new_string, int $num_string = 0)
 {
     $array = file($file);
     if ($array) {
-        $array[$num_string] = $new_string."\n";
+        $array[$num_string] = $new_string . "\n";
     }
     if (!is_writable($file)) {
         return false;
@@ -376,7 +382,7 @@ function human_filesize($bytes, $decimals = 2)
     $sz = 'BKMGTP';
     $factor = floor((strlen($bytes) - 1) / 3);
 
-    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)).@$sz[$factor];
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
 
 function in_array_rec($needle, $haystack, $strict = false)

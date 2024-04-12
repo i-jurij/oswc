@@ -12,7 +12,9 @@ class Auth
     {
         $this->session = new \App\Lib\Session();
 		$this->session::start();
-        $this->medoo = new \App\Lib\Db_init_sqlite;
+        //$this->medoo = new \App\Lib\Db_init_sqlite;
+        $dbinit = '\App\Lib\\'.DBINITNAME;
+        $this->medoo = new $dbinit;
     }
 
     public function login() 
@@ -34,7 +36,7 @@ class Auth
                 $status = (isset($res[0]['status'])) ? $res[0]['status'] : '';
 
                 if (empty($password)) {
-                    $this->reject_login();
+                    $this->rejectLogin();
                     $this->session->flash('<span style="color:red;">Неправильный логин или пароль.</span>');
                     include APPROOT.DS.'view'.DS.'login.php';
                     die;
@@ -63,7 +65,7 @@ class Auth
             }
 
             if ( filter_has_var( INPUT_POST, "password" ) && $this->check_auth() === false ) {
-                $this->reject_login();
+                $this->rejectLogin();
                 $this->session->flash('<span style="color:red;">Неправильный логин или пароль.</span>');
                 include APPROOT.DS.'view'.DS.'login.php';
                 die;

@@ -4,7 +4,7 @@
 */ 
 namespace App\Lib\Traits;
 
-trait Count_parametrs_of_method 
+trait CountParametersOfMethod 
 {
     function count_parameters_of_method($class, $method)
     {

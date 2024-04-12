@@ -1,8 +1,8 @@
 <?php
 
 // DB Params
-define('DBINITNAME', 'Db_init_sqlite');
-// define('DBINITNAME', 'Db_init_mysql'); //mysql, mariadb
+define('DBINITNAME', 'DbInitSqlite');
+// define('DBINITNAME', 'DbInitMysql'); //mysql, mariadb
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');

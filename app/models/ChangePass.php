@@ -1,12 +1,12 @@
 <?php
 namespace App\Models;
 
-class Change_pass extends Adm
+class ChangePass extends Adm
 {
     private array $users;
-	protected function db_query() 
+	protected function dbQuery() 
 	{
-		$this->data['page_db_data'] = array(array("page_alias" => "change_pass", 
+		$this->data['page_db_data'] = array(array("page_alias" => "ChangePass", 
                                                 "page_title" => "Пользователи",
                                                 "page_meta_description" => "Изменить явки и пароли",
                                                 "page_robots" => "NOINDEX, NOFOLLOW",

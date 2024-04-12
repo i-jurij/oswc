@@ -19,9 +19,9 @@ if (!empty($data['res'])) {
   if ( password_verify("admin", $session->get("status")) ) {
     //default button for create controller, model, view and insert data of page to db
     echo '<p class="margin_bottom_1rem">
-            <a href="' . URLROOT . '/create_delete_page/" class="buttons">Страницы</a>
-            <a href="' . URLROOT . '/change_pass/" class="buttons">Пользователи</a>
-            <a href="' . URLROOT . '/logs_view/" class="buttons">Просмотр логов</a>
+            <a href="' . URLROOT . '/CreateDeletePage/" class="buttons">Страницы</a>
+            <a href="' . URLROOT . '/ChangePass/" class="buttons">Пользователи</a>
+            <a href="' . URLROOT . '/LogsView/" class="buttons">Просмотр логов</a>
             <a href="' . URLROOT . '/adm/clear/" class="buttons">Чистка логов</a>
           </p>';
   }

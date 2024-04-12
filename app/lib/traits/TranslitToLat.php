@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Translit2lat {
+trait TranslitToLat {
     /**
      * replaces all Cyrillic letters with Latin
      * @param string $var

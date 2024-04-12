@@ -7,9 +7,9 @@
  */
 namespace App\Lib\Traits;
 
-trait File_find
+trait FileFind
 {
-    public static function find_by_filename($path, $filename) {
+    public static function findByFilename($path, $filename) {
         $files = scandir($path);
         foreach ($files as $k => $v) {
             $fname = pathinfo($v, PATHINFO_FILENAME);

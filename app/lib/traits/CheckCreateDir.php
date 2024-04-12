@@ -1,9 +1,9 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Check_create_dir
+trait CheckCreateDir
 {
-    function check_or_create_dir($dir, $permissions, $create) {
+    function checkOrCreateDir($dir, $permissions, $create) {
         if (file_exists($dir)) {
             if (is_dir($dir)) {
                 if ( !is_writable($dir) && !chmod($dir, $permissions) ) {

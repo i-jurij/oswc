@@ -1,14 +1,14 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Clear_file
+trait ClearFile
 {
     /**
      * @param string $log_folder - path to logs folder
      * @param int $keep_num_lines - the number of lines to save, starting from the end of the file eg 33
      * @return bool
      */
-    public static function clearfile($log_folder, $keep_num_lines = 0) {
+    public static function clearFile($log_folder, $keep_num_lines = 0) {
         // clear log file if filetime > 1 week, but leave the last seven lines
         if (file_exists($log_folder)) {
             foreach (new \DirectoryIterator($log_folder) as $fileInfo) {

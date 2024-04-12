@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 
-class Change_pass extends Adm
+class ChangePass extends Adm
 {
 
 }

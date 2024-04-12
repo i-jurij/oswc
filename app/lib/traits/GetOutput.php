@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
-trait Get_output 
+trait GetOutput 
 {
     public function getOutput ($file) {
         ob_start();
