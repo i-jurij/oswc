@@ -174,10 +174,10 @@
                         <div class="form-element"><?php echo (isset($_SESSION['flash'])) ? $_SESSION['flash'] : "Enter data for log in"; ?></div>
                         <div class="form-element">
                           <input type="text" name="login"
-                                  value="<?php echo (isset($_POST["login"])) ? htmlentities($_POST["login"]) : null; // Заполняем поле по умолчанию ?>"
+                                  value="<?php echo (isset($_POST["login"])) ? htmlentities($_POST["login"]) : null; // Заполняем поле по умолчанию?>"
                                   minlength="3" maxlength="25"
                                   placeholder="Name"
-                                  pattern="^[a-zA-Zа-яА-ЯёЁ0-9-_]{3,25}$"
+                                  pattern="^[a-zA-Zа-яА-ЯёЁ0-9\-_]{3,25}$"
                                   required />
                         </div>
 

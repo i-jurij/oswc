@@ -1,10 +1,13 @@
 <?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 $root = __DIR__;
 
-require_once $root.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'load.php';
+$init = new App\Lib\Rout($root);
 
-// Init Core Library
-$init  = new App\Lib\Rout($root);
+////////////////////////////////////////////
+// print page
 /*
 use App\Lib\Registry;
 $content_view = Registry::get("content_view");
@@ -15,4 +18,3 @@ if (!empty($template_view)) {
 }
 Registry::clean();
 */
-?>
