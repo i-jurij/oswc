@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Models;
 
+use Fileupload\Upload;
+//use App\Lib\Upload;
 use App\Lib\SqlColNames;
-use App\Lib\Upload;
 
 class CreateDeletePage extends Adm
 {
@@ -11,25 +13,25 @@ class CreateDeletePage extends Adm
     use \App\Lib\Traits\FilesInDir;
     use \App\Lib\Traits\MbUcfirst;
 
-	protected function dbQuery()
-	{
-		$this->data['page_db_data'] = array(array("page_alias" => "CreateDeletePage",
+    protected function dbQuery()
+    {
+        $this->data['page_db_data'] = array(array("page_alias" => "CreateDeletePage",
                                                 "page_title" => "Страницы",
                                                 "page_meta_description" => "Создать или удалить страницу",
                                                 "page_robots" => "NOINDEX, NOFOLLOW",
                                                 "page_h1" => "Страницы",
                                                 "page_access" => "admin"));
-	}
+    }
 
     public function create()
-	{
+    {
         //VALIDATE PAGE DATA for SQL DB
         $this->data['name'] = 'Создать';
         if (filter_has_var(INPUT_POST, 'page_alias') && !empty($_POST['page_alias'])) {
             $this->data['res'] = null;
 
             foreach ($_POST as $key => $value) {
-                if ( $key === 'page_alias') {
+                if ($key === 'page_alias') {
                     if (!preg_match("/^[a-zA-Zа-яА-ЯёЁ0-9-_]{1,100}$/", $value)) {
                         $this->data['res'] .= 'ERROR!<br />Page_alias "'.$value.'" не соответствует шаблону.<br />';
                         $end = true;
@@ -41,22 +43,21 @@ class CreateDeletePage extends Adm
                     }
                 }
 
-                if (($key === 'page_templates' || $key === 'page_title' || $key === 'page_robots' || $key === 'page_h1' )
-                    && strlen($value) > 100 )
-                {
+                if (($key === 'page_templates' || $key === 'page_title' || $key === 'page_robots' || $key === 'page_h1')
+                    && strlen($value) > 100) {
                     $this->data['res'] .= 'ERROR!<br />'.$key.' "'.mb_substr($value, 0, 30).'..." слишком длинный.<br />';
                     $end = true;
                 }
                 if ($key !== 'MAX_FILE_SIZE') {
-                    $post[$key] = (!empty($value)) ? $value: null;
+                    $post[$key] = (!empty($value)) ? $value : null;
                 }
             }
 
-            if ( isset($end) && $end === true ) {
+            if (isset($end) && $end === true) {
                 goto end;
             }
 
-            if ( isset($post) ) {
+            if (isset($post)) {
                 //INSERT DATA INTO SQL TABLE
                 $res = $this->db->db->insert($this->table, $post);
                 if ($res->rowCount()) {
@@ -87,7 +88,7 @@ class CreateDeletePage extends Adm
                                     .'include_once APPROOT.DS."view".DS."back_home.html";'.PHP_EOL
                                 .'}?>'.PHP_EOL
                             .'</div>'.PHP_EOL];
-                if (!empty($post['page_admin']) && $post['page_admin'] == 1 ) {
+                if (!empty($post['page_admin']) && $post['page_admin'] == 1) {
                     $controllers = [ '<?php'.PHP_EOL, 'namespace App\Controllers;'.PHP_EOL, 'class '.$classname.' extends Adm'.PHP_EOL, '{'.PHP_EOL, '}'.PHP_EOL ];
                     $view = $view_adm;
                 } else {
@@ -105,15 +106,15 @@ class CreateDeletePage extends Adm
                     }
                     */
                     $name = $this->mbUcfirst($value, 'UTF-8');
-                        if ( substr($name, -1) === 's' ) {
-                            $name = substr($name, 0, -1);
-                        }
+                    if (substr($name, -1) === 's') {
+                        $name = substr($name, 0, -1);
+                    }
                     if (file_exists(APPROOT.DS.$value.DS.$filename)) {
                         $this->data['res'] .= 'ERROR! <br />Dir or file "'.APPROOT.DS.$value.DS.$filename.'" exists.<br />';
                         goto end;
                     } else {
-                        if ( is_dir(APPROOT.DS.$value) ) {
-                            if ( !is_writable(APPROOT.DS.$value) && !chmod(APPROOT.DS.$value, 0755) ) {
+                        if (is_dir(APPROOT.DS.$value)) {
+                            if (!is_writable(APPROOT.DS.$value) && !chmod(APPROOT.DS.$value, 0755)) {
                                 $this->data['res'] .=  'ERROR!<br /> Cannot change the mode of dir "'.APPROOT.DS.$value.'".';
                                 goto end;
                             } else {
@@ -131,76 +132,56 @@ class CreateDeletePage extends Adm
                     }
                 }
                 //PROCESSING $_FILES
-                $load = new Upload;
-                if ($load->isset_data()) {
-                    foreach ($load->files as $input => $input_array) {
-                        //print_r($input_array); print '<br />';
-                        $this->data['res'] .= 'Input "'.$input.'":<br />';
+                $new_load = new Upload();
 
-                        foreach ($input_array as $key => $file) {
-                            if (!empty($file['name'])) {
-                                if (mb_strlen($file['name'], 'UTF-8') < 101) {
-                                    $name = $file['name'];
-                                } else {
-                                    $name = mb_strimwidth($file['name'], 0, 48, "...") . mb_substr($file['name'], -48, null, 'UTF-8');
-                                }
-                                $this->data['res'] .= 'Name "'.$name.'":<br />';
-                            }
-                            // SET the vars for class
-                            $load->create_dir = false; // let create dest dir if not exists
-                            if ($input === 'template') {
-                                $load->dest_dir = PUBLICROOT.DS.'templates'; // where upload file after postprocessing
-                                $load->file_size = 3*100*1024; //300KB - size for upload files = MAX_FILE_SIZE from html
-                                $load->file_mimetype = ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ]; // allowed mime-types for upload file
-                                $load->file_ext = ['.php', 'html']; // allowed extension for upload file
-                                $load->new_file_name = $post['page_alias']; // new name of upload file
-                                $load->replace_old_file = false; // replace old file in dest dir with new upload file with same name
-                                $load->processing = []; // method and parameters for class imageresize
-                            }
-                            if ($input === 'picture') {
-                                $load->default_vars();
-                                $load->dest_dir = PUBLICROOT.DS.'imgs/pages';
-                                $load->tmp_dir = PUBLICROOT.DS.'tmp';
-                                $load->file_size = 1*1000*1024; //1MB
-                                $load->file_mimetype = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
-                                $load->file_ext = ['.jpg', '.jpeg', '.png', '.webp'];
-                                $load->result_file_ext = 'jpg'; // !! jpg use in view/home.php
-                                $load->new_file_name = $post['page_alias'];
-                                //$load->processing = ['resizeToBestFit' => ['1024', '640']];
-                                $load->processing = ['resize' => ['1024', '640', 'ZEBRA_IMAGE_CROP_CENTER']];
-                                $load->replace_old_file = false;
-                            }
-                            // PROCESSING DATA
-                            if ($load->execute($input_array, $key, $file)) {
-                                if (!empty($load->message)) { $this->data['res'] .= $load->message; }
-                            } else {
-                                if (!empty($load->error)) { $this->data['res'] .= $load->error; }
-                                continue;
-                            }
-                            //CLEAR TMP FOLDER
-                            if (!$load->del_files_in_dir($load->tmp_dir)) {
-                                if (!empty($load->error)) { $this->data['res'] .= $load->error; }
-                            }
-                        }
-                    }
+                //set vars for each inputs from form if you need it (array('name_of_input' => [vars]))
+                $new_load->config = [
+                    'template' => 	[
+                        'dest_dir' => PUBLICROOT.DS.'templates', // where upload file will be saved
+                        'file_size' => 3 * 100 * 1024,
+                        'file_mimetype' => ['text/php', 'text/html', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source' ],
+                        'file_ext' => ['.php', 'html'],
+                        'new_file_name' => $post['page_alias'],
+                        'replace_old_file' => false
+                    ],
+                    'picture' => [
+                        'dest_dir' => PUBLICROOT.DS.'imgs/pages',
+                        'file_size' => 1 * 1000 * 1024, //1MB
+                        'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
+                        'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
+                        'new_file_name' => $post['page_alias'],
+                        'replace_old_file' => false
+                    ]
+                ];
+                if ($new_load->issetData()) {
+                    $new_load->upload();
+                    $this->data['res'] .= $new_load->infoToString();
+                    //
+                    // some command for processing a file located in a dest_dir
+                    //
+                    //CLEAR FOLDER - all files will be deleted in a directory specified by user
+                    //print '<br />' . Fileupload\Classes\DelFilesInDir::run('upload_pictures');
                 }
+
+
+
             }
             end:
             //OUTPUT MESSAGE if isset error
             if (strpos($this->data['res'], 'RROR') or strpos($this->data['res'], 'rror')) {
                 $this->data['res'] .= 'ATTENTION!<br /> If there are errors, delete page and enter all page data again<br />';
             }
-            unset($post, $aliases, $value, $key, $end, $res, $filename, $model, $controller, $view );
+            unset($post, $aliases, $value, $key, $end, $res, $filename, $model, $controller, $view);
         } else {
             $colnames = (new SqlColNames($this->db, $this->table))->res;
             $this->data['colname'] = $colnames;
-            unset($q, $colnames );
+            unset($q, $colnames);
         }
         return $this->data;
-	}
+    }
 
     public function delete()
-	{
+    {
         $this->data['name'] = 'Удалить';
         $this->data['res'] = null;
         if (filter_has_var(INPUT_POST, 'delete_page')) {
@@ -232,7 +213,7 @@ class CreateDeletePage extends Adm
                             }
                             */
                             $name = $this->mbUcfirst($va, 'UTF-8');
-                            if ( substr($name, -1) === 's' ) {
+                            if (substr($name, -1) === 's') {
                                 $name = substr($name, 0, -1);
                             }
                             if (self::delFile($path) === true) {
@@ -244,7 +225,7 @@ class CreateDeletePage extends Adm
                         unset($path);
                         //delete page img
                         $path = PUBLICROOT.DS.'imgs'.DS.'pages';
-                        if ( self::findByFilename($path, $val) === false ) {
+                        if (self::findByFilename($path, $val) === false) {
                             $this->data['res'] .= 'WARNING! Image named "'.$val.'" was not found for deletion.<br />';
                         } else {
                             $file_for_del = self::findByFilename($path, $val);
@@ -259,7 +240,7 @@ class CreateDeletePage extends Adm
                         //delete page img
                         $path = PUBLICROOT.DS.'templates';
                         if ($val != 'adm_templ' || $val != 'templ') {
-                            if ( self::findByFilename($path, $val) === false ) {
+                            if (self::findByFilename($path, $val) === false) {
                                 $this->data['res'] .= 'WARNING! Template named "'.$val.'" was not found for deletion.<br />';
                             } else {
                                 $file_for_del = self::findByFilename($path, $val);
@@ -286,7 +267,7 @@ class CreateDeletePage extends Adm
             $pagename = $this->db->db->select($this->table, ["page_alias", "page_title", "page_admin"]);
             //print_r($pagename);
             foreach ($pagename as $page) {
-                if ($page['page_alias'] != 'home' && $page['page_alias'] != 'adm' ) {
+                if ($page['page_alias'] != 'home' && $page['page_alias'] != 'adm') {
                     if (!empty($page['page_admin'])) {
                         $this->data['adm_pagename'][] = $page;
                     } else {
@@ -298,5 +279,5 @@ class CreateDeletePage extends Adm
             $this->data['templates_list'] = $this->filesInDirScan(PUBLICROOT.DS.'templates', 'php, html');
         }
         return $this->data;
-	}
+    }
 }
