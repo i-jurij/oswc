@@ -1,5 +1,12 @@
 <?php
 
+function redirect($url, $statusCode = 303)
+{
+    header_remove();
+    header('Location: '.$url, true, $statusCode);
+    exit;
+}
+
 function getOutput($file)
 {
     ob_start();
@@ -50,6 +57,7 @@ function filesInDirScan($path, $ext = '')
 /**
  * @param string $dir - dir for scan
  * @param string $ext - extension of files eg 'png' or 'png, webp, jpg'
+ *
  * @return array basename  of files or false
  */
 function filesInDirIter($dir, $ext = '')
@@ -97,10 +105,10 @@ function menu($data)
     // set empty value for main pages 'home' and 'admin'
     if (!empty($data['page_db_data'][0])) {
         $ress[$data['page_db_data'][0]['page_alias']] = $data['page_db_data'][0]['page_h1'];
-        if ($data['page_db_data'][0]['page_alias'] === 'home' or $data['page_db_data'][0]['page_alias'] === 'adm') {
+        if ($data['page_db_data'][0]['page_alias'] === 'Home' or $data['page_db_data'][0]['page_alias'] === 'Adm') {
             $nav = '';
         } else {
-            $nav = '<a href="' . URLROOT . '/adm/">Главная</a>';
+            $nav = '<a href="'.URLROOT.'/Adm/">Главная</a>';
         }
     }
     // get full path for links
@@ -111,20 +119,33 @@ function menu($data)
                 $value = (!empty($data['name'])) ? $data['name'] : $key;
             }
             if (!empty($prevk)) {
-                $nav .= ' / <a href="' . URLROOT . $prevk . '/' . $key . '/">' . $value . '</a>';
-                $prevk .= DS . $key;
+                $nav .= ' / <a href="'.URLROOT.$prevk.'/'.$key.'/">'.$value.'</a>';
+                $prevk .= DS.$key;
             } else {
                 if (empty($nav)) {
-                    $nav = '<a href="' . URLROOT . '/' . $key . '/">' . $value . '</a>';
+                    $nav = '<a href="'.URLROOT.'/'.$key.'/">'.$value.'</a>';
                 } else {
-                    $nav .= ' / <a href="' . URLROOT . '/' . $key . '/">' . $value . '</a>';
+                    $nav .= ' / <a href="'.URLROOT.'/'.$key.'/">'.$value.'</a>';
                 }
-                $prevk .= DS . $key;
+                $prevk .= DS.$key;
             }
         }
     }
 
     return (isset($nav)) ? $nav : '';
+}
+/**
+ * replacing FILTER_SANITIZE_STRING.
+ */
+function filterString(string $string): string
+{
+    $str = preg_replace('/\x00|<[^>]*>?/', '', $string);
+    $str = str_replace(["'", '"'], ['&#39;', '&#34;'], $str);
+    if (!empty($str)) {
+        return $str;
+    } else {
+        return false;
+    }
 }
 
 function sanitize($filename)
@@ -138,7 +159,7 @@ function sanitize($filename)
     // remove dangerous characters for file names
     $chars = [
         '?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '’', '%20',
-        '+', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', '^', chr(0)
+        '+', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', '^', chr(0),
     ];
     $filename = str_replace($chars, '_', $filename);
     // remove break/tabs/return carriage
@@ -146,7 +167,7 @@ function sanitize($filename)
     // convert some special letters
     $convert = [
         'Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss',
-        'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'
+        'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u',
     ];
     $filename = strtr($filename, $convert);
     // remove foreign accents by converting to HTML entities, and then remove the code
@@ -169,7 +190,7 @@ function my_mb_ucfirst($str)
 {
     $fc = mb_strtoupper(mb_substr($str, 0, 1));
 
-    return $fc . mb_substr($str, 1);
+    return $fc.mb_substr($str, 1);
 }
 
 function mb_ucfirst($string, $encoding)
@@ -177,7 +198,7 @@ function mb_ucfirst($string, $encoding)
     $firstChar = mb_substr($string, 0, 1, $encoding);
     $then = mb_substr($string, 1, null, $encoding);
 
-    return mb_strtoupper($firstChar, $encoding) . $then;
+    return mb_strtoupper($firstChar, $encoding).$then;
 }
 
 function test_input($data)
@@ -208,7 +229,7 @@ function phone_number_view($sPhone)
         $sNumber1 = mb_substr($sPhone, 4, 3);
         $sNumber2 = mb_substr($sPhone, 7, 2);
         $sNumber3 = mb_substr($sPhone, 9, 2);
-        $sPhone = '+' . $sArea . ' (' . $sPrefix . ') ' . $sNumber1 . ' ' . $sNumber2 . ' ' . $sNumber3;
+        $sPhone = '+'.$sArea.' ('.$sPrefix.') '.$sNumber1.' '.$sNumber2.' '.$sNumber3;
 
         return $sPhone;
     } else {
@@ -218,8 +239,6 @@ function phone_number_view($sPhone)
 
 /**
  * replaces all Cyrillic letters with Latin.
- *
- * @param string $var
  *
  * @return string
  */
@@ -237,8 +256,6 @@ function translit_ostslav_to_lat($textcyr)
 }
 /**
  * replaces all letters with Latin ASCII.
- *
- * @param string $var
  *
  * @return string
  */
@@ -275,12 +292,12 @@ function find_by_filename($path, $filename)
 
 function get_master_photo($master_id)
 {
-    $path = IMGDIR . DS . 'masters' . DS;
-    $filename = 'master_photo_' . $master_id;
+    $path = IMGDIR.DS.'masters'.DS;
+    $filename = 'master_photo_'.$master_id;
     if (find_by_filename($path, $filename) === false) {
-        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'ddd.jpg';
+        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'ddd.jpg';
     } else {
-        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'masters' . DS . find_by_filename($path, $filename);
+        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'masters'.DS.find_by_filename($path, $filename);
     }
 
     return $img;
@@ -288,11 +305,11 @@ function get_master_photo($master_id)
 
 function get_page_image($page_alias)
 {
-    $path = IMGDIR . DS . 'pages' . DS;
+    $path = IMGDIR.DS.'pages'.DS;
     if (find_by_filename($path, $page_alias) === false) {
-        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'ddd.jpg';
+        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'ddd.jpg';
     } else {
-        $img = URLROOT . DS . 'public' . DS . 'imgs' . DS . 'pages' . DS . find_by_filename($path, $page_alias);
+        $img = URLROOT.DS.'public'.DS.'imgs'.DS.'pages'.DS.find_by_filename($path, $page_alias);
     }
 
     return $img;
@@ -307,7 +324,7 @@ function replace_string($file, $new_string, int $num_string = 0)
 {
     $array = file($file);
     if ($array) {
-        $array[$num_string] = $new_string . "\n";
+        $array[$num_string] = $new_string."\n";
     }
     if (!is_writable($file)) {
         return false;
@@ -382,7 +399,7 @@ function human_filesize($bytes, $decimals = 2)
     $sz = 'BKMGTP';
     $factor = floor((strlen($bytes) - 1) / 3);
 
-    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)).@$sz[$factor];
 }
 
 function in_array_rec($needle, $haystack, $strict = false)

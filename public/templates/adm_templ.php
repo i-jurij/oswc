@@ -1,19 +1,17 @@
 <!doctype html>
 <?php
 
-use App\Lib\Registry;
-
- $db = (!empty($data['page_db_data']['0'])) ?  $data['page_db_data']['0'] : null; ?>
+$db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; ?>
 <html lang="<?php echo $a = (isset($db['html_lang']) and !empty($db['html_lang'])) ? htmlspecialchars($db['html_lang']) : 'ru'; ?>">
 <head>
-  <meta charset="<?php echo $b = (isset($db['charset']) and !empty($db['charset'])) ? htmlspecialchars($db['charset']) : 'utf-8' ; ?>">
+  <meta charset="<?php echo $b = (isset($db['charset']) and !empty($db['charset'])) ? htmlspecialchars($db['charset']) : 'utf-8'; ?>">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <title>
     <?php
-      echo $c = (isset($db['page_title']) and !empty($db['page_title'])) ? htmlspecialchars($db['page_title']) : 'Title of page';
-    ?>
+     echo $c = (isset($db['page_title']) and !empty($db['page_title'])) ? htmlspecialchars($db['page_title']) : 'Title of page';
+?>
   </title>
   <meta name="description" content="<?php echo $d = (isset($db['page_meta_description']) and !empty($db['page_meta_description'])) ? htmlspecialchars($db['page_meta_description']) : 'Description of page'; ?>">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -34,19 +32,19 @@ use App\Lib\Registry;
 							<a class="buttons" href="<?php echo URLROOT; ?>/adm/exit/">Выход</a>
 					</div>
           <div class="content stickyheader">
-            <!-- <h2><?php //echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2> -->
+            <!-- <h2><?php // echo $c = (isset($db['page_h1']) and !empty($db['page_h1'])) ? htmlspecialchars($db['page_h1']) : 'H1 of page';?></h2> -->
             <p class="nav"><?php echo menu($data); ?></p>
           </div>
           <?php
-            if (!empty($data[0]['page_content'])) {
-              print htmlspecialchars($data[0]['page_content']);
-            }
-            if ( (new SplFileInfo($content_view))->isReadable() ) {
-              include $content_view;
-            } elseif (is_string($content_view)) {
-              print $content_view;
-            }
-          ?>
+        if (!empty($db['page_content'])) {
+            echo '<div class="content mar_pad"><p>'.htmlspecialchars($db['page_content']).'</p></div>';
+        }
+        if ((new SplFileInfo($content_view))->isReadable()) {
+            include $content_view;
+        } elseif (is_string($content_view)) {
+            echo $content_view;
+        }
+?>
         </div>
       </section>
     </div>

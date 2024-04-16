@@ -8,14 +8,14 @@ trait MbUcfirst
     {
         $fc = mb_strtoupper(mb_substr($str, 0, 1));
 
-        return $fc . mb_substr($str, 1);
+        return $fc.mb_substr($str, 1);
     }
 
-    public function mbUcfirst($string, $encoding)
+    public function mbUcfirst($string)
     {
-        $firstChar = mb_substr($string, 0, 1, $encoding);
-        $then = mb_substr($string, 1, null, $encoding);
+        $firstChar = mb_substr($string, 0, 1, mb_detect_encoding($string));
+        $then = mb_substr($string, 1, null, mb_detect_encoding($string));
 
-        return mb_strtoupper($firstChar, $encoding) . $then;
+        return mb_strtoupper($firstChar, mb_detect_encoding($string)).$then;
     }
 }
