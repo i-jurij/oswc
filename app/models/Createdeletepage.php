@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\ImageProc;
 use App\Lib\SanitizeFileName;
 use App\Lib\SqlColNames;
 use Fileupload\Upload;
@@ -157,7 +158,7 @@ class Createdeletepage extends Adm
                         'replace_old_file' => false,
                     ],
                     'picture' => [
-                        'dest_dir' => PUBLICROOT.DS.'imgs/pages',
+                        'dest_dir' => PUBLICROOT.DS.'tmp',
                         'file_size' => 1 * 1000 * 1024, // 1MB
                         'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
                         'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
@@ -168,10 +169,15 @@ class Createdeletepage extends Adm
                 if ($new_load->issetData()) {
                     $new_load->upload();
                     $this->data['res'] .= $new_load->infoToString();
-                    //
-                    // some command for processing a file located in a dest_dir
-
-                    //
+                    // command for processing a image located in a tmp dir
+                    $imagefile = self::findByFilename(PUBLICROOT.DS.'tmp', $classname);
+                    if ($imagefile !== false) {
+                        $this->data['res'] .= (new ImageProc())->imgForPage($imagefile, PUBLICROOT.DS.'imgs'.DS.'pages', 'jpg');
+                        // del image file in tmp folder
+                        self::delFile($imagefile);
+                    } else {
+                        $this->data['res'] .= 'WARNING! Image witn name "'.$classname.'" was not found in "'.PUBLICROOT.DS.'tmp"<br />';
+                    }
                     // CLEAR FOLDER - all files will be deleted in a directory specified by user
                     // print '<br />' . Fileupload\Classes\DelFilesInDir::run('upload_pictures');
                 }
