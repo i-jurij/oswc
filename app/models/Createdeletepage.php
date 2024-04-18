@@ -168,13 +168,16 @@ class Createdeletepage extends Adm
                 ];
                 if ($new_load->issetData()) {
                     $new_load->upload();
-                    $this->data['res'] .= $new_load->infoToString();
+                    // $this->data['res'] .= $new_load->infoToString();
+
                     // command for processing a image located in a tmp dir
                     $imagefile = self::findByFilename(PUBLICROOT.DS.'tmp', $classname);
                     if ($imagefile !== false) {
                         $this->data['res'] .= (new ImageProc())->imgForPage($imagefile, PUBLICROOT.DS.'imgs'.DS.'pages', 'jpg');
                         // del image file in tmp folder
-                        self::delFile($imagefile);
+                        if (self::delFile($imagefile) !== true) {
+                            $this->data['res'] .= self::del_file_message;
+                        }
                     } else {
                         $this->data['res'] .= 'WARNING! Image witn name "'.$classname.'" was not found in "'.PUBLICROOT.DS.'tmp"<br />';
                     }
@@ -228,7 +231,7 @@ class Createdeletepage extends Adm
                             if (self::delFile($path) === true) {
                                 $this->data['res'] .= $name.' "'.$value.'" has been deleted.<br />';
                             } else {
-                                $this->data['res'] .= self::delFile($path).'<br />';
+                                $this->data['res'] .= self::del_file_message.'<br />';
                             }
                         }
                         unset($path);
@@ -241,7 +244,7 @@ class Createdeletepage extends Adm
                             if (self::delFile($file_for_del)) {
                                 $this->data['res'] .= 'Image "'.$val.'" has been deleted.<br />';
                             } else {
-                                $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted.<br />';
+                                $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted, because<br />'.self::del_file_message;
                             }
                         }
                         // delete template (except adm_templ.php and templ.php if is the only one)
@@ -256,7 +259,7 @@ class Createdeletepage extends Adm
                                 if (self::delFile($file_for_del)) {
                                     $this->data['res'] .= 'Template "'.$val.'" has been deleted.<br />';
                                 } else {
-                                    $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted.<br />';
+                                    $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted, because<br />'.self::del_file_message;
                                 }
                             }
                         } else {
