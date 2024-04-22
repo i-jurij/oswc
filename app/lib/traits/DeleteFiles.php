@@ -4,7 +4,7 @@ namespace App\Lib\Traits;
 
 trait DeleteFiles
 {
-    public string $del_file_message = '';
+    public static string $del_file_message = '';
 
     public static function delFilesInDir(string $dir, bool $recursive = true)
     {
