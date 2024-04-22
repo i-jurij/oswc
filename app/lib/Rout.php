@@ -23,22 +23,21 @@ class Rout
 
     public function __construct($siterootpath)
     {
-        $dbinit = '\App\Lib\\'.DBINITNAME;
+        $dbinit = '\App\Lib\\' . DBINITNAME;
         $db_create = new $dbinit();
         $db_create->create_tables();
         $url_arr = $this->url_to_arr($siterootpath);
         Registry::remove('nav');
-
         // if (empty($url_arr) or !file_exists(APPROOT.DS.'controllers'.DS.$url_arr[0].'.php'))
-        if (empty($url_arr)) {
+        if (empty($url_arr) or (empty($url_arr[0]))) {
             $contr = '\App\Controllers\Home';
             $this->controller = new $contr();
             $nav[] = 'home';
             $url_arr = [];
         } else {
-            if (class_exists("\App\\Controllers\\".$this->mbUcfirst($url_arr[0]))) {
+            if (class_exists("\App\\Controllers\\" . $this->mbUcfirst($url_arr[0]))) {
                 // $contr = "\App\\Controllers\\".ucwords($url_arr[0]);
-                $contr = "\App\\Controllers\\".$this->mbUcfirst($url_arr[0]);
+                $contr = "\App\\Controllers\\" . $this->mbUcfirst($url_arr[0]);
                 $this->controller = new $contr();
                 $nav[] = array_shift($url_arr);
                 if (isset($url_arr[0]) && method_exists($contr, $url_arr[0])) {
@@ -74,18 +73,18 @@ class Rout
         if (isset($_SERVER['REQUEST_URI'])) {
             $request_url_filter = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
             $request_url = strtok($request_url_filter, '?');
-            // если в конце нет слеша - перенаправим со слешем
+            //если в адресе нет конечного слеша - перенаправим по адресу со слешем на конце
             if (mb_substr($request_url, -1) === '/') {
                 $request_url = trim($request_url, " \/");
                 $res_path = explode('/', $request_url);
                 // если на сервере многосайтовость - уберем из пути корневую папку сайта и переиндексируем
                 $root = explode('/', $siterootpath);
                 $res_path = array_values(array_diff($res_path, [array_pop($root)]));
+                return $res_path;
             } else {
-                redirect(CURRENT_PAGE_LOCATION.'/', 301);
+                redirect(CURRENT_PAGE_LOCATION . '/', 301);
+                exit;
             }
-
-            return $res_path;
         }
     }
 }
