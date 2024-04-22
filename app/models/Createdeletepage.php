@@ -176,7 +176,7 @@ class Createdeletepage extends Adm
                         $this->data['res'] .= (new ImageProc())->imgForPage($imagefile, PUBLICROOT.DS.'imgs'.DS.'pages', 'jpg');
                         // del image file in tmp folder
                         if (self::delFile($imagefile) !== true) {
-                            $this->data['res'] .= self::del_file_message;
+                            $this->data['res'] .= self::$del_file_message;
                         }
                     } else {
                         $this->data['res'] .= 'WARNING! Image witn name "'.$classname.'" was not found in "'.PUBLICROOT.DS.'tmp"<br />';
@@ -231,7 +231,7 @@ class Createdeletepage extends Adm
                             if (self::delFile($path) === true) {
                                 $this->data['res'] .= $name.' "'.$value.'" has been deleted.<br />';
                             } else {
-                                $this->data['res'] .= self::del_file_message.'<br />';
+                                $this->data['res'] .= self::$del_file_message.'<br />';
                             }
                         }
                         unset($path);
@@ -244,7 +244,7 @@ class Createdeletepage extends Adm
                             if (self::delFile($file_for_del)) {
                                 $this->data['res'] .= 'Image "'.$val.'" has been deleted.<br />';
                             } else {
-                                $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted, because<br />'.self::del_file_message;
+                                $this->data['res'] .= 'ERROR!<br />Image "'.$val.'" has not been deleted, because<br />'.self::$del_file_message;
                             }
                         }
                         // delete template (except adm_templ.php and templ.php if is the only one)
@@ -259,7 +259,7 @@ class Createdeletepage extends Adm
                                 if (self::delFile($file_for_del)) {
                                     $this->data['res'] .= 'Template "'.$val.'" has been deleted.<br />';
                                 } else {
-                                    $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted, because<br />'.self::del_file_message;
+                                    $this->data['res'] .= 'ERROR!<br />Template "'.$val.'" has not been deleted, because<br />'.self::$del_file_message;
                                 }
                             }
                         } else {
