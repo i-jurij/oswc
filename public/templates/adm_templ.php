@@ -17,9 +17,9 @@ $db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; 
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'NOINDEX, NOFOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
-  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.DS.'public'.DS.'css'.DS.'first'.DS.'normalize.css'; ?>" />
-  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.DS.'public'.DS.'css'.DS.'first'.DS.'style.css'; ?>" />
-  <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/key.png" />
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/first/normalize.css'; ?>" />
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/first/style.css'; ?>" />
+  <link rel="icon" href="<?php echo URLROOT; ?>/public/imgs/key.png" />
 </head>
 <body>
   <div class="wrapper">
@@ -50,7 +50,7 @@ $db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; 
     </div>
   </div>
 
-  <script type="text/javascript" src="<?php echo URLROOT.DS.'public'.DS.'js'.DS.'adm'.DS.'adm.js'; ?>"></script>
+  <script type="text/javascript" src="<?php echo URLROOT.'/public/js/adm/adm.js'; ?>"></script>
   <!-- <script type="text/jsx" src="public/js/fancybox.umd.js"></script> -->
   </body>
 </html>

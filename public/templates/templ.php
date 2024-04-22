@@ -27,13 +27,10 @@
     }
   }
   ?>
-  <link rel="icon" href="<?php echo URLROOT.DS; ?>public/imgs/favicon.png" />
+  <link rel="icon" href="<?php echo URLROOT; ?>/public/imgs/favicon.png" />
   <?php 
     foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
-      print '<script type="text/javascript" src="'.URLROOT.DS.'public'.DS.'js'.DS.'core'.DS.$value.'"></script>';
-    }
-    foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'core', 'js') as $value) {
-      print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'other'.DS.$value.'"></script>';
+      print '<script type="text/javascript" src="'.URLROOT.'/public/js/core/'.$value.'"></script>';
     }
   ?>
 </head>
@@ -76,7 +73,7 @@
 
   <?php 
     foreach (filesInDirScan(PUBLICROOT.DS.'js'.DS.'other', 'js') as $value) {
-      print '<script type="text/javascript" defer src="'.URLROOT.DS.'public'.DS.'js'.DS.'other'.DS.$value.'"></script>';
+      print '<script type="text/javascript" defer src="'.URLROOT.'/public/js/other/'.$value.'"></script>';
     }
   ?>
   <!-- <script type="text/jsx" src="public/js/fancybox.umd.js"></script> -->
