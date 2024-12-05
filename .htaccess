@@ -2,7 +2,7 @@
 Options All -ExecCGI -Indexes -Includes +FollowSymLinks
 RewriteBase /oswc
 RewriteEngine on
-RewriteRule !.(js|css|ico|gif|jpg|png|woff|woff2|ttf)$ index.php [L]
+RewriteRule !.(js|css|ico|gif|jpg|png|webp|woff|woff2|ttf)$ index.php [L]
 # -----------------------------
 </IfModule>
 

@@ -1,4 +1,12 @@
 <?php
+function mbStrReplace($search, $replace, $string)
+{
+    $charset = mb_detect_encoding($string);
+
+    $unicodeString = iconv($charset, 'UTF-8', $string);
+
+    return str_replace($search, $replace, $unicodeString);
+}
 
 function redirect($url, $statusCode = 303)
 {
@@ -400,6 +408,18 @@ function human_filesize($bytes, $decimals = 2)
     $factor = floor((strlen($bytes) - 1) / 3);
 
     return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)).@$sz[$factor];
+}
+
+function formatBytes($bytes, $precision = 2)
+{
+        if ($bytes > 0) {
+            $i = floor(log($bytes) / log(1024));
+            $sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+            return sprintf('%.02F', round($bytes / pow(1024, $i), $precision)) * 1 .' '.@$sizes[$i];
+        } else {
+            return 0;
+        }
 }
 
 function in_array_rec($needle, $haystack, $strict = false)
