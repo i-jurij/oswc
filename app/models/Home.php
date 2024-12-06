@@ -28,17 +28,17 @@ class Home
         if ($this->page === 'home' || $this->page === 'Home') {
             $this->data['page_db_data'] = [
                 ['page_alias' => 'home',
-                'page_title' => 'Главная страница',
-                'page_meta_description' => 'Главная страница',
-                'page_robots' => 'INDEX, FOLLOW',
-                'page_h1' => 'Главная страница',
+                    'page_title' => 'Главная страница',
+                    'page_meta_description' => 'Главная страница',
+                    'page_robots' => 'INDEX, FOLLOW',
+                    'page_h1' => 'Главная страница',
                 ]];
         } else {
             // add data for head in template
             if ($this->db->db->has($this->table, ['page_alias' => $this->page])) {
                 $this->data['page_db_data'] = $this->db->db->select($this->table, '*', ['page_alias' => $this->page]);
             }
-            \App\Lib\Registry::set('page_db_data', $this->data['page_db_data']);
+            Registry::set('page_db_data', $this->data['page_db_data']);
         }
     }
 
@@ -47,8 +47,8 @@ class Home
         // START required
         $this->data['nav'] = Registry::get('nav');
 
-        if (null !== \App\Lib\Registry::get('page_db_data')) {
-            $this->data['page_db_data'] = \App\Lib\Registry::get('page_db_data');
+        if (null !== Registry::get('page_db_data')) {
+            $this->data['page_db_data'] = Registry::get('page_db_data');
         } else {
             $this->dbQuery();
         }
@@ -70,7 +70,7 @@ class Home
         }
 
         // add css for head in template
-        $this->data['css'] = $this->cssAdd('public'.DS.'css'.DS.'first');
+        $this->data['css'] = $this->cssAdd('public'.DS.'css');
 
         $i = 0;
         foreach ($this->db->db->select('contacts', ['contacts_type', 'contacts_data']) as $value) {

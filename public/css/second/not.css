@@ -1,6 +1,0 @@
-.main_section .flex_top p:not([class]),
-.main_section .flex_top span:not([class]),
-.main_section .flex_top a:not([class]),
-.main_section .flex_top div:not([class]) {
-  color: blanchedalmond;
-}

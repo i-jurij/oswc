@@ -17,8 +17,8 @@ $db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; 
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'NOINDEX, NOFOLLOW'; ?>">
   <meta name="author" content="I-Jurij">
-  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/first/normalize.css'; ?>" />
-  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/first/style.css'; ?>" />
+
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/oswc2.min.css'; ?>" />
   <link rel="icon" href="<?php echo URLROOT; ?>/public/imgs/key.png" />
 </head>
 <body>
@@ -39,11 +39,11 @@ $db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; 
         if (!empty($db['page_content'])) {
             echo '<div class="content mar_pad"><p>'.htmlspecialchars($db['page_content']).'</p></div>';
         }
-        if ((new SplFileInfo($content_view))->isReadable()) {
-            include $content_view;
-        } elseif (is_string($content_view)) {
-            echo $content_view;
-        }
+if ((new SplFileInfo($content_view))->isReadable()) {
+    include $content_view;
+} elseif (is_string($content_view)) {
+    echo $content_view;
+}
 ?>
         </div>
       </section>
