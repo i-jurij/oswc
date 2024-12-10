@@ -16,9 +16,9 @@ $db = (!empty($data['page_db_data']['0'])) ? $data['page_db_data']['0'] : null; 
   <meta name="description" content="<?php echo $d = (isset($db['page_meta_description']) and !empty($db['page_meta_description'])) ? htmlspecialchars($db['page_meta_description']) : 'Description of page'; ?>">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
   <META NAME="Robots" CONTENT="<?php echo $f = (isset($db['robots']) and !empty($db['robots'])) ? htmlspecialchars($db['robots']) : 'NOINDEX, NOFOLLOW'; ?>">
-  <meta name="author" content="I-Jurij">
+  <meta name="author" content="ijuij" >
 
-  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/oswc2.min.css'; ?>" />
+  <link rel="stylesheet" type="text/css" href="<?php echo URLROOT.'/public/css/oswc2_styles.min.css'; ?>" />
   <link rel="icon" href="<?php echo URLROOT; ?>/public/imgs/key.png" />
 </head>
 <body>
